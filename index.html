@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>えいけんタウン | 英検4級クエスト</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23ffe1ee'/><rect x='4' y='4' width='56' height='56' rx='11' fill='none' stroke='%23f06ba3' stroke-width='3'/><text x='32' y='47' font-size='36' text-anchor='middle'>🏙️</text></svg>">
+<meta name="theme-color" content="#f06ba3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="えいけんタウン">
+<link rel="manifest" href='data:application/manifest+json,{"name":"えいけんタウン","short_name":"えいけんタウン","start_url":".","display":"standalone","orientation":"any","background_color":"%23fef6fb","theme_color":"%23f06ba3"}'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --pink:#ff9ec4;
+  --pink-d:#f06ba3;
+  --pink-l:#ffe1ee;
+  --mint:#6fd6b8;
+  --mint-d:#2fae8d;
+  --mint-l:#dcf7ef;
+  --lav:#a98ef5;
+  --lav-d:#8465dd;
+  --lav-l:#ece4ff;
+  --sun:#ffcf56;
+  --sun-d:#e8a913;
+  --sun-l:#fff3d6;
+  --sky:#bfe7ff;
+  --ink:#5c4553;
+  --ink-soft:#93788a;
+  --paper:#fffdfa;
+  --line:#ffd9e8;
+  --shadow:0 10px 24px rgba(240,107,163,.16);
+  --radius:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{
+  min-height:100%;
+  font-family:'Zen Maru Gothic',sans-serif;
+  color:var(--ink);
+  overscroll-behavior-y:contain;
+  -webkit-user-select:none;user-select:none;
+  background:
+   radial-gradient(circle at 12% 18%,rgba(255,158,196,.14),transparent 34%),
+   radial-gradient(circle at 86% 8%,rgba(169,142,245,.14),transparent 30%),
+   radial-gradient(circle at 78% 82%,rgba(111,214,184,.16),transparent 36%),
+   linear-gradient(180deg,#dff0ff 0%,#fef6fb 42%,#fdfbf5 100%);
+  background-attachment:fixed;
+  -webkit-tap-highlight-color:transparent;
+}
+input,textarea{-webkit-user-select:text;user-select:text}
+button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+button:disabled{cursor:not-allowed}
+
+#app{max-width:1160px;margin:0 auto;padding:14px 14px 90px;position:relative}
+
+.appbar{
+  position:sticky;top:10px;z-index:50;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:999px;
+  background:rgba(255,253,250,.92);
+  border:3px solid var(--line);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(6px);
+}
+.appbar .logo-mini{font-weight:900;font-size:19px;color:var(--pink-d);letter-spacing:.04em;white-space:nowrap}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:999px;font-weight:700;font-size:15px;
+  background:var(--sun-l);border:2px solid #ffe6a8;color:#a97a00;white-space:nowrap;
+}
+.pill.minty{background:var(--mint-l);border-color:#bff0e2;color:var(--mint-d)}
+.spacer{flex:1}
+.iconbtn{
+  width:44px;height:44px;border-radius:16px;font-size:21px;
+  background:#fff;border:3px solid var(--line);box-shadow:0 4px 10px rgba(240,107,163,.12);
+  transition:transform .15s;display:flex;align-items:center;justify-content:center;position:relative;
+}
+.iconbtn:hover{transform:translateY(-2px) rotate(-3deg)}
+.iconbtn .badge{
+  position:absolute;top:-4px;right:-3px;min-width:20px;height:20px;padding:0 5px;
+  border-radius:999px;background:var(--pink-d);color:#fff;font-size:11px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;border:2px solid #fff;
+}
+
+.screen{display:none;animation:pop-in .35s ease}
+.screen.active{display:block}
+@keyframes pop-in{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+
+.panel{
+  background:var(--paper);
+  border:3px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:900;font-size:17px;letter-spacing:.03em;
+  padding:14px 28px;border-radius:999px;
+  border-bottom:5px solid rgba(0,0,0,.14);
+  transition:transform .12s,filter .12s;
+  user-select:none;
+}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:translateY(3px);border-bottom-width:2px}
+.btn:disabled{opacity:.45;filter:grayscale(.4)}
+.btn.pinky{background:linear-gradient(180deg,#ffb1cd,var(--pink));color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.08)}
+.btn.minty{background:linear-gradient(180deg,#8ce4c9,var(--mint));color:#0c5c47}
+.btn.lavvy{background:linear-gradient(180deg,#c3adfa,var(--lav));color:#fff}
+.btn.sunny{background:linear-gradient(180deg,#ffe08a,var(--sun));color:#8a5b00}
+.btn.ghosty{background:#fff;color:var(--ink-soft);border:3px solid var(--line)}
+.btn.big{font-size:21px;padding:18px 44px}
+.btn.small{font-size:14px;padding:9px 18px;border-bottom-width:4px}
+
+.title-hero{text-align:center;padding-top:34px}
+.title-logo{
+  font-size:min(15vw,84px);font-weight:900;line-height:1.05;
+  background:linear-gradient(135deg,#ff7fb4 20%,#a98ef5 60%,#5fc9ec 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 0 #fff) drop-shadow(0 12px 18px rgba(240,107,163,.35));
+  animation:bob 3.2s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.title-sub{font-size:19px;font-weight:700;color:var(--ink-soft);margin-top:6px}
+.title-clouds{font-size:34px;letter-spacing:26px;animation:drift 6s linear infinite alternate}
+@keyframes drift{from{transform:translateX(-12px)}to{transform:translateX(12px)}}
+.title-deco{font-size:40px;margin-top:18px;letter-spacing:10px}
+.title-menu{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:30px}
+.save-note{font-size:13px;color:var(--ink-soft);margin-top:10px}
+
+.town-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 2px 10px}
+.rank-card{display:flex;align-items:center;gap:10px;background:var(--paper);border:3px solid var(--line);border-radius:999px;padding:8px 18px;box-shadow:var(--shadow)}
+.rank-card .rk-emoji{font-size:26px}
+.rank-card .rk-name{font-weight:900;font-size:17px;color:var(--pink-d)}
+
+.lot{
+  position:relative;aspect-ratio:1/1;border-radius:26px;
+  background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.16) 0 12px,transparent 12px 24px),
+    linear-gradient(160deg,#bfe9cf,#93dbb6);
+  border:3px solid #ffffffcc;
+  box-shadow:0 8px 18px rgba(47,174,141,.18), inset 0 -6px 0 rgba(0,0,0,.05);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;transition:transform .15s;overflow:hidden;cursor:pointer;
+}
+.lot:hover{transform:translateY(-4px) scale(1.02)}
+.lot.empty::after{content:'🌱';font-size:22px;opacity:.75}
+.lot.empty .plus{font-size:30px;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.18);font-weight:900}
+.lot .house{font-size:52px;line-height:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.14))}
+.lot.built{background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.2) 0 12px,transparent 12px 24px),
+    linear-gradient(160deg,#ffe6f1,#ffc9df);
+  border-color:#fff;}
+.lot .nameplate{
+  margin-top:6px;background:#ffffffe8;border-radius:999px;padding:2px 12px;
+  font-size:13px;font-weight:900;color:var(--ink);white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;
+}
+.lot.road{background:
+  repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 8px,transparent 8px 20px),
+  linear-gradient(160deg,#9a95a3,#7c7787);
+  border-color:#fff}
+.lot .stars{font-size:13px;letter-spacing:1px;height:16px}
+.lot .lv-tag{
+  position:absolute;top:8px;left:8px;background:var(--sun);color:#7a5200;
+  font-size:11px;font-weight:900;border-radius:999px;padding:2px 8px;border:2px solid #fff;
+}
+.lot .newdot{
+  position:absolute;top:-6px;right:-6px;width:26px;height:26px;border-radius:50%;
+  background:var(--pink-d);color:#fff;font-size:14px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;border:3px solid #fff;animation:pulse 1.2s infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.map-tip{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:12px}
+
+.modal-root{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(92,69,83,.4);backdrop-filter:blur(3px)}
+.modal-root.open{display:flex}
+.modal{
+  width:100%;max-width:560px;max-height:86vh;overflow:auto;
+  background:var(--paper);border:3px solid var(--line);border-bottom:none;
+  border-radius:30px 30px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom));
+  box-shadow:0 -14px 40px rgba(92,69,83,.25);
+  animation:slide-up .3s ease;
+}
+@media(min-height:760px){.modal-root.open{align-items:center}.modal{border-radius:30px;border-bottom:3px solid var(--line);margin:16px}}
+@keyframes slide-up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+.modal h3{font-size:21px;font-weight:900;color:var(--pink-d);text-align:center;margin-bottom:4px}
+.modal .sub{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:16px}
+.close-row{display:flex;justify-content:center;margin-top:18px;gap:10px;flex-wrap:wrap}
+
+.bcard{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  background:#fff;border:3px solid var(--line);border-radius:20px;
+  padding:13px 15px;margin-bottom:11px;transition:transform .13s,box-shadow .13s;
+}
+.bcard:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow)}
+.bcard:disabled{opacity:.55;filter:grayscale(.5)}
+.bcard .bc-emoji{font-size:40px;width:58px;text-align:center;flex-shrink:0}
+.bcard .bc-name{font-weight:900;font-size:17px}
+.bcard .bc-desc{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+.bcard .bc-cost{margin-left:auto;font-weight:900;color:#b57d00;background:var(--sun-l);padding:5px 12px;border-radius:999px;border:2px solid #ffe6a8;font-size:13px;white-space:nowrap}
+.bcard.locked .bc-cost{background:#f3eef5;color:var(--ink-soft);border-color:#e5dbe9}
+
+.quiz-top{display:flex;align-items:center;gap:10px;margin:16px 0 12px;flex-wrap:wrap}
+.q-building{font-weight:900;font-size:17px;color:var(--pink-d);background:var(--pink-l);border:2px solid var(--line);border-radius:999px;padding:6px 16px}
+.dots{display:flex;gap:6px}
+.dot{width:14px;height:14px;border-radius:50%;background:#f1e3ea;border:2px solid #eccfdb;transition:all .25s}
+.dot.done-ok{background:var(--mint);border-color:var(--mint-d)}
+.dot.done-ng{background:#ff8f8f;border-color:#e06a6a}
+.dot.now{background:var(--sun);border-color:var(--sun-d);transform:scale(1.25)}
+.streak{margin-left:auto;font-weight:900;color:#e8590c;font-size:15px;background:#fff1e1;padding:4px 12px;border-radius:999px;border:2px solid #ffdcb0}
+
+.qcard{padding:26px 22px;text-align:center}
+.qcat-tag{display:inline-block;font-size:12px;font-weight:900;color:var(--lav-d);background:var(--lav-l);border-radius:999px;padding:3px 12px;margin-bottom:12px}
+.qtext{font-size:min(5.6vw,27px);font-weight:700;line-height:1.55;white-space:pre-line}
+.qjp{font-size:15px;color:var(--ink-soft);margin-top:10px;font-weight:500}
+.blank{display:inline-block;min-width:64px;border-bottom:3px dashed var(--pink-d);color:transparent;line-height:1}
+
+.choices{display:grid;gap:11px;margin-top:16px}
+.choice{
+  text-align:left;font-weight:700;font-size:17px;
+  background:#fff;border:3px solid var(--line);border-radius:18px;
+  padding:14px 18px;transition:all .13s;display:flex;align-items:center;gap:10px;
+}
+.choice:hover:not(:disabled){border-color:var(--pink);transform:translateY(-2px);box-shadow:var(--shadow)}
+.choice .ckey{
+  width:32px;height:32px;border-radius:12px;background:var(--lav-l);color:var(--lav-d);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;
+}
+.choice.ok{background:var(--mint-l);border-color:var(--mint);animation:shake-good .4s}
+.choice.ng{background:#ffecec;border-color:#ff9d9d;animation:shake-bad .4s}
+.choice:disabled{opacity:.92}
+@keyframes shake-good{0%,100%{transform:none}40%{transform:scale(1.03)}}
+@keyframes shake-bad{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}65%{transform:translateX(6px)}}
+
+.speak-zone{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px}
+.speak-btn{
+  width:96px;height:96px;border-radius:50%;font-size:42px;
+  background:linear-gradient(180deg,#c3adfa,#a98ef5);color:#fff;
+  border-bottom:6px solid #6f4fd0;box-shadow:0 10px 22px rgba(132,101,221,.35);
+  transition:transform .12s;
+}
+.speak-btn:active{transform:translateY(3px);border-bottom-width:2px}
+.speak-btn.playing{animation:speak-pulse 1s infinite}
+@keyframes speak-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+.speak-hint{font-size:13px;color:var(--ink-soft)}
+.pic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:16px}
+.pic{
+  aspect-ratio:2/1.15;font-size:clamp(26px,6vw,40px);letter-spacing:2px;
+  background:#fff;border:3px solid var(--line);border-radius:18px;
+  display:flex;align-items:center;justify-content:center;transition:all .13s;
+}
+.pic:hover:not(:disabled){border-color:var(--pink);transform:translateY(-2px);box-shadow:var(--shadow)}
+.pic.ok{background:var(--mint-l);border-color:var(--mint)}
+.pic.ng{background:#ffecec;border-color:#ff9d9d}
+
+.order-slots{
+  min-height:64px;background:#fff;border:3px dashed var(--line);border-radius:18px;
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;
+  padding:12px;margin-top:14px;
+}
+.order-slots .ph{color:#cdb6c3;font-size:14px;font-weight:700}
+.chip{
+  font-weight:700;font-size:16px;background:#fff;border:3px solid var(--lav-l);
+  color:var(--lav-d);border-radius:999px;padding:8px 16px;transition:all .12s;
+}
+.chip:hover{border-color:var(--lav);transform:translateY(-2px)}
+.chip.in-slot{background:var(--lav);border-color:var(--lav);color:#fff}
+.chip:disabled{opacity:.35}
+.order-bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:14px}
+
+.feedback{
+  margin-top:16px;border-radius:20px;padding:16px 18px;
+  border:3px solid var(--mint);background:var(--mint-l);
+  animation:pop-in .3s ease;
+}
+.feedback.bad{border-color:#ff9d9d;background:#fff0f0}
+.fb-head{font-size:23px;font-weight:900;margin-bottom:6px}
+.feedback.good .fb-head{color:var(--mint-d)}
+.feedback.bad .fb-head{color:#e05252}
+.fb-exp{font-size:15px;line-height:1.65;font-weight:500}
+.fb-next{display:flex;justify-content:center;margin-top:12px}
+
+.writing-meta{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:13px;color:var(--ink-soft)}
+#wr-count.over{color:var(--mint-d);font-weight:900}
+textarea.writebox{
+  width:100%;min-height:150px;resize:vertical;
+  font-family:'Segoe UI','Zen Maru Gothic',sans-serif;font-size:17px;line-height:1.7;
+  border:3px solid var(--line);border-radius:18px;padding:14px;background:#fffdf8;color:var(--ink);
+}
+textarea.writebox:focus{outline:none;border-color:var(--pink)}
+.checklist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.checkrow{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--line);border-radius:16px;padding:12px 14px;font-weight:700;font-size:15px;cursor:pointer;transition:border-color .15s}
+.checkrow input{width:22px;height:22px;accent-color:var(--pink-d)}
+.checkrow.checked{border-color:var(--mint);background:var(--mint-l)}
+
+.result-wrap{text-align:center;padding-top:30px}
+.result-title{font-size:38px;font-weight:900;color:var(--pink-d)}
+.stars-big{font-size:52px;letter-spacing:6px;margin:10px 0}
+.coin-gain{
+  display:inline-flex;align-items:center;gap:8px;font-size:26px;font-weight:900;color:#b57d00;
+  background:var(--sun-l);border:3px solid #ffe6a8;border-radius:999px;padding:10px 26px;margin-top:6px;
+}
+.res-detail{margin:16px auto 0;max-width:420px;text-align:left;font-size:15px;font-weight:700;color:var(--ink-soft)}
+.res-detail div{display:flex;justify-content:space-between;padding:6px 4px;border-bottom:2px dashed var(--line)}
+.levelup-banner{
+  margin:18px auto 0;max-width:480px;padding:18px;border-radius:24px;
+  background:linear-gradient(135deg,#fff0f6,#f3edff);border:3px solid var(--lav-l);
+  animation:pop-in .5s ease;
+}
+.levelup-banner .lu-t{font-size:24px;font-weight:900;color:var(--lav-d)}
+.levelup-banner .lu-s{font-size:14px;color:var(--ink-soft);margin-top:4px}
+
+.progress-wrap{margin:14px auto 0;max-width:460px}
+.progress-label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.progress-bar{height:18px;background:#f6ecf1;border-radius:999px;border:2px solid var(--line);overflow:hidden;margin-top:5px}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink),var(--lav));transition:width .8s ease}
+
+.toast-root{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{
+  background:#fff;border:3px solid var(--line);color:var(--ink);font-weight:700;font-size:15px;
+  border-radius:999px;padding:10px 22px;box-shadow:var(--shadow);animation:toast-in .3s ease;white-space:nowrap;
+}
+@keyframes toast-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.confetti{position:fixed;top:-40px;z-index:500;font-size:24px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.6}}
+
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;justify-content:center}
+.stat-chip{background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 16px;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.stat-chip b{color:var(--pink-d);font-size:16px}
+
+.hidden{display:none!important}
+
+#scene-wrap{position:relative;height:clamp(430px,calc(100vh - 240px),900px);height:clamp(430px,calc(100dvh - 240px),900px);margin-top:8px;border-radius:26px;overflow:hidden;border:3px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(180deg,#bfe9ff,#eaf8ff 55%,#e2f5e6)}
+#scene-wrap canvas{display:block;touch-action:none;cursor:grab}
+#scene-canvas-host{position:absolute;inset:0}
+#scene-wrap canvas:active{cursor:grabbing}
+.scene-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:5;pointer-events:none;background:rgba(255,255,255,.9);border:2px solid var(--line);border-radius:999px;padding:5px 16px;font-size:12.5px;font-weight:700;color:var(--ink-soft);white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+.view-btns{position:absolute;top:44px;right:10px;z-index:6;display:flex;flex-direction:column;gap:8px}
+.tiny-icon{width:38px;height:38px;border-radius:13px;background:rgba(255,255,255,.95);border:2px solid var(--line);font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(240,107,163,.14);transition:transform .15s}
+.tiny-icon:hover{transform:translateY(-2px) rotate(-4deg)}
+.build-fab{position:absolute;left:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6}
+.place-bar{position:absolute;left:8px;right:8px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:7;display:flex;gap:10px;align-items:center;justify-content:center;background:rgba(255,253,250,.97);border:3px solid var(--sun);border-radius:999px;padding:8px 10px 8px 14px;font-weight:900;font-size:14px;box-shadow:var(--shadow);max-width:calc(100% - 16px);margin:0 auto;pointer-events:none}
+.place-bar>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto;min-width:0}
+.place-bar .place-emoji{flex:0 0 auto}
+.place-bar .place-tip-short{display:none}
+.place-bar .cancel{pointer-events:auto;background:#ffecec;border:2px solid #ffc9c9;color:#e05252;border-radius:999px;padding:6px 14px;font-weight:900;font-size:13px;flex:0 0 auto}
+#scene-fallback{position:absolute;inset:0;padding:12px;overflow:auto;background:linear-gradient(180deg,#dff0ff,#fef6fb)}
+#scene-fallback .fb-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+@media(max-width:520px){#scene-fallback .fb-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.town-head-v2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 2px 10px}
+.nameplate-main{display:flex;align-items:center;gap:8px;background:var(--paper);border:3px solid var(--line);border-radius:999px;padding:6px 8px 6px 20px;box-shadow:var(--shadow)}
+.nameplate-main .nm{font-weight:900;font-size:19px;color:var(--pink-d);max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-chip{display:inline-flex;align-items:center;gap:6px;background:var(--mint-l);border:2px solid #bff0e2;border-radius:999px;padding:9px 16px;font-weight:900;color:var(--mint-d);font-size:14.5px}
+.name-input{font-family:inherit;font-size:17px;font-weight:900;border:3px solid var(--line);border-radius:14px;padding:11px 14px;width:100%;background:#fff;color:var(--ink)}
+.name-input:focus{outline:none;border-color:var(--pink)}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center}
+.sugg button{background:var(--lav-l);border:2px solid #ddd0f5;color:var(--lav-d);border-radius:999px;padding:6px 14px;font-weight:700;font-size:13px}
+
+@media(max-width:600px){
+ .appbar{padding:8px 10px;gap:6px;top:6px}
+ .logo-mini{font-size:0;letter-spacing:0}
+ .logo-mini::before{content:'🌸';font-size:20px}
+ .pill{font-size:13px;padding:5px 10px}
+ #coin-pill{max-width:34vw;overflow:hidden}
+ .iconbtn{width:38px;height:38px;font-size:17px;border-radius:12px}
+ #sound-btn{display:none}
+ #app{padding:10px 10px 80px}
+ .nameplate-main{padding:5px 7px 5px 14px}
+ .nameplate-main .nm{font-size:16px;max-width:34vw}
+ .rank-chip{font-size:12.5px;padding:7px 12px}
+ .town-head-v2{margin-top:12px}
+ .panel{padding:16px}
+ .qcard{padding:20px 14px}
+ .choice{font-size:15.5px;padding:13px 14px}
+ .btn.big{font-size:19px;padding:16px 32px}
+ .result-title{font-size:30px}
+ .stars-big{font-size:42px}
+ .view-btns{top:auto;bottom:calc(70px + env(safe-area-inset-bottom));right:10px;flex-direction:row}
+}
+@media(max-width:480px){
+ .title-hero{padding-top:8px}
+ .title-logo{font-size:min(12vw,64px)}
+ .title-sub{font-size:15px;padding:0 6px}
+ .title-clouds{font-size:24px;letter-spacing:10px}
+ .title-deco{font-size:30px;letter-spacing:5px;margin-top:12px}
+ .save-note{font-size:11.5px;padding:0 4px}
+ .title-menu{margin-top:20px;gap:11px;width:100%}
+ .title-menu .btn{max-width:92%}
+ .place-bar{font-size:13px;padding:7px 8px 7px 12px;gap:7px}
+ .place-bar .place-tip{display:none}
+ .place-bar .place-tip-short{display:inline}
+ .place-bar .cancel{padding:5px 11px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="appbar hidden" id="appbar">
+    <span class="logo-mini">🌸えいけんタウン</span>
+    <span class="pill" id="coin-pill">💰 <span id="coin-num">0</span></span>
+    <span class="pill minty hidden" id="streak-pill">🔥 <span id="streak-num">0</span></span>
+    <span class="spacer"></span>
+    <button class="iconbtn" id="settings-btn" title="せってい">⚙️</button>
+    <button class="iconbtn" id="sound-btn" title="効果音">🔔</button>
+    <button class="iconbtn" id="review-btn" title="ふくしゅう">📖<span class="badge hidden" id="review-badge">0</span></button>
+    <button class="iconbtn hidden" id="home-btn" title="まちへもどる">🏠</button>
+  </header>
+
+  <section class="screen active" id="scr-title">
+    <div class="title-hero">
+      <div class="title-clouds">☁️ 🌈 ☁️ ☁️ ☁️</div>
+      <h1 class="title-logo">えいけんタウン</h1>
+      <p class="title-sub">クイズに答えて、街を育てよう!</p>
+      <div class="title-deco">🏫 📚 ☕ 🚉 🌳 💐</div>
+      <div class="title-menu">
+        <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
+        <button class="btn ghosty small hidden" id="reset-btn-top">💾 データをけして最初から</button>
+        <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
+        <p class="save-note">英検4級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい・さくぶん」をバランスよく練習できるよ。<br>進み具合は自動で保存されるよ(このブラウザの中に)</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="scr-town">
+    <div class="town-head-v2">
+      <div class="nameplate-main"><span style="font-size:22px">🏙️</span><span class="nm" id="town-name-label">ちいさな村</span><button class="iconbtn" id="rename-btn" style="width:36px;height:36px;font-size:15px;border-radius:12px" title="なまえをかえる">✏️</button></div>
+      <div class="rank-chip"><span id="rank-emoji">🏘️</span><span id="rank-name">ちいさな村</span></div>
+      <span class="spacer"></span>
+      <div style="font-size:13px;color:var(--ink-soft);font-weight:700" id="town-stats"></div>
+    </div>
+    <div id="scene-wrap">
+      <div class="scene-hint" id="scene-hint">🖱️ ドラッグ=まわす・ホイール/ピンチ=ズーム・建物タップ=クイズ</div>
+      <div class="view-btns"><button class="tiny-icon" id="pan-toggle" title="いどう/かいてん">🖐️</button><button class="tiny-icon" id="cam-reset" title="視点をもどす">🎯</button></div>
+      <button class="btn sunny small build-fab" id="build-open">🏗️ こうじする</button>
+      <div id="scene-canvas-host"></div>
+      <div id="scene-fallback" class="hidden"><div class="fb-grid" id="fb-grid"></div></div>
+    </div>
+    <div class="stat-row" id="stat-row"></div>
+  </section>
+
+  <section class="screen" id="scr-quiz">
+    <div class="quiz-top">
+      <span class="q-building" id="q-building">📚 図書館</span>
+      <div class="dots" id="q-dots"></div>
+      <span class="streak hidden" id="q-streak"></span>
+    </div>
+    <div class="panel qcard" id="q-card"></div>
+    <div id="q-answer-zone"></div>
+  </section>
+
+  <section class="screen" id="scr-result">
+    <div class="result-wrap panel" style="margin-top:16px">
+      <h2 class="result-title" id="res-title">おつかれさま!</h2>
+      <div class="stars-big" id="res-stars"></div>
+      <div><span class="coin-gain">💰 +<span id="res-coins">0</span> コインゲット!</span></div>
+      <div class="res-detail" id="res-detail"></div>
+      <div class="progress-wrap hidden" id="res-progress-wrap">
+        <div class="progress-label"><span id="res-progress-label"></span><span id="res-progress-num"></span></div>
+        <div class="progress-bar"><div class="progress-fill" id="res-progress-fill" style="width:0%"></div></div>
+      </div>
+      <div class="levelup-banner hidden" id="levelup-banner">
+        <div class="lu-t">🎉 レベルアップできそう!!</div>
+        <div class="lu-s" id="levelup-text">まちにもどって建物をタップしてレベルアップしよう!</div>
+      </div>
+      <div class="close-row" style="margin-top:24px">
+        <button class="btn pinky big" id="res-town-btn">🏠 まちへもどる</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal-root" id="modal-root"><div class="modal" id="modal"></div></div>
+  <div class="toast-root" id="toast-root"></div>
+
+</div>
+<script>
+const QUESTIONS = {
+library:[
+{d:1,q:"My mother ___ dinner for us every evening.",c:["cooks","cook","cooked","cooking"],a:0,e:"「毎晩」の話で、主語が My mother(三人称単数)なので動詞に s をつけて cooks。「母は毎晩夕食を作ってくれる」。"},
+{d:1,q:"I ___ to school by bus every day.",c:["go","goes","going","went"],a:0,e:"主語が I のとき一般動詞は原形のまま。「毎日バスで学校へ行く」。"},
+{d:1,q:"She ___ TV last night.",c:["watched","watch","watches","watching"],a:0,e:"last night(ゆうべ)は過去を表す言葉なので過去形 watched を使う。"},
+{d:1,q:"There ___ two cats in the garden.",c:["are","is","was","be"],a:0,e:"two cats と複数なので There are。is は単数のときに使う。"},
+{d:1,q:"Look! The children ___ soccer in the park.",c:["are playing","play","plays","played"],a:0,e:"Look!(見て!)といっているときは、今まさにしていること=現在進行形 are playing。"},
+{d:1,q:"Did you ___ your hands before lunch?",c:["wash","washed","washes","washing"],a:0,e:"Did を使った疑問文では動詞は原形にもどす(Did you wash ...?)。"},
+{d:1,q:"Ken can ___ very fast.",c:["run","runs","ran","running"],a:0,e:"can(〜できる)のあとは動詞の原形を置く。"},
+{d:1,q:"This book is ___ than that one.",c:["more interesting","interesting","most interesting","interestinger"],a:0,e:"than(〜より)でくらべているので比較級。長い単語の比較級は more をつける。"},
+{d:1,q:"Mt. Fuji is ___ mountain in Japan.",c:["the highest","high","higher","highest"],a:0,e:"「日本でいちばん高い」のように一番を表すのは最上級 the highest。"},
+{d:1,q:"How ___ water do you drink every day?",c:["much","many","old","long"],a:0,e:"water(水)は数えられない名詞なので How much。数えられるものは How many。"},
+{d:1,q:"We have no bread. Let's go ___.",c:["shopping","shop","shopped","shops"],a:0,e:"「買い物に行く」は go shopping とセットで覚える。"},
+{d:1,q:"My birthday is ___ October.",c:["in","on","at","of"],a:0,e:"月や年には in(10月に=in October)。日付には on、時刻には at。"},
+{d:1,q:"Please turn ___ the light. It's dark here.",c:["on","off","in","up"],a:0,e:"暗いから電気をつける=turn on。消すは turn off。"},
+{d:1,q:"A: ___ is that bag? B: It's 2,000 yen.",c:["How much","How many","How old","How long"],a:0,e:"値段を聞くときは How much(いくら)。"},
+{d:1,q:"Winter is my favorite ___ of the year.",c:["season","month","day","week"],a:0,e:"一年の中で好きなのは season(季節)。month=月、week=週。"},
+{d:1,q:"He plays tennis ___ weekends.",c:["on","in","at","for"],a:0,e:"on weekends(週末に)。曜日や特定の日には on を使う。"},
+{d:2,q:"She is good ___ playing the violin.",c:["at","in","for","of"],a:0,e:"「〜が得意」は be good at 〜ing とセット。"},
+{d:2,q:"Thank you ___ helping me with my homework.",c:["for","to","of","with"],a:0,e:"「〜してくれてありがとう」= Thank you for 〜ing。"},
+{d:2,q:"I'm looking ___ my cat. She's lost!",c:["for","at","after","up"],a:0,e:"「探している」= look for。look at はただ「見る」。"},
+{d:2,q:"If it rains tomorrow, we ___ stay home.",c:["will","did","are","be"],a:0,e:"if(もし〜なら)の文で未来のことは will を使って表す。"},
+{d:2,q:"You look tired. You ___ go to bed early tonight.",c:["should","must not","can't","would not"],a:0,e:"アドバイスには should(〜したほうがいい)。"},
+{d:2,q:"I enjoy ___ music in my room.",c:["listening to","listen to","to listening","listened"],a:0,e:"enjoy のあとは動名詞(-ing)。聴くは listen TO music なので to も忘れずに。"},
+{d:2,q:"A: Whose bag is this? B: It's ___.",c:["mine","my","me","I"],a:0,e:"「私のもの」は所有代名詞 mine。my はあとに名詞(my bag)が必要。"},
+{d:2,q:"How ___ is it from here to the station?",c:["far","long","much","many"],a:0,e:"距離を聞くのは How far。時間の長さなら How long。"},
+{d:2,q:"I have lived in Kyoto ___ ten years.",c:["for","since","from","during"],a:0,e:"ten years のように期間を表すのは for。since は起点(2015年など)。"},
+{d:2,q:"She enjoys playing the piano ___ her free time.",c:["in","on","at","to"],a:0,e:"ひまな時間=free time には in を使うのがふつう。"},
+{d:2,q:"I was late ___ the heavy rain this morning.",c:["because of","because","so","if"],a:0,e:"because of のあとは名詞。because のあとは主語+動詞の文。"},
+{d:2,q:"You ___ eat more vegetables. They are good for you.",c:["should","shouldn't","can't","won't"],a:0,e:"野菜は体にいいので should(食べたほうがいい)。shouldn't は反対の意味。"},
+{d:2,q:"A: ___ do you play tennis? B: Twice a week.",c:["How often","How many","How much","How long"],a:0,e:"Twice a week(週2回)は回数=頻度なので How often。"},
+{d:2,q:"My dream is ___ a doctor.",c:["to become","become","became","becomes"],a:0,e:"「医者になること」は to 不定詞の名詞的用法 to become。"},
+{d:3,q:"The movie was so ___ that I cried at the end.",c:["sad","happy","funny","exciting"],a:0,e:"最後に泣いたのだから sad(かなしい)。文全体の意味から正しい形容詞を選ぼう。"},
+{d:3,q:"If it ___ tomorrow, the game will be canceled.",c:["rains","will rain","rained","rain"],a:0,e:"if 節の中では未来のことでも現在形 rains を使うのがルール。"},
+{d:3,q:"I don't know ___ to swim yet.",c:["how","what","where","who"],a:0,e:"「泳ぎ方」= how to swim。how to do で「〜のしかた」。"},
+{d:3,q:"My mother asked me ___ the dishes.",c:["to wash","wash","washing","washed"],a:0,e:"ask 人 to do=人に〜するよう頼む。目的語のあとは to 不定詞。"},
+{d:3,q:"You must ___ quiet in the library.",c:["be","is","are","being"],a:0,e:"must のあとは動詞の原形。quiet は形容詞なので be を使う。"},
+{d:3,q:"Neither answer ___ right.",c:["is","are","were","be"],a:0,e:"neither(どちらも〜ない)は単数扱い。「どちらの答えも正しくない」。"},
+{d:3,q:"She is looking forward to ___ you again.",c:["seeing","see","saw","be seeing"],a:0,e:"look forward to + 動名詞。「また会えるのを楽しみにしている」。to があっても -ing!"},
+{d:3,q:"It's getting dark. Let's ___ home.",c:["go","to go","going","went"],a:0,e:"Let's(〜しよう)のあとは動詞の原形 go。"},
+{d:3,q:"A: Must I bring my dictionary? B: No, you ___.",c:["don't have to","mustn't","can't","shouldn't"],a:0,e:"Must I 〜? の否定の答えは don't have to(持ってこなくていい)。mustn't は「〜してはいけない」なので注意!"},
+{d:3,q:"Ken is ___ honest boy.",c:["an","a","the","one"],a:0,e:"honest の h は発音しないので音では母音ではじまる言葉。「アン オネスト ボーイ」だから an。"}
+],
+school:[
+{d:1,q:"My brother ___ soccer after school every day.",c:["plays","play","playing","played"],a:0,e:"三人称単数(My brother)+習慣(every day)=三単現の s。"},
+{d:1,q:"They ___ at the library yesterday afternoon.",c:["were","was","are","is"],a:0,e:"They に対する be 動詞の過去形は were。"},
+{d:1,q:"What ___ you doing now?",c:["are","is","do","did"],a:0,e:"進行形は be + -ing。you には are。「今なにしてるの?」"},
+{d:1,q:"I'm going to ___ my grandmother this weekend.",c:["visit","visited","visits","visiting"],a:0,e:"be going to + 動詞の原形で「〜するつもり」。"},
+{d:1,q:"My sister ___ swim when she was three years old.",c:["could","can","may","must"],a:0,e:"3歳のとき(過去)にできていた=can の過去形 could。"},
+{d:1,q:"___ does your school start?",c:["What time","How much","How many","Which"],a:0,e:"時刻を聞く疑問詞は What time。"},
+{d:1,q:"___ quiet, please. The class is starting.",c:["Be","Is","Are","Being"],a:0,e:"命令文は動詞の原形ではじめる。quiet は形容詞なので Be quiet!(静かに!)" },
+{d:1,q:"___ there a big station near your old house?",c:["Was","Were","Is","Are"],a:0,e:"old house(昔の家)=過去の話。a station は単数なので Was there。"},
+{d:1,q:"This present is for Ken. Please give it to ___.",c:["him","he","his","she"],a:0,e:"前置詞 to のあとは目的格 him。"},
+{d:1,q:"I bought a ___ bag yesterday.",c:["beautiful","beautifully","beauty","most beautiful"],a:0,e:"名詞 bag を説明するのは形容詞 beautiful。beautifully は動詞を修飾する副詞。"},
+{d:1,q:"She sings very ___. Everyone likes her songs.",c:["well","good","nice","fine"],a:0,e:"動詞 sings を修飾するのは副詞 well(good の副詞形)。"},
+{d:1,q:"How ___ students are there in your class?",c:["many","much","long","often"],a:0,e:"students は数えられる名詞なので How many。"},
+{d:1,q:"I like dogs, ___ I don't like cats.",c:["but","and","or","so"],a:0,e:"好き/きらいで対比になっているので but(でも)。"},
+{d:1,q:"She ___ a letter to her friend last week.",c:["wrote","write","written","writes"],a:0,e:"write の過去形は wrote。last week で過去。"},
+{d:2,q:"I went to the station ___ my friend.",c:["to meet","meeting","met","meet"],a:0,e:"「会うために」目的の to 不定詞。"},
+{d:2,q:"___ color do you like better, red or blue?",c:["Which","What","Who","Whose"],a:0,e:"2つの選択肢から選ばせる疑問詞は Which(どちら)。"},
+{d:2,q:"The ___ tail is very long.",c:["cat's","cat","cats","of cat"],a:0,e:"「猫のしっぽ」は所有格 cat's tail。"},
+{d:2,q:"Ken is two years ___ than his sister.",c:["older","oldest","more old","old"],a:0,e:"「数 + 比較級 + than」で「〜歳ぶん年上」。"},
+{d:2,q:"Tom is as ___ as his father.",c:["tall","taller","tallest","more tall"],a:0,e:"as 原形 as で「同じくらい」。as tall as=父と同じくらいの身長。"},
+{d:2,q:"You ___ play soccer in the street. It's dangerous.",c:["must not","don't have to","may","will"],a:0,e:"禁止は must not(〜してはいけない)。don't have to は「必要がない」。"},
+{d:2,q:"I stayed home ___ I had a bad cold.",c:["because","but","or","though"],a:0,e:"風邪だった→家にいた。理由を表す because。"},
+{d:2,q:"My hobby is ___ video games.",c:["playing","play","plays","played"],a:0,e:"be 動詞のあとで「〜すること」は動名詞(-ing)。"},
+{d:2,q:"___ a nice day it is today!",c:["What","How","Which","Who"],a:0,e:"感嘆文 What a + 形容詞 + 名詞!(なんて良い天気!)How nice it is! とも言える。"},
+{d:2,q:"___ your brother like pizza?",c:["Does","Do","Is","Did"],a:0,e:"your brother は三人称単数。Does ではじめたら動詞は原形 like へ。"},
+{d:2,q:"My birthday is ___ March 3rd.",c:["on","in","at","by"],a:0,e:"日付があるときは on。月だけなら in March。"},
+{d:2,q:"I have two pens. One is blue, and ___ is black.",c:["the other","other","another","others"],a:0,e:"2つのうち残りの1つ=the other。"},
+{d:2,q:"There ___ a new shopping mall here next year.",c:["will be","was","were","are"],a:0,e:"next year は未来。There is の未来形は There will be。"},
+{d:2,q:"She ___ goes jogging after dinner.",c:["usually","usual","useful","use"],a:0,e:"「たいてい」の頻度を表す usually は副詞。usual は形容詞。"},
+{d:3,q:"I ___ dinner when the phone rang.",c:["was cooking","cooked","am cooking","cook"],a:0,e:"電話が鳴った「そのとき料理をしていた」=過去進行形 was cooking。"},
+{d:3,q:"If you study harder, you ___ pass the test.",c:["will","would","did","are"],a:0,e:"if 節は現在形、もう一方の文に will。「勉強すれば合格するでしょう」。"},
+{d:3,q:"She asked me ___ her with her homework.",c:["to help","helping","help","helped"],a:0,e:"ask 人 to do=人に〜するようたのむ。"},
+{d:3,q:"The days are getting ___ in spring.",c:["longer and longer","long and long","more long","longest"],a:0,e:"比較級 and 比較級=「ますます」。「日がだんだん長くなる」。"},
+{d:3,q:"Lake Biwa is the largest lake ___ Japan.",c:["in","of","on","between"],a:0,e:"最上級で範囲が場所なら in。of はグループ(the largest of all)。"},
+{d:3,q:"___ were you doing at eight last night?",c:["What","Where","Who","When"],a:0,e:"過去進行形と組み合わせ「昨夜8時に何をしていましたか」。"},
+{d:3,q:"Wait here ___ I come back.",c:["until","because","if","so"],a:0,e:"until(〜までずっと)。「戻ってくるまで待っていて」。"},
+{d:3,q:"After ___ dinner, I take a short walk.",c:["eating","eat","ate","eaten"],a:0,e:"After が前置詞のときは動名詞(-ing)がくる。"},
+{d:3,q:"Look! There are ten ___ in the field.",c:["sheep","sheeps","sheep's","a sheep"],a:0,e:"sheep(羊)は単数も複数も同じ形。sheeps はない!"},
+{d:3,q:"___ is ready for the party. Let's start!",c:["Everything","All things is","Everyone","Every things"],a:0,e:"「すべて」= Everything は必ず単数扱い(Everything is)。Everyone は人にだけ使う。"},
+{d:3,q:"Ken is ___ in his class.",c:["the tallest","taller","the taller","most tall"],a:0,e:"クラスで一番なら最上級 the tallest。比較級は2者を比べるとき。"},
+{d:3,q:"___ did you stay in Kyoto last month?",c:["How long","How often","How far","How soon"],a:0,e:"「どのくらいの期間」は How long。How often は頻度、How far は距離。"}
+],
+cafe:[
+{d:1,q:"A: Thank you for your help.\nB: ___",c:["You're welcome.","Here you are.","Yes, please.","No, thank you."],a:0,e:"「手伝ってくれてありがとう」には You're welcome.(どういたしまして)。Here you are. はものを渡すときの言葉。"},
+{d:1,q:"A: How are you today?\nB: ___",c:["I'm fine, thank you.","I'm thirteen years old.","Yes, I am.","It's sunny today."],a:0,e:"調子を聞かれているので I'm fine.(元気だよ)と答える。"},
+{d:1,q:"A: See you tomorrow!\nB: ___",c:["See you!","Me too.","Good night.","You're welcome."],a:0,e:"別れのあいさつは See you!(またね!)"},
+{d:1,q:"A: I'm sorry I'm late.\nB: ___",c:["That's OK.","Of course.","Good idea.","Nice to meet you."],a:0,e:"謝られたら That's OK.(大丈夫だよ)と返すのが自然。"},
+{d:1,q:"A: Let's play badminton after school.\nB: ___",c:["Sounds great!","I'm fine.","See you tomorrow.","You're right."],a:0,e:"誘いに乗るときは Sounds great!(いいね!)Let's の誘いには賛成の返事を。"},
+{d:1,q:"A: What day is it today?\nB: ___",c:["It's Monday.","It's nine o'clock.","It's May 5th.","It's rainy."],a:0,e:"曜日を聞かれている。It's Monday.(月曜日)。時刻・日付・天気ではない。"},
+{d:1,q:"A: Do you like ice cream?\nB: ___",c:["Yes, I love it.","Yes, I am.","Yes, it is.","No, I can't."],a:0,e:"Do you like 〜? への答えは Yes, I do./Yes, I love it. I am は be 動詞の質問への返事。"},
+{d:1,q:"A: Where are you from?\nB: ___",c:["I'm from Australia.","I'm twelve years old.","I'm fine.","I'm a student."],a:0,e:"出身地を聞かれているので国や町の名前で答える。"},
+{d:1,q:"A: What time is it now?\nB: ___",c:["It's half past three.","It's Monday.","It's March.","It's cold."],a:0,e:"時刻は It's + 時刻。half past three=3時30分。"},
+{d:1,q:"A: Hello, this is Yumi.\nB: Hi, Yumi. ___",c:["How are you?","Who are you?","Where is it?","What is that?"],a:0,e:"あいさつがすんだら How are you? で調子を聞くと会話がつづく。"},
+{d:1,q:"A: Can I use your eraser?\nB: Sure. ___",c:["Here you are.","Thank you.","You're welcome.","Excuse me."],a:0,e:"Sure.(もちろん)といってものを渡すときは Here you are.(はい、どうぞ)。"},
+{d:1,q:"A: Good morning, everyone!\nB: ___",c:["Good morning, Ms. Sato!","Good night, Ms. Sato!","Good bye, Ms. Sato!","Take care, Ms. Sato!"],a:0,e:"朝のあいさつは Good morning. 先生などには Ms. などの呼びかけをつけると丁寧。"},
+{d:2,q:"A: Could you pass the salt, please?\nB: ___",c:["Sure, here you are.","Yes, it is.","No, thanks.","I'd love to."],a:0,e:"Could you 〜? は丁寧なお願い。引き受けるときは Sure, here you are."},
+{d:2,q:"A: I passed the English exam!\nB: ___",c:["Congratulations!","I'm sorry to hear that.","Good luck!","Take care."],a:0,e:"よい知らせには Congratulations!(おめでとう!)Good luck! はこれからがんばる人にかける言葉。"},
+{d:2,q:"A: Would you like something to drink?\nB: ___",c:["Orange juice, please.","I like orange juice.","Orange juice is sweet.","I drank juice yesterday."],a:0,e:"Would you like 〜? は勧めの言葉。ほしいときは Orange juice, please. と注文のかたちで答える。"},
+{d:2,q:"A: How about going to the movies tonight?\nB: ___",c:["I'd love to!","I saw it last week.","It's five hundred yen.","By bus, please."],a:0,e:"How about 〜?(〜はどう?)への乗り気な返事は I'd love to.(ぜひ!)"},
+{d:2,q:"A: What's the matter? You look pale.\nB: ___",c:["I feel sick.","I got a present.","It's my birthday.","I won the game."],a:0,e:"顔色が悪そうと言われた理由は I feel sick.(気分が悪い)。"},
+{d:2,q:"A: Can I help you?\nB: ___",c:["Yes. I'm looking for a gift.","No problem.","Help yourself.","You're welcome."],a:0,e:"店員さんの Can I help you? には探しているものを伝える。Help yourself. は「ご自由にどうぞ」。"},
+{d:2,q:"A: What do you do in your free time?\nB: ___",c:["I play the guitar and read books.","At seven o'clock.","By myself.","Once a week."],a:0,e:"自由時間にすることを聞かれているので、習慣のことを一般動詞で答える。"},
+{d:2,q:"A: Is it OK if I open the window?\nB: ___",c:["Sure, go ahead.","Yes, I am.","Thanks a lot.","I'm opening now."],a:0,e:"許可をたずねられたら Sure, go ahead.(どうぞやって)と返す。"},
+{d:2,q:"A: I'm so hungry!\nB: ___",c:["Let's get something to eat.","Let's do our homework.","Let's clean the room.","Let's call the police."],a:0,e:"おなかがすいたら Let's get something to eat.(何か食べに行こう)"},
+{d:2,q:"A: Thanks for walking my dog.\nB: ___",c:["Anytime!","I'm afraid so.","So am I.","Well done."],a:0,e:"Anytime!(いつでもいいよ)は感謝へのカジュアルな返事。"},
+{d:2,q:"A: What's your favorite subject?\nB: ___",c:["Art. I love drawing.","Mr. Tanaka. He is kind.","Monday and Thursday.","In the art room."],a:0,e:"favorite subject は教科のこと。先生や曜日、場所ではない。"},
+{d:2,q:"A: Sorry, what did you say?\nB: ___",c:["I said let's meet at noon.","You're welcome.","That's right.","Here we are."],a:0,e:"聞き返されたら言った内容をもう一度くり返す。"},
+{d:3,q:"A: Excuse me, how can I get to the museum?\nB: ___",c:["Go straight and turn left at the second corner.","You should visit there once.","It costs eight dollars.","The museum is very old."],a:0,e:"道案内は Go straight(まっすぐ行く)/turn left(左に曲がる)などの表現で説明する。"},
+{d:3,q:"A: Could you say that again more slowly?\nB: ___",c:["Of course. The meeting starts at six.","The room is on the second floor.","My name is Ken.","It's Tuesday today."],a:0,e:"「もう一度ゆっくり」たのまれたら承知して、言った内容をゆっくりくり返す。"},
+{d:3,q:"A: What do you think of this T-shirt?\nB: ___",c:["It looks great on you!","Yes, it is a T-shirt.","I'm wearing shoes.","The shop closes at eight."],a:0,e:"意見を聞かれたら It looks ...(ように見える)で感想を伝える。"},
+{d:3,q:"A: I'm afraid I can't come to your party.\nB: ___",c:["That's too bad. Maybe next time!","Congratulations!","You're welcome!","Sounds wonderful!"],a:0,e:"断られたら残念がりつつ次のチャンスをさそう。I'm afraid はやんわり断るときの言葉。"},
+{d:3,q:"A: Do you mind if I sit here?\nB: ___",c:["Of course not. Go ahead.","Yes, I am.","No, thank you.","Yes, it is."],a:0,e:"mind(気にする)を使った許可の質問には Of course not.(全然気にしないよ)。Yes だと嫌な意味になるので注意!"},
+{d:3,q:"A: How was your trip to Kyoto?\nB: ___",c:["It was wonderful. I want to go again.","It takes two hours by train.","Maybe next spring.","With my classmates."],a:0,e:"How was 〜? には体験の評価(It was wonderful.)で答える。時間や時期は別の質問への返事。"},
+{d:3,q:"A: You speak English very well!\nB: ___",c:["Thank you. I study every day.","Yes, you speak English well.","My name is Ken.","It's my dictionary."],a:0,e:"英語圏ではほめられたら Thank you と素直にうけとるのがマナー。"},
+{d:3,q:"A: Would you mind waiting a minute?\nB: ___",c:["No, not at all.","Yes, I am.","No, thank you.","Yes, it does."],a:0,e:"Would you mind 〜? は丁寧なお願い。OK の返事は No, not at all.(全然構わない)!"},
+{d:3,q:"A: What time shall we meet tomorrow?\nB: ___",c:["How about at ten?","It's ten o'clock now.","I met him at ten.","We walked ten minutes."],a:0,e:"集合時刻を決めるときは How about 〜?(〜はどう?)を使うと自然。"},
+{d:3,q:"A: I heard you broke your leg. How are you feeling?\nB: ___",c:["Much better, thank you.","The game starts at three.","My favorite color is blue.","Turn left at the bank."],a:0,e:"体調を聞かれたら Much better.(だいぶ良くなった)など自分の状態で答える。"},
+{d:3,q:"A: May I take your order?\nB: ___",c:["Yes. I'll have a cheeseburger, please.","The waiter is very kind.","This table is small.","Lunch begins at eleven."],a:0,e:"May I take your order?(ご注文はお決まりですか)には I'll have 〜.(〜をください)で注文する。"},
+{d:3,q:"A: I'm moving to Osaka next month.\nB: ___",c:["Really? I'll miss you!","Osaka Castle is beautiful.","I visited Osaka once.","It's south of Tokyo."],a:0,e:"引っ越しの報告には Really? I'll miss you.(寂しくなるなあ)のような気持ちをそえるのが自然。"}
+],
+station:[
+{d:1,jp:"私は毎朝7時に起きます。",words:["I","get","up","at","seven","every morning"],e:"起きる=get up。時刻の前に at を置く(I get up at seven)。"},
+{d:1,jp:"彼女は水泳が得意です。",words:["She","is","good","at","swimming"],e:"得意=be good at。at のあとは動名詞(-ing)。"},
+{d:1,jp:"あなたはどこに住んでいますか。",words:["Where","do","you","live"],e:"場所の疑問詞 Where + do + 主語 + 動詞の順。"},
+{d:1,jp:"これは私の本です。",words:["This","is","my","book"],e:"This is + 名詞で「これは〜です」。my=私の。"},
+{d:1,jp:"彼は昨日サッカーをしました。",words:["He","played","soccer","yesterday"],e:"yesterday(昨日)があるので過去形 played。"},
+{d:1,jp:"机の上に本が2冊あります。",words:["There","are","two","books","on","the","desk"],e:"There are + 数 + 名詞 + 場所(on the desk)の順番。"},
+{d:1,jp:"私は犬が好きです。",words:["I","like","dogs"],e:"主語+動詞+目的語の基本の語順。好きなものが複数なら dogs。"},
+{d:1,jp:"彼女は毎朝牛乳を飲みます。",words:["She","drinks","milk","every morning"],e:"三人称単数(She)なので drinks に s がつく。"},
+{d:1,jp:"窓を閉めてください。",words:["Please","close","the","window"],e:"命令文は動詞の原形ではじめる。Please をつけるとていねい。"},
+{d:1,jp:"彼はとても背が高いです。",words:["He","is","very","tall"],e:"「背が高い」は He is tall. very で「とても」をくわえる。"},
+{d:1,jp:"私はバスで学校へ行きます。",words:["I","go","to","school","by","bus"],e:"交通手段は by bus / by car。「〜へ行く」は go to 〜。"},
+{d:2,jp:"私の夢は医者になることです。",words:["My","dream","is","to","become","a","doctor"],e:"「〜すること」=to 不定詞。a doctor の a も忘れずに。"},
+{d:2,jp:"彼女は歌うことが好きです。",words:["She","likes","to","sing"],e:"like to do / like doing どちらもOK。ここでは to sing。"},
+{d:2,jp:"あなたはいつ英語を勉強しますか。",words:["When","do","you","study","English"],e:"疑問詞 When を最初に。あとはふつうの疑問文と同じ語順。"},
+{d:2,jp:"その映画はとてもおもしろかったです。",words:["The","movie","was","very","interesting"],e:"be 動詞 + 形容詞。interesting は物事が「おもしろい」。"},
+{d:2,jp:"私はテニスをするのを楽しんでいます。",words:["I","enjoy","playing","tennis"],e:"enjoy のあとは動名詞(-ing)。"},
+{d:2,jp:"そこまで歩いて10分かかります。",words:["It","takes","ten","minutes","to","walk","there"],e:"It takes + 時間 + to do(〜するのに時間がかかる)。"},
+{d:2,jp:"彼は背が高くて親切です。",words:["He","is","tall","and","kind"],e:"形容詞をつなぐ and。tall and kind の順が自然。"},
+{d:2,jp:"どうやってその店に行きますか。",words:["How","do","I","get","to","the","store"],e:"道順を聞く How do I get to 〜?(〜へはどうやって行くの?)" },
+{d:2,jp:"私たちの先生はとても親切です。",words:["Our","teacher","is","very","kind"],e:"Our(私たちの)+ 名詞。kind=親切な。"},
+{d:2,jp:"彼女は今、昼ごはんを食べています。",words:["She","is","eating","lunch","now"],e:"今していること=現在進行形 is eating。now は文のおわりへ。"},
+{d:2,jp:"週末に何をしましたか。",words:["What","did","you","do","last","weekend"],e:"過去の疑問文は did + 主語 + 動詞の原形。"},
+{d:2,jp:"このかばんは私のです。",words:["This","bag","is","mine"],e:"「私のもの」は所有代名詞 mine(my bag = mine)。"},
+{d:3,jp:"その知らせを聞いて、私はうれしかった。",words:["I","was","glad","to","hear","the","news"],e:"感情の言葉 + to 不定詞(be glad to do=できてうれしい)。"},
+{d:3,jp:"雨がふっていたので、私は家にいました。",words:["I","stayed","home","because","it","was","raining"],e:"because のあとに理由の文。ふっていた=過去進行形 was raining。"},
+{d:3,jp:"彼は私にその本を読むように言いました。",words:["He","told","me","to","read","the","book"],e:"tell 人 to do(人に〜するよう言う)。"},
+{d:3,jp:"その山は日本でいちばん高い山です。",words:["That","mountain","is","the","highest","in","Japan"],e:"範囲が日本=in Japan。最上級 the highest。"},
+{d:3,jp:"自転車を見せてもらえますか。",words:["Could","you","show","me","your","bike"],e:"Could you show me 〜?(見せてくれますか)show 人 もの。"},
+{d:3,jp:"私は毎日練習しなければなりません。",words:["I","must","practice","every","day"],e:"must + 動詞の原形(〜しなければならない)。"},
+{d:3,jp:"その公園は思っていたよりも広いです。",words:["The","park","is","bigger","than","I","expected"],e:"比較級 + than I expected(思っていたより)。"},
+{d:3,jp:"宿題を終えたら遊びましょう。",words:["Let's","play","after","you","finish","your","homework"],e:"after + 主語 + 動詞で「〜したあとに」。"},
+{d:3,jp:"何か熱い飲み物がほしいです。",words:["I","want","something","hot","to","drink"],e:"something + 形容詞 + to do。形容詞は後ろに置くのがルール!"},
+{d:3,jp:"彼はクラスでいちばん背が高い。",words:["He","is","the","tallest","in","his","class"],e:"範囲がクラス=in his class。最上級 the tallest。"}
+],
+park:[
+{d:1,t:'pic',say:"Ken plays soccer every Sunday.",s:["👦⚽","👦⚾","👦🏀","👦🎾"],a:0,e:"音声の内容「ケンは毎週日曜日にサッカーをします」。soccer=サッカー⚽"},
+{d:1,t:'pic',say:"Mary is watering the flowers.",s:["🌸💧","🌸✂️","🌸👃","🌸🎁"],a:0,e:"watering the flowers=花に水をあげている。water は動詞でも使える!"},
+{d:1,t:'pic',say:"My father is driving a car.",s:["👨🚗","👨🚲","👨🏊","👨🍳"],a:0,e:"driving a car=車を運転している。drive は運転する。"},
+{d:1,t:'pic',say:"There are two apples on the table.",s:["🍎🍎🪑","🍌🍌🪑","🍇🍇🪑","🍓🍓🪑"],a:0,e:"two apples=りんご2つ。apples が複数なので There ARE。"},
+{d:1,t:'pic',say:"Emily is wearing a crown.",s:["👧👑","👧🎩","👧🧣","👧👒"],a:0,e:"wearing a crown=王冠をかぶっている。crown=王冠、hat=帽子。"},
+{d:1,t:'pic',say:"The bird is flying in the sky.",s:["🐦☁️","🐧❄️","🐔🏠","🦆💧"],a:0,e:"flying in the sky=空を飛んでいる。fly は飛ぶ。"},
+{d:1,t:'pic',say:"Jack is brushing his teeth.",s:["🪥👦","🧼🛁👦","👕👔👦","🛏️😴👦"],a:0,e:"brushing his teeth=歯をみがいている。brush=みがく、teeth=tooth(歯)の複数形。"},
+{d:1,t:'pic',say:"We eat lunch at noon.",s:["🕛🍱","🌅🍳","🌙🍛","🌃🍿"],a:0,e:"noon=正午(12時)。lunch は昼ごはん。"},
+{d:1,t:'pic',say:"Lisa is talking on the phone.",s:["📞👧","📺👧","🎧👧","📖👧"],a:0,e:"talking on the phone=電話で話している。"},
+{d:1,t:'pic',say:"The bus stops near the bank.",s:["🚌🏦","🚗🏪","✈️🏖️","🚲⛲"],a:0,e:"bank=銀行。bus stops near the bank=バスが銀行の近くにとまる。"},
+{d:1,t:'pic',say:"Tom is sleeping on the sofa.",s:["😴🛋️","🍚🍴","⚽🏃","📚✏️"],a:0,e:"sleeping on the sofa=ソファでねている。sofa=ソファ。"},
+{d:2,t:'qa',say:"Hi, Emma! Where are you going? I'm going to the library to return some books.",q:"Where is Emma going?",s:["To the library.","To the bookstore.","To her school.","To the park."],a:0,e:"return some books=本を返すために library(図書館)へ行きます。"},
+{d:2,t:'qa',say:"Wow, what a big dog! Is it yours? Yes, my uncle gave him to me last month.",q:"Who gave the dog to the boy?",s:["His uncle.","His friend.","His teacher.","His grandmother."],a:0,e:"my uncle gave him to me=おじさんが犬をくれた、と言っています。"},
+{d:2,t:'qa',say:"Do you want to play tennis this afternoon? I'd love to, but I have to practice the piano.",q:"What will the girl do this afternoon?",s:["Practice the piano.","Play tennis.","Watch a game.","Clean her room."],a:0,e:"I'd love to, but ...=行きたいけど、と断って piano の練習をしなければならないと言っています。"},
+{d:2,t:'qa',say:"Excuse me, when does the museum open? At nine, but today it opens at ten because it's Monday.",q:"What time does the museum open today?",s:["At ten.","At nine.","At eleven.","At noon."],a:0,e:"ふだんは9時だけど、今日は月曜日なので10時開き(today it opens at ten)。"},
+{d:2,t:'qa',say:"Mom, can I have some ice cream? Sure, but finish your vegetables first.",q:"What must the boy do first?",s:["Eat his vegetables.","Eat ice cream.","Wash his hands.","Set the table."],a:0,e:"finish your vegetables first=まず野菜を食べなさい、と言われています。"},
+{d:2,t:'qa',say:"Your new bike looks cool! Thanks. I ride it to school every day now.",q:"How does the boy go to school?",s:["By bike.","By bus.","On foot.","By train."],a:0,e:"ride it to school every day=毎日自転車で学校へ行っています。"},
+{d:2,t:'qa',say:"Are you good at swimming, Kate? Not really, but I enjoy it very much.",q:"What does Kate say about swimming?",s:["She enjoys it but isn't good at it.","She is very good at it.","She doesn't like it at all.","She never swims."],a:0,e:"Not really, but I enjoy it very much.=あまり得意じゃないけど大好き、という意味。"},
+{d:2,t:'qa',say:"Let's make a cake for Dad's birthday. Great idea! I'll buy some strawberries.",q:"What will they make?",s:["A cake.","Cookies.","Pizza.","Salad."],a:0,e:"make a cake for Dad's birthday=お父さんの誕生日にケーキを作る、ということ。"},
+{d:2,t:'qa',say:"Why were you late for school? I missed the bus, and I had to walk.",q:"Why was the girl late?",s:["She missed the bus.","She woke up late.","She forgot her homework.","She was sick."],a:0,e:"missed the bus=バスに乗りおくれたので歩いた、と言っています。"},
+{d:2,t:'qa',say:"What did you do last weekend, Sam? I helped my father wash our car. Then we watched a movie together.",q:"What did Sam do last weekend?",s:["He washed the car and watched a movie.","He played video games all day.","He visited his grandparents.","He studied for a test."],a:0,e:"helped wash our car + watched a movie together の2つのことをしました。"},
+{d:2,t:'qa',say:"How many brothers and sisters do you have? I have one brother and two sisters.",q:"How many brothers and sisters does she have?",s:["Three.","Two.","One.","Four."],a:0,e:"1人のお兄さん(弟)+2人の姉(妹)=合わせて3人。"},
+{d:3,t:'qa',say:"Hello, everyone. This is your school radio club. Today we have good news. Our basketball team won the city tournament. Let's cheer for them at Friday's assembly.",q:"What is the main topic of this announcement?",s:["The basketball team's victory.","The school festival.","A new radio program.","Friday's classes."],a:0,e:"won the city tournament(市の大会で優勝した)がメインの話題。cheer for them=応援する。"},
+{d:3,t:'qa',say:"Hi, Lucy. This is Mike. I'm calling about tomorrow's picnic. Let's meet at ten instead of nine, because it will rain in the morning. See you there!",q:"What time will they meet?",s:["At ten.","At nine.","At eleven.","At noon."],a:0,e:"instead of nine(9時のかわりに)=at ten(10時に会う)に変更しています。"},
+{d:3,t:'qa',say:"Attention, shoppers. Our store will close at six o'clock today instead of eight. We're sorry for any trouble. Please visit us again tomorrow morning at nine.",q:"What time does the store usually close?",s:["At eight.","At six.","At nine.","At seven."],a:0,e:"今日は6時閉店(instead of eight=ふだんの8時のかわり)。usually close=ふだんの閉店時刻を聞いています。"},
+{d:3,t:'qa',say:"Dear students, the library will be closed this Saturday for cleaning. But don't worry. You can return your books in the box outside the door. Thank you!",q:"What should students do with their books on Saturday?",s:["Put them in the box outside.","Keep them at home until Monday.","Bring them to the office.","Return them next month."],a:0,e:"the box outside the door=ドアの外の箱に返すように言っています。"},
+{d:3,t:'qa',say:"Welcome to Green Valley Zoo! Remember, please do not feed the animals. Our animals eat special food, and other food can make them sick. Enjoy your visit!",q:"What are visitors told NOT to do?",s:["Feed the animals.","Take pictures.","Touch the goats.","Buy food."],a:0,e:"do not feed the animals=動物にえさをあげないで。feed=えさをあげる。"},
+{d:3,t:'qa',say:"Hey, Jenny! I found your science notebook in the music room. I put it in your classroom desk, so please check there. If it's not there, call me tonight.",q:"Where did the speaker find the notebook?",s:["In the music room.","In the library.","In the gym.","In the classroom."],a:0,e:"見つけたのは音楽室(music room)、置いたのが教室の机です。場所を聞かれているのに注意!"},
+{d:3,t:'qa',say:"Our class trip to the science museum has changed. We will go next Thursday, not Tuesday. Please bring your permission slips by tomorrow. Thank you.",q:"When will the class go to the museum?",s:["Next Thursday.","Next Tuesday.","Tomorrow.","Next Monday."],a:0,e:"next Thursday, not Tuesday=火曜日ではなく来週の木曜日に行きます。"},
+{d:3,t:'qa',say:"Good morning! This is today's weather forecast. It will be sunny and warm all day today. But take your umbrella tomorrow because it will rain.",q:"What will the weather be like tomorrow?",s:["Rainy.","Sunny.","Snowy.","Cloudy."],a:0,e:"明日は umbrella(かさ)が必要=rain(雨)。今日は晴れです。"},
+{d:3,t:'qa',say:"Mom, this is Amy. I'm at my friend Sarah's house, and we're studying together. Don't worry about dinner. I'll be home by seven.",q:"When will Amy be home?",s:["By seven.","By six.","By eight.","By nine."],a:0,e:"by seven=7時までには帰る、という意味。"},
+{d:3,t:'qa',say:"Boys and girls, tomorrow's swimming lesson is canceled because the pool is being cleaned. Instead, we'll watch a video about ocean animals in the classroom.",q:"What will students do tomorrow?",s:["Watch a video about ocean animals.","Swim in the pool.","Clean the pool.","Visit the ocean."],a:0,e:"プールのそうじのため水泳の授業は中止。代わりに教室でビデオを見ます。"},
+{d:3,t:'qa',say:"Thank you for calling Sunny Bakery. We're open from eight to six, Monday through Saturday. We're closed on Sundays. Our fresh bread comes out at noon every day.",q:"When is the bakery closed?",s:["On Sundays.","On Mondays.","On Saturdays.","Every day at noon."],a:0,e:"We're closed on Sundays.=日曜日はお休みです。"}
+],
+flower:[
+{d:1,en:"What is your favorite food? Why?",jp:"すきな食べ物と、その理由を書こう。",hints:["My favorite food is ...","It is (very / sweet / hot / good).","I eat it ..."],sample:"My favorite food is ramen. It is very hot and delicious. I eat it with my family on cold winter days."},
+{d:1,en:"What did you do last weekend?",jp:"しゅうまつにしたことを過去形で書こう。",hints:["Last weekend, I ...","I went to ... / I played ...","It was fun."],sample:"Last weekend, I went to the park with my friends. We played badminton and ate ice cream there. It was so much fun."},
+{d:1,en:"What is your favorite subject at school? Why?",jp:"すきな教科と理由を書こう。",hints:["My favorite subject is ...","I like ... because ...","The teacher is kind."],sample:"My favorite subject is music. I like singing songs with my friends. Music makes me happy every day."},
+{d:1,en:"Do you have a pet? What is it like?",jp:"ペットについて書こう。(いない場合はほしいペットでもOK)",hints:["Yes, I have a ... / No, but I want a ...","His/Her name is ...","He/She likes to ..."],sample:"Yes, I have a cat. Her name is Momo. She is white and very small. She sleeps on my bed every night."},
+{d:1,en:"What time do you get up on weekdays? Tell us about your morning.",jp:"平日の朝のじかん割を書こう。",hints:["I get up at ... on weekdays.","First, I ... Then, I ...","I go to school by ..."],sample:"I get up at seven on weekdays. First, I wash my face and eat breakfast. Then I go to school by bus with my brother."},
+{d:1,en:"What is your favorite season? Why?",jp:"すきな季節と理由を書こう。",hints:["My favorite season is ...","I can swim / ski / see flowers.","It is not too hot or cold."],sample:"My favorite season is summer. I like it because I can swim in the sea. I also love summer festivals with fireworks."},
+{d:1,en:"Who is your best friend? What do you do together?",jp:"だいすきな友だちといっしょにすることを書こう。",hints:["My best friend is ...","We play ... / We talk about ...","He/She always helps me."],sample:"My best friend is Yuki. We play video games and talk about comics a lot. She always helps me when I am sad."},
+{d:1,en:"What do you usually eat for breakfast?",jp:"いつも朝ごはんで食べるものを書こう。",hints:["I usually eat ...","Sometimes I eat ...","Breakfast gives me energy."],sample:"I usually eat rice, eggs, and miso soup. Sometimes I eat toast with jam on busy mornings. Breakfast gives me energy for school."},
+{d:2,en:"What do you like to do on sunny days?",jp:"晴れの日にしたいことを書こう。",hints:["On sunny days, I like to ...","I often ... with my friends.","After that, we ..." ],sample:"I like to ride my bike in the park on sunny days. After that, I often buy ice cream and talk with my friends near the station."},
+{d:2,en:"What is your favorite place in your town? Why?",jp:"自分の町のすきな場所と理由を書こう。",hints:["My favorite place is ... in my town.","It is quiet / fun / beautiful.","I go there ..." ],sample:"My favorite place is the library in my town. It is quiet, and there are many interesting books. I go there every Saturday morning."},
+{d:2,en:"Tell us about your club activity or favorite hobby.",jp:"部活や趣味について書こう。",hints:["I am in the ... club. / My hobby is ...","We practice / draw / play ...","Last month, we ..." ],sample:"I am in the art club at school. We draw pictures and paint every Tuesday after class. Last month, we showed our works at the school festival."},
+{d:2,en:"What do you want to be in the future? Why?",jp:"将来なりたいものと理由を書こう。",hints:["I want to be a ... in the future.","Because I like helping / cooking / animals.","My dream is to ..." ],sample:"I want to be a nurse because I like helping people. My aunt is a nurse, and she always looks happy at work. I want to be like her."},
+{d:2,en:"Describe one of your family members.",jp:"家族のだれかについて書こう。",hints:["My ... is ... years old.","He/She likes ...","Every night/day, we ..." ],sample:"My little brother is five years old. He likes dinosaurs very much. Every night, we read dinosaur books together before going to bed."},
+{d:2,en:"What did you do last summer vacation?",jp:"夏休みにしたことを書こう。",hints:["In summer vacation, I went to ...","We caught / swam / climbed ...","It was exciting!" ],sample:"In summer vacation, I went to my grandfather's house in Nagano. We caught fish in the river and climbed a small mountain. It was exciting."},
+{d:2,en:"Do you like rainy days? Why or why not?",jp:"雨の日がすきか、理由もいっしょに書こう。",hints:["Yes, I do. / No, I don't.","On rainy days, I stay home and ...","Because I can ..." ],sample:"Yes, I like rainy days. On rainy days, I stay home and read manga or watch movies with my family. It is very relaxing for me."},
+{d:2,en:"What is your favorite movie or TV show? Why?",jp:"すきな映画や番組と理由を書こう。",hints:["My favorite movie/show is ...","The songs/story/characters are ...","I have seen it ..." ],sample:"My favorite movie is Frozen. The songs are wonderful, and the story is very exciting. I have seen it five times with my sister."},
+{d:3,en:"Some people like team sports, and others like solo sports. Which do you prefer? Why?",jp:"団体競技と個人競技、どちらが好きか書こう。",hints:["I prefer team sports / solo sports.","When we win, I feel ...","I can share the joy with ..." ],sample:"I prefer team sports like soccer. When we win a game, I feel really happy, and I can share the joy with my teammates. It makes sports more fun."},
+{d:3,en:"Should students have more homework? What do you think?",jp:"宿題はもっと増えるべきか、意見と理由を書こう。",hints:["I don't think so. / I think so.","Students need time to ...","If we have too much homework, ..." ],sample:"I don't think students should have more homework. Students need time to play sports and enjoy hobbies. If we have too much homework, we cannot relax after school."},
+{d:3,en:"If you had one million yen, what would you do?",jp:"100万円あったら何をするか書こう。",hints:["If I had one million yen, I would ...","I want to see / buy / help ...","First, I would ... Then ..." ],sample:"If I had one million yen, I would travel around the world with my family. I want to see famous places and try many local foods in different countries."},
+{d:3,en:"Which do you like better, reading books or watching videos? Why?",jp:"本を読むことと動画を見ること、どちらが好きか理由も書こう。",hints:["I like watching videos better.","They are fun and easy to understand.","But I know reading books helps me ..." ],sample:"I like watching videos better because they are fun and easy to understand. But I know reading books helps me learn new words, so I try to read books too."},
+{d:3,en:"What is the most important thing for a happy life? Why?",jp:"幸せな生活にいちばん大切なことは何か書こう。",hints:["For me, ... is the most important thing.","They always support/help me.","I can talk to them about anything." ],sample:"For me, family is the most important thing in life. They always support me, and I can talk to them about anything. When I am sad, they make me smile again."},
+{d:3,en:"If your friend is very sad, what should you do?",jp:"友だちがかなしいとき、どうすればいいか書こう。",hints:["First, I listen to ...","Then I stay with / cheer up ...","Small gifts or jokes make them ..." ],sample:"First, I listen to my friend's story carefully. Then I stay with them, or sometimes I cheer them up with a small gift or a funny joke. Being together is important."},
+{d:3,en:"What kind of town do you want to live in the future?",jp:"将来住みたい町について書こう。",hints:["I want to live in a town with ...","People can walk safely / neighbors are friendly.","There are many parks/shops." ],sample:"I want to live in a green town with many trees and parks. People can walk safely everywhere, and neighbors are friendly to each other. It sounds wonderful."},
+{d:3,en:"Do you think robots will be good for our future? Why?",jp:"ロボットは未来に役立つと思うか、理由を書こう。",hints:["Yes, I think so. / No, I don't think so.","Robots can help doctors / old people.","But we should learn how to ..." ],sample:"Yes, I think robots will be good for our future. Robots can help doctors and take care of old people. But we should also learn how to use them well."}
+]
+
+};
+const $=s=>document.querySelector(s);
+const SAVE_KEY='eikenTownSave_v1';
+const TH=[0,6,16];
+const UP_COST=[0,40,100];
+const GRID=7,TILE=3.2,PITCH=3.36;
+const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','こはる村','スターヒルズ','にじがわ町','あおぞらシティ'];
+const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
+const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
+const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん'};
+const CHECKS=['15語以上で書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした'];
+const BUILDINGS=[
+{id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
+{id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',desc:'文法(ぶんぽう)クイズ'},
+{id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',desc:'会話(かいわ)クイズ'},
+{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',desc:'並べかえ(じゅんばん)クイズ'},
+{id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',desc:'リスニング(ちょうかい)'},
+{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'ライティング(さくぶん)'}
+];
+const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
+
+let state=null;
+function freshState(){return{v:3,g:GRID,townName:'',coins:50,placed:{},progress:{},roads:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
+function migrate(d){
+ if(!d||typeof d!=='object')return null;
+ const s=Object.assign(freshState(),d);
+ s.v=3;
+ if(typeof s.townName!=='string')s.townName='';
+ if(!Array.isArray(s.review))s.review=[];
+ const oldG=(typeof d.g==='number'&&d.g>0&&d.g<=20)?d.g:5;
+ const remap=t=>{
+  let c=t%oldG,r=Math.floor(t/oldG);
+  c=Math.min(c,GRID-1);r=Math.min(r,GRID-1);
+  return r*GRID+c;
+ };
+ const fixed={};
+ Object.entries(s.placed||{}).forEach(([cat,p])=>{
+  if(p&&typeof p.level==='number'){
+   let t=0;
+   if('lot' in p)t=Math.floor(p.lot/4)*oldG+(p.lot%4);
+   else if('tile' in p)t=remap(p.tile);
+   fixed[cat]={tile:Math.max(0,Math.min(GRID*GRID-1,t)),level:Math.max(1,Math.min(3,p.level))};
+  }
+ });
+ s.placed=fixed;
+ s.g=GRID;
+ const occ=new Set(Object.values(s.placed).map(p=>p.tile));
+ s.roads=[...new Set(
+  (Array.isArray(s.roads)?s.roads:[]).filter(t=>Number.isInteger(t)&&t>=0)
+   .map(t=>t<GRID*GRID&&oldG!==GRID?remap(t):t)
+   .filter(t=>t>=0&&t<GRID*GRID&&!occ.has(t))
+ )];
+ return s;
+}
+function loadState(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return null;return migrate(JSON.parse(raw))}catch(e){return null}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(e){}}
+
+let actx=null;
+function tone(f,dur,type,delay=0,vol=.12){try{const t=actx.currentTime+delay;const o=actx.createOscillator();const g=actx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+dur+.02)}catch(e){}}
+function sfx(name){
+ if(!state.sound)return;
+ try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+ if(name==='ok'){tone(660,.1,'sine');tone(880,.14,'sine',.09)}
+ else if(name==='ng'){tone(200,.2,'square',0,.05);tone(160,.22,'square',.08,.05)}
+ else if(name==='coin'){tone(1250,.06,'triangle');tone(1650,.12,'triangle',.06)}
+ else if(name==='level'){[523,659,784,1047].forEach((f,i)=>tone(f,.13,'triangle',i*.09))}
+ }catch(e){}
+}
+
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+const HAS_TTS='speechSynthesis' in window;
+function speak(text,rate){
+ return new Promise(res=>{
+  if(!HAS_TTS)return res();
+  try{
+   speechSynthesis.cancel();
+   const u=new SpeechSynthesisUtterance(text);
+   const v=voices.find(x=>/en[-_]US/i.test(x.lang))||voices.find(x=>/^en/i.test(x.lang));
+   if(v)u.voice=v;
+   u.lang='en-US';u.rate=rate;u.pitch=1.05;
+   u.onend=()=>res();u.onerror=()=>res();
+   speechSynthesis.speak(u);
+  }catch(e){res()}
+ });
+}
+
+function toast(msg){
+ const el=document.createElement('div');
+ el.className='toast';el.textContent=msg;
+ $('#toast-root').appendChild(el);
+ setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .4s'},1900);
+ setTimeout(()=>el.remove(),2400);
+}
+function confetti(n){
+ const em=['🎉','✨','🌸','⭐','💖','🎊'];
+ for(let i=0;i<n;i++){
+  const s=document.createElement('span');
+  s.className='confetti';
+  s.textContent=em[Math.floor(Math.random()*em.length)];
+  s.style.left=Math.random()*100+'vw';
+  s.style.animationDuration=(1.6+Math.random()*1.4)+'s';
+  s.style.fontSize=(18+Math.random()*16)+'px';
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),3200);
+ }
+}
+let modalOpenedAt=0;
+function openModal(html){$('#modal').innerHTML=html;modalOpenedAt=Date.now();$('#modal-root').classList.add('open')}
+function closeModal(){$('#modal-root').classList.remove('open')}
+$('#modal-root').addEventListener('click',e=>{if(e.target.id==='modal-root'&&Date.now()-modalOpenedAt>350)closeModal()});
+function askYesNo(title,msg,yesLabel,onYes){
+ openModal(`<h3>${title}</h3><p class="sub">${msg}</p>
+ <div class="close-row">
+ <button class="btn ghosty" id="yn-no">やめる</button>
+ <button class="btn pinky" id="yn-yes">${yesLabel}</button></div>`);
+ $('#yn-no').onclick=closeModal;
+ $('#yn-yes').onclick=()=>{closeModal();onYes()};
+}
+
+function show(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ $('#'+id).classList.add('active');
+ window.scrollTo(0,0);
+ $('#appbar').classList.toggle('hidden',id==='scr-title');
+ $('#home-btn').classList.toggle('hidden',id==='scr-title'||id==='scr-town');
+ if(R.scene)R.renderVisible=(id==='scr-town');
+}
+function refreshHUD(){
+ $('#coin-num').textContent=state.coins;
+ const n=state.review.length;
+ $('#review-badge').textContent=n;
+ $('#review-badge').classList.toggle('hidden',n===0);
+ $('#sound-btn').textContent=state.sound?'🔔':'🔕';
+ let hasSave=false;
+ try{hasSave=!!localStorage.getItem(SAVE_KEY)}catch(e){}
+ $('#reset-btn-top').classList.toggle('hidden',!hasSave);
+}
+
+let session=null;
+
+function sumLevels(){return Object.values(state.placed).reduce((s,p)=>s+p.level,0)}
+function rankInfo(){
+ const l=sumLevels();
+ if(l>=14)return{e:'🏰',n:'えいご王国'};
+ if(l>=9)return{e:'🌆',n:'きらめくシティ'};
+ if(l>=4)return{e:'🏙️',n:'にぎやかな町'};
+ return{e:'🏘️',n:'ちいさな村'};
+}
+function canUpgrade(cat){
+ const p=state.placed[cat];
+ if(!p||p.level>=3)return false;
+ return state.progress[cat]>=TH[p.level]&&state.coins>=UP_COST[p.level];
+}
+function townNameText(){return state.townName||'ちいさな村'}
+function refreshNameUI(){
+ $('#town-name-label').textContent=townNameText();
+}
+function openNaming(isFirst){
+ const sug=NAME_IDEAS.slice().sort(()=>Math.random()-.5).slice(0,3);
+ openModal(`<h3>${isFirst?'🏙️ まちに名前をつけよう!':'✏️ まちの名前をかえる'}</h3>
+ <p class="sub">${isFirst?'あなただけの街の名前を決めてね!(最大12文字・スキップもOK)':'新しい名前を入れてね!(最大12文字)'}</p>
+ <input class="name-input" id="nm-input" maxlength="12" placeholder="例:サクラタウン" value="${state.townName||''}">
+ <div class="sugg" id="nm-sugg">${sug.map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div>
+ <div class="close-row">
+ ${isFirst?'':'<button class="btn ghosty" onclick="closeModal()">やめる</button>'}
+ <button class="btn minty big" id="nm-ok">きめる!</button></div>`);
+ const inp=$('#nm-input');
+ setTimeout(()=>inp.focus(),80);
+ $('#nm-sugg').querySelectorAll('button').forEach(b=>{b.onclick=()=>{inp.value=b.dataset.n}});
+ $('#nm-ok').onclick=()=>{
+  state.townName=inp.value.trim().slice(0,12);
+  save();closeModal();refreshNameUI();
+  if(isFirst){show('scr-town');renderMap();openTutorial()}
+ };
+ inp.onkeydown=e=>{if(e.key==='Enter')$('#nm-ok').click()};
+}
+
+const TUT=[
+{e:'🏙️✨',t:'ようこそ!',d:'クイズに答えてコイン💰をためて、あなただけの街を大きくしよう!まちには6つの建物と、走る車もあるよ。'},
+{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと建物がえらべるよ。建物をえらんだら、置きたい場所の地面をタップして決定!まずは無料の図書館📚からどうぞ。'},
+{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!1回に5問、正解するたびにコイン💰がもらえるよ。まちがえた問題はじどうでふくしゅうリストに入るので、📖ボタンで復習できる!'},
+{e:'🛣️🚗',t:'道路をひこう',d:'道路は1マス💰10。建物のそばに道を通すと、クイズのごほうびコインがプラスされる!道がつながるとカラフルな車が走りだすよ。'},
+{e:'⭐',t:'レベルアップで成長',d:'同じ建物で正解を重ねるとレベルアップ(Lv2は6問+💰40、Lv3は16問+💰100)。レベル3になると本番そっくりの難しい問題が出るぞ!街が発展すると称号も変わるよ。'},
+{e:'🖱️',t:'操作のかんばん',d:'ドラッグ=街をまわす/🖐️ボタン=移動モード(右ドラッグ・ピンチ2本指でも移動)/ホイール・ピンチ=ズーム/🎯=視点をもどす。右上の⚙️せっていから、効果音や「遊び方」をいつでも見られるよ!'}
+];
+let tutPage=0;
+function openTutorial(){
+ tutPage=0;
+ renderTut();
+}
+function renderTut(){
+ const p=TUT[tutPage];
+ const last=tutPage===TUT.length-1;
+ openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
+ <h3>${p.t}</h3>
+ <p style="text-align:center;font-size:15px;line-height:1.9;font-weight:700;margin:12px 4px 4px">${p.d}</p>
+ <div class="dots" style="justify-content:center;margin-top:14px">
+ ${TUT.map((_,k)=>`<span class="dot ${k===tutPage?'now':(k<tutPage?' done-ok':'')}"></span>`).join('')}
+ </div>
+ <div class="close-row">
+ <button class="btn ghosty small" id="tut-skip">スキップ</button>
+ <button class="btn pinky big" id="tut-next">${last?'さあ、はじめよう!🎉':'つぎへ ▶'}</button>
+ </div>`);
+ $('#tut-next').onclick=()=>{
+  if(last){closeModal();toast('街づくりの基本はOK!まずは図書館📚を建ててみよう!')}
+  else{tutPage++;renderTut()}
+ };
+ $('#tut-skip').onclick=closeModal;
+}
+
+let pendingPlace=null;
+let freshStart=false;
+
+function catAt(t){return Object.keys(state.placed).find(c=>state.placed[c].tile===t)}
+function onTileTap(t){
+ if(pendingPlace){
+  if(pendingPlace==='__road'){tryRoad(t);return}
+  if(catAt(t)){toast('そこにはもう建物があるよ!別の場所にしてね');return}
+  if(state.placed[pendingPlace]){exitPlace();return}
+  const b=B[pendingPlace];
+  askYesNo(`${b.emoji} ${b.name}`,`${b.desc}<br>この場所に建てる?`,`💰${b.cost===0?'無料':b.cost}で ここに建てる!`,()=>confirmBuild(t,pendingPlace));
+  return;
+ }
+ const cat=catAt(t);
+ if(cat)openBuildingMenu(cat);
+ else openPalette();
+}
+function neighborsRoad(t){
+ const c=t%GRID,r=(t/GRID)|0,res=[];
+ [[c,r-1],[c,r+1],[c-1,r],[c+1,r]].forEach(([x,y])=>{
+  if(x>=0&&x<GRID&&y>=0&&y<GRID&&(state.roads||[]).includes(y*GRID+x))res.push(y*GRID+x);
+ });
+ return res;
+}
+function tryRoad(t){
+ if(t==null)return;
+ if(catAt(t)){toast('建物の上には道はひけないよ!');return}
+ if((state.roads||[]).includes(t)){toast('ここにはもう道があるよ');return}
+ if(state.coins<ROAD.cost){toast('💰 コインが足りない…');exitPlace();return}
+ state.coins-=ROAD.cost;
+ state.roads.push(t);
+ save();sfx('coin');
+ if(R.ok){
+  rebuildRoads();
+  spawnCars();
+  if(R.sun)R.sun.shadow.needsUpdate=true;
+ }else{
+  renderMap();
+ }
+ refreshHUD();
+ refreshNameUI();
+ renderStats();
+}
+function confirmBuild(t,cat){
+ exitPlace();
+ const b=B[cat];
+ if(state.placed[cat]||catAt(t)||state.coins<b.cost){toast(state.coins<b.cost?'💰 コインが足りない…':'そこには建てられないよ…');renderMap();return}
+ state.coins-=b.cost;
+ state.placed[cat]={tile:t,level:1};
+ state.progress[cat]=state.progress[cat]||0;
+ save();
+ sfx('level');confetti(26);
+ toast(`${b.emoji}${b.name}ができたよ!`);
+ renderMap();
+}
+function enterPlace(cat){
+ pendingPlace=cat;
+ setPlaceBar(true);
+ $('#build-open').classList.add('hidden');
+ if(R.ok)setGhost(cat);
+}
+function exitPlace(){
+ pendingPlace=null;
+ setPlaceBar(false);
+ $('#build-open').classList.remove('hidden');
+ if(R.ok)setGhost(null);
+}
+function setPlaceBar(on){
+ let bar=$('#place-bar');
+ if(on){
+  const cfg=pendingPlace==='__road'?ROAD:B[pendingPlace];
+  const tip=pendingPlace==='__road'?'(続けてタップすればどんどんひけるよ!)':'';
+  if(!bar){bar=document.createElement('div');bar.id='place-bar';bar.className='place-bar';$('#scene-wrap').appendChild(bar)}
+  bar.innerHTML=`📍 <span class="place-emoji">${cfg.emoji}${cfg.name}</span><span class="place-tip"> を置く場所をタップ!${tip}</span><span class="place-tip-short"> をタップして置こう!</span> <button class="cancel" id="place-cancel">やめる</button>`;
+  $('#place-cancel').onclick=e=>{e.stopPropagation();exitPlace()};
+ }else if(bar)bar.remove();
+ refreshSceneHint();
+}
+function openPalette(){
+ exitPlace();closeModal();
+ const items=BUILDINGS.filter(b=>!state.placed[b.cat]).sort((a,b)=>a.cost-b.cost).map(b=>{
+  const locked=b.req&&!state.placed[B[b.req].cat];
+  const poor=state.coins<b.cost;
+  const dis=locked||poor?'disabled':'';
+  const why=locked?`🔒 ${B[b.req].name}を先に建てよう`:poor?'💰 コインが足りない…':'タップして好きな場所へ!';
+  return`<button class="bcard ${locked?'locked':''}" ${dis} data-cat="${b.cat}">
+   <span class="bc-emoji">${b.emoji}</span>
+   <span><span class="bc-name">${b.name}</span><br><span class="bc-desc">${b.desc}<br><small style="color:var(--lav-d);font-weight:700">${why}</small></span></span>
+   <span class="bc-cost">${b.cost===0?'無料':'💰'+b.cost}</span></button>`;
+ }).join('');
+ const roadPoor=state.coins<ROAD.cost;
+ const roadCard=`<button class="bcard" ${roadPoor?'disabled':''} data-cat="__road">
+   <span class="bc-emoji">🛣️</span>
+   <span><span class="bc-name">道路</span><br><span class="bc-desc">まちに道をひこう!<br><small style="color:var(--mint-d);font-weight:700">🚗 建物のそばに通すと、クイズのごほうびコインがプラスされるよ!</small></span></span>
+   <span class="bc-cost">💰${ROAD.cost}/マス</span></button>`;
+ openModal(`<h3>🏗️ 何を建てる?</h3><p class="sub">建物や道路をえらんで、好きな場所に置こう!</p>${items}${roadCard}
+ <div class="close-row"><button class="btn ghosty" onclick="closeModal()">やめる</button></div>`);
+ document.querySelectorAll('#modal .bcard:not(:disabled)').forEach(el=>{
+  el.onclick=()=>{closeModal();enterPlace(el.dataset.cat)};
+ });
+}
+
+const R={inited:false,ok:false,compiled:false,lastPtrUp:0,renderer:null,scene:null,camera:null,sun:null,renderVisible:false,tiles:[],city:null,roadsG:null,carsG:null,agents:[],clouds:[],anims:[],ghostLabel:null,ghostCat:null,hover:null,ray:null,ptr:null,cam:{theta:.78,phi:1.02,radius:23},target:{x:0,z:0},dragMode:'orbit'};
+function isWebGLAvailable(){try{const c=document.createElement('canvas');return !!(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')))}catch(e){return false}}
+function tileXY(t){const c=t%GRID,rw=Math.floor(t/GRID);return{x:(c-(GRID-1)/2)*PITCH,z:(rw-(GRID-1)/2)*PITCH}}
+function updateCam(){
+ const{theta,phi,radius}=R.cam;
+ R.camera.position.set(
+  R.target.x+radius*Math.sin(phi)*Math.sin(theta),
+  radius*Math.cos(phi),
+  R.target.z+radius*Math.sin(phi)*Math.cos(theta)
+ );
+ R.camera.lookAt(R.target.x,.4,R.target.z);
+}
+function panBy(dx,dy){
+ const cp=R.camera.position;
+ const fx=R.target.x-cp.x,fz=R.target.z-cp.z;
+ const fl=Math.hypot(fx,fz)||1;
+ const nx=fx/fl,nz=fz/fl;
+ const rx=-nz,rz=nx;
+ const k=R.cam.radius*.0016;
+ const lim=PITCH*GRID/2;
+ R.target.x=Math.max(-lim,Math.min(lim,R.target.x+(-rx*dx+nx*dy)*k));
+ R.target.z=Math.max(-lim,Math.min(lim,R.target.z+(-rz*dx+nz*dy)*k));
+ updateCam();
+}
+function refreshSceneHint(){
+ const h=$('#scene-hint');
+ if(!h)return;
+ if(pendingPlace){
+  h.textContent=pendingPlace==='__road'?'地面をタップして道路をひこう!':'地面をタップして建設場所をえらぼう!';
+ }else{
+  h.textContent=`🖱️ ドラッグ=${R.dragMode==='pan'?'移動':'まわす'}・ホイール/ピンチ=ズーム・右ドラッグ=いつでも移動・建物タップ=クイズ`;
+ }
+}
+const MATS={};
+function M(color,extra){
+ let m=MATS[color];
+ if(!m){m=new THREE.MeshLambertMaterial({color});MATS[color]=m}
+ return m;
+}
+function box(w,h,d,color,x,y,z,g){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(color));m.position.set(x,y,z);m.castShadow=true;if(g)g.add(m);return m}
+function pyr(size,h,color,x,y,z,g){const m=new THREE.Mesh(new THREE.ConeGeometry(size,h,4),M(color));m.rotation.y=Math.PI/4;m.position.set(x,y,z);m.castShadow=true;if(g)g.add(m);return m}
+function cyl(rt,rb,h,color,x,y,z,g,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||14),M(color));m.position.set(x,y,z);m.castShadow=true;if(g)g.add(m);return m}
+function sph(r,color,x,y,z,g){const m=new THREE.Mesh(new THREE.SphereGeometry(r,14,14),M(color));m.position.set(x,y,z);m.castShadow=true;if(g)g.add(m);return m}
+function tree(x,z,s,g){cyl(.09*s,.11*s,.5*s,0x9a6b4f,x,.25*s,z,g,8);sph(.34*s,0x58c48d,x,.72*s,z,g);sph(.26*s,0x7fdcae,x+.16*s,.95*s,z,g)}
+function flowerDot(x,z,color,g){cyl(.022,.022,.32,0x3f9d63,x,.16,z,g,6);sph(.09,color,x,.38,z,g)}
+
+function cone(rt,h,color,x,y,z,g,seg){const m=new THREE.Mesh(new THREE.ConeGeometry(rt,h,seg||12),M(color));m.position.set(x,y,z);m.castShadow=true;if(g)g.add(m);return m}
+function gable(w,hgt,depth,color,x,y,z,g){
+ const slope=Math.atan2(hgt,w/2);
+ const len=Math.hypot(hgt,w/2)+.03;
+ const l=box(len,.1,depth,color,x-w/4-.005,y,z,g);l.rotation.z=slope;
+ const r=box(len,.1,depth,color,x+w/4+.005,y,z,g);r.rotation.z=-slope;
+}
+const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4};
+
+function makeBuilding(cat,level){
+ const g=new THREE.Group();
+ if(cat==='library'||cat==='school'||cat==='cafe'||cat==='flower')box(2.9,.12,2.9,0xf1e9d8,0,.06,0,g);
+ if(cat==='library'){
+  box(2.5,.12,.6,0xe3dcc9,0,.06,1.28,g);
+  box(2.3,.12,.48,0xe9e2d0,0,.18,1.18,g);
+  box(2.1,.12,.36,0xefe8d6,0,.30,1.08,g);
+  box(2.4,.4,1.7,0xded5bf,0,.20,-.05,g);
+  box(2.2,1.0,1.5,0xf2ead6,0,.90,-.08,g);
+  box(2.32,.14,1.62,0xe0d7c1,0,1.47,-.08,g);
+  [-.78,-.26,.26,.78].forEach(x=>{cyl(.09,.10,.85,0xffffff,x,.82,1.02,g,12)});
+  box(2.0,.18,.52,0xffffff,0,1.33,1.02,g);
+  gable(2.0,.4,.54,0xf2a0bd,0,1.60,1.02,g);
+  box(.46,.8,.08,0x8a6a4f,0,.80,1.04,g);
+  [-1.13,1.13].forEach(x=>{
+   [-.45,.25].forEach(z=>{box(.07,.5,.34,0x9adcf0,x,.95,z,g)});
+  });
+  cyl(.44,.47,.22,0xe8dfca,0,1.65,-.08,g,16);
+  const dm=sph(.46,0xff9fb2,0,1.76,-.08,g);dm.scale.set(1,.72,1);
+  cyl(.02,.02,.16,0xE8B84B,0,2.14,-.08,g,6);
+  sph(.055,0xE8B84B,0,2.26,-.08,g);
+  box(.92,.05,.64,0xd9577f,1.18,.20,1.18,g);
+  const pl=box(.4,.05,.54,0xfffdf5,1.06,.27,1.18,g);pl.rotation.z=.48;
+  const pr=box(.4,.05,.54,0xfffdf5,1.31,.27,1.18,g);pr.rotation.z=-.48;
+  sph(.16,0x58c48d,-1.42,.16,1.3,g);
+ }else if(cat==='school'){
+  box(2.6,.24,1.7,0xcfc6ae,0,.12,0,g);
+  box(2.25,1.5,1.15,0xfdf3cf,0,1.0,-.05,g);
+  [.68,1.32].forEach(y=>{
+   [-.78,0,.78].forEach(x=>{box(.26,.3,.06,0x9adcf0,x,y,.54,g)});
+  });
+  box(.4,.5,.07,0x8a6a4f,0,.33,.56,g);
+  box(.85,.06,.4,0x7db9e8,0,.66,.74,g);
+  box(.75,2.0,.95,0xfce8b0,1.18,1.0,-.02,g);
+  box(.16,1.3,.06,0x9adcf0,1.18,1.05,.47,g);
+  box(.83,.12,1.02,0xd9cdb0,1.18,2.06,-.02,g);
+  box(2.31,.1,1.2,0xead9b5,0,1.8,-.05,g);
+  [[-1.05,-.5],[1.05,-.5],[-1.05,.45],[1.05,.45]].forEach(([x,z])=>{cyl(.025,.025,.22,0x999999,x,1.96,z,g,6)});
+  cyl(.03,.03,1.75,0xdddddd,-1.5,.99,.9,g,6);
+  box(.48,.3,.03,0xffffff,-1.26,1.62,.9,g);
+  const hi=sph(.085,0xff5a76,-1.26,1.62,.925,g);hi.scale.set(1,1,.35);
+ }else if(cat==='cafe'){
+  box(1.9,1.02,1.45,0xfff6ec,0,.51,0,g);
+  box(1.45,.46,.07,0xbfe3ff,0,.62,.73,g);
+  [-.35,.35].forEach(x=>{box(.05,.46,.09,0xffffff,x,.62,.745,g)});
+  box(.36,.58,.07,0x7a4a2f,.58,.29,.74,g);
+  const aw=box(1.98,.1,.9,0xff8fae,0,1.08,.98,g);aw.rotation.x=.3;
+  cyl(.27,.21,.42,0xffffff,-.38,1.52,0,g,14);
+  cyl(.235,.235,.06,0x6b4023,-.38,1.74,0,g,14);
+  const hd=new THREE.Mesh(new THREE.TorusGeometry(.11,.04,8,16),M(0xffffff));
+  hd.position.set(-.06,1.52,0);hd.castShadow=true;g.add(hd);
+  sph(.05,0xffffff,-.46,1.94,0,g);sph(.035,0xffffff,-.34,2.04,0,g);
+  cyl(.035,.035,.95,0xdad2c8,-1.05,.48,1.02,g,8);
+  cone(.55,.32,0xff9fb2,-1.05,1.1,1.02,g,10);
+  cyl(.26,.26,.05,0xffffff,-1.05,.5,1.02,g,14);
+  cyl(.04,.04,.45,0xdad2c8,-1.05,.23,1.02,g,8);
+  cyl(.028,.028,.75,0xdad2c8,1.28,.38,-.88,g,8);
+  cone(.42,.26,0xffd166,1.28,.82,-.88,g,10);
+  const cb=box(.34,.46,.05,0x5a4636,1.05,.4,1.14,g);cb.rotation.x=-.18;
+  const bd=box(.26,.36,.05,0x3a3a3a,1.05,.41,1.165,g);bd.rotation.x=-.18;
+ }else if(cat==='station'){
+  box(2.7,.08,.62,0xbdb6ac,0,.04,-.35,g);
+  [-.5,-.2].forEach(z=>{box(2.7,.04,.05,0x8a8a8a,0,.1,z,g)});
+  box(1.5,.5,.56,0xff8fa3,-.15,.47,-.35,g);
+  box(.42,.44,.54,0xffb1c1,.82,.45,-.35,g);
+  box(.06,.2,.4,0xbfe3ff,1.04,.55,-.35,g);
+  box(1.95,.13,.58,0xffffff,-.05,.52,-.35,g);
+  box(1.15,.19,.58,0x4a4a55,-.25,.68,-.35,g);
+  [[-.5],[.45]].forEach(([x])=>{
+   [-.53,-.17].forEach(z=>{const w=cyl(.12,.12,.07,0x3a3a3a,x,.12,z,g,10);w.rotation.x=Math.PI/2});
+  });
+  sph(.05,0xfff3a6,1.06,.36,-.5,g);sph(.05,0xfff3a6,1.06,.36,-.2,g);
+  box(2.6,.16,.85,0xd8d3cb,0,.08,.68,g);
+  [-.95,0,.95].forEach(x=>{cyl(.05,.05,1.0,0xf5f2ea,x,.66,.9,g,8)});
+  box(2.3,.09,.8,0x7db9e8,0,1.2,.75,g);
+  [.55,-.15].forEach(x=>{box(.5,.07,.2,0xc9986a,x,.27,.55,g)});
+  box(.95,.8,.75,0xf3efe6,-.85,.4,-.9,g);
+  gable(1.05,.3,.85,0xff9fb0,-.85,.97,-.9,g);
+  box(.26,.42,.06,0x9a7b5f,-.85,.27,-.51,g);
+  sph(.09,0xffffff,-.4,.72,-.51,g);
+ }else if(cat==='park'){
+  cyl(.66,.66,.06,0xdff0f8,-.5,.03,.42,g,20);
+  cyl(.58,.58,.1,0x7fc4ee,-.5,.06,.42,g,20);
+  sph(.1,0xffffff,-.62,.17,.5,g);
+  sph(.06,0xffffff,-.5,.27,.5,g);
+  box(.06,.03,.04,0xff9f43,-.43,.26,.5,g);
+  cyl(.42,.46,.16,0xe8e2d6,0,.08,-.05,g,16);
+  cyl(.35,.35,.04,0x9adcf0,0,.15,-.05,g,16);
+  cyl(.07,.09,.26,0xe8e2d6,0,.27,-.05,g,10);
+  cyl(.2,.24,.07,0xe8e2d6,0,.43,-.05,g,14);
+  sph(.08,0x9adcf0,0,.55,-.05,g);
+  sph(.035,0x9adcf0,.13,.47,.05,g);sph(.035,0x9adcf0,-.12,.47,-.15,g);
+  tree(.9,.6,1.05,g);tree(-.95,-.55,1.2,g);
+  box(.4,.06,.4,0xc9986a,.9,.55,-.6,g);
+  [[.72,-.78],[1.08,-.78],[.72,-.42],[1.08,-.42]].forEach(([x,z])=>{cyl(.03,.03,.55,0x8a8a8a,x,.28,z,g,6)});
+  [[.3],[.45],[.6]].forEach(([y])=>{box(.36,.045,.045,0x8a8a8a,.9,y,-.85,g)});
+  const ch=box(.34,.05,.8,0xff6f91,.9,.3,-.1,g);ch.rotation.x=.6;
+  cyl(.03,.03,.9,0x8a8a8a,-1.25,.45,-.6,g,6);cyl(.03,.03,.9,0x8a8a8a,-.85,.45,-.6,g,6);
+  box(.5,.05,.06,0x8a8a8a,-1.05,.93,-.6,g);
+  box(.18,.04,.24,0xffd166,-1.05,.4,-.6,g);
+  cyl(.012,.012,.5,0xdddddd,-1.13,.66,-.6,g,6);cyl(.012,.012,.5,0xdddddd,-.97,.66,-.6,g,6);
+  flowerDot(-.2,.78,0xff6f91,g);flowerDot(.05,.84,0xffd166,g);flowerDot(.32,.78,0xb79cff,g);
+ }else{
+  box(1.6,1.0,1.3,0xffe4ef,0,.5,-.25,g);
+  pyr(1.22,.6,0xff9fc0,0,1.3,-.25,g);
+  box(.34,.52,.07,0x9a6b4f,0,.26,.42,g);
+  box(.46,.38,.06,0xfff3fa,-.5,.56,.43,g);
+  box(1.5,.18,.32,0x9a6b4f,0,.14,.6,g);
+  flowerDot(-.55,.6,0xff6f91,g);flowerDot(-.2,.6,0xffd166,g);flowerDot(.15,.6,0xb79cff,g);flowerDot(.5,.6,0xff8fa3,g);
+  const glass=new THREE.Mesh(new THREE.BoxGeometry(.95,.7,.85),new THREE.MeshLambertMaterial({color:0xbfe6ff,transparent:true,opacity:.4}));
+  glass.position.set(1.12,.37,-.2);g.add(glass);
+  [[.675,-.58],[1.565,-.58],[.675,.18],[1.565,.18]].forEach(([x,z])=>{box(.05,.74,.05,0xffffff,x,.37,z,g)});
+  gable(1.0,.26,.95,0xd6ecfa,1.12,.72,-.2,g);
+  box(.8,.04,.3,0xffffff,1.12,.32,-.2,g);
+  sph(.06,0xff6f91,.98,.38,-.28,g);sph(.06,0xffd166,1.12,.38,-.12,g);sph(.06,0xb79cff,1.27,.38,-.25,g);
+  cyl(.03,.03,.55,0x8a8a8a,-1.0,.28,.62,g,6);
+  sph(.11,0xff6f91,-1.0,.62,.62,g);sph(.1,0xffd166,-.87,.58,.62,g);sph(.09,0xb79cff,-1.13,.57,.62,g);
+ }
+ if(level>=2)box(2.35,.1,2.1,0xffd166,0,cat==='park'?.09:.17,0,g);
+ if(level>=3){
+  cyl(.035,.035,1.1,0x8a8a8a,1.0,1.85,-.6,g,6);
+  box(.55,.3,.05,0xe8590c,1.28,2.25,-.6,g);
+  sph(.09,0xffd166,1.0,2.45,-.6,g);
+ }
+ return g;
+}
+function disposeObj(o){
+ o.traverse(c=>{
+  if(c.geometry)c.geometry.dispose();
+  if(c.material&&c.material.map&&c.material.map.dispose)c.material.map.dispose();
+ });
+}
+function makeLabel(cat,level,noStars){
+ const cv=document.createElement('canvas');cv.width=256;cv.height=170;
+ const ctx=cv.getContext('2d');
+ ctx.textAlign='center';ctx.textBaseline='middle';
+ ctx.font='96px sans-serif';ctx.fillText(B[cat].emoji,128,60);
+ if(!noStars){ctx.font='40px sans-serif';ctx.fillText('⭐'.repeat(level),128,138)}
+ const tex=new THREE.CanvasTexture(cv);
+ if(THREE.sRGBEncoding)tex.encoding=THREE.sRGBEncoding;
+ const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
+ sp.scale.set(noStars?1.8:2.4,noStars?1.2:1.6,1);
+ sp.position.y=noStars?2.0:2.55;
+ return sp;
+}
+function setGhost(cat){
+ if(R.ghostLabel){R.scene.remove(R.ghostLabel);disposeObj(R.ghostLabel);R.ghostLabel=null}
+ R.ghostCat=cat;
+ if(cat&&cat!=='__road'){
+  R.ghostLabel=makeLabel(cat,1,true);
+  R.ghostLabel.visible=false;
+  R.scene.add(R.ghostLabel);
+ }
+}
+function makeCloud(){
+ const g=new THREE.Group();
+ const mat=M(0xffffff);
+ for(let i=0;i<3;i++){
+  const s=new THREE.Mesh(new THREE.SphereGeometry(.5+Math.random()*.4,8,8),mat);
+  s.position.set(i*.7-.7,(i%2)*.16,0);
+  s.castShadow=false;
+  g.add(s);
+ }
+ g.position.set(-22-Math.random()*10,7.5+Math.random()*3,-11+Math.random()*22);
+ g.userData.speed=1.6+Math.random()*2.2;
+ R.scene.add(g);
+ return g;
+}
+function clearGroup(g){
+ while(g.children.length){const c=g.children.pop();disposeObj(c);g.remove(c)}
+}
+function rebuildCity(){
+ if(!R.ok)return;
+ clearGroup(R.city);
+ Object.entries(state.placed).forEach(([cat,p])=>{
+  const g=makeBuilding(cat,p.level);
+  const{x,z}=tileXY(p.tile);
+  g.position.set(x,0,z);
+  const lb=makeLabel(cat,p.level,false);
+  lb.position.y=LABEL_Y[cat]||2.55;
+  g.add(lb);
+  R.city.add(g);
+  g.scale.set(.01,.01,.01);
+  R.anims.push({obj:g,t:0});
+ });
+ rebuildRoads();
+ spawnCars();
+ if(R.sun)R.sun.shadow.needsUpdate=true;
+}
+let ROADMATS=null;
+function roadMats(){
+ if(!ROADMATS)ROADMATS={curb:M(0xcfc9bf,{roughness:1}),asp:M(0x6e6a75,{roughness:.95}),stripe:M(0xffffff)};
+ return ROADMATS;
+}
+function rebuildRoads(){
+ if(!R.roadsG)return;
+ while(R.roadsG.children.length){
+  const c=R.roadsG.children.pop();
+  if(c.geometry)c.geometry.dispose();
+ }
+ const rd=state.roads||[];
+ if(!rd.length)return;
+ const mats=roadMats();
+ const dummy=new THREE.Object3D();
+ const curb=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE*.96,.1,TILE*.96),mats.curb,rd.length);
+ const asp=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE*.82,.08,TILE*.82),mats.asp,rd.length);
+ curb.receiveShadow=true;
+ asp.receiveShadow=true;
+ let sc=0;
+ rd.forEach(t=>{
+  const c=t%GRID,r=(t/GRID)|0;
+  if(r>0&&rd.includes((r-1)*GRID+c))sc++;
+  if(r<GRID-1&&rd.includes((r+1)*GRID+c))sc++;
+  if(c>0&&rd.includes(r*GRID+c-1))sc++;
+  if(c<GRID-1&&rd.includes(r*GRID+c+1))sc++;
+ });
+ let stripes=null,ci=0;
+ if(sc>0){
+  stripes=new THREE.InstancedMesh(new THREE.BoxGeometry(.15,.03,TILE*.36),mats.stripe,sc);
+ }
+ rd.forEach((t,i)=>{
+  const{x,z}=tileXY(t);
+  dummy.rotation.set(0,0,0);
+  dummy.position.set(x,.05,z);
+  dummy.updateMatrix();
+  curb.setMatrixAt(i,dummy.matrix);
+  dummy.position.set(x,.10,z);
+  dummy.updateMatrix();
+  asp.setMatrixAt(i,dummy.matrix);
+  const c=t%GRID,r=(t/GRID)|0;
+  const add=(side,ox,oz)=>{
+   dummy.position.set(x+ox,.15,z+oz);
+   dummy.rotation.set(0,side?Math.PI/2:0,0);
+   dummy.updateMatrix();
+   stripes.setMatrixAt(ci++,dummy.matrix);
+  };
+  if(r>0&&rd.includes((r-1)*GRID+c))add(false,0,-TILE*.27);
+  if(r<GRID-1&&rd.includes((r+1)*GRID+c))add(false,0,TILE*.27);
+  if(c>0&&rd.includes(r*GRID+c-1))add(true,-TILE*.27,0);
+  if(c<GRID-1&&rd.includes(r*GRID+c+1))add(true,TILE*.27,0);
+ });
+ [curb,asp,stripes].forEach(m=>{
+  if(!m)return;
+  m.instanceMatrix.needsUpdate=true;
+  m.frustumCulled=false;
+  freeze(m);
+  R.roadsG.add(m);
+ });
+}
+function neighborsRoad3D(t){return neighborsRoad(t)}
+function makeCar(col){
+ const g=new THREE.Group();
+ box(.6,.22,.38,col,0,.2,0,g);
+ box(.32,.16,.34,0xffffff,-.05,.38,0,g);
+ [[-.18],[.18]].forEach(([x])=>{
+  [-.21,.21].forEach(z=>{
+   const w=cyl(.09,.09,.06,0x333333,x,.09,z,g,10);
+   w.rotation.x=Math.PI/2;
+  });
+ });
+ g.traverse(o=>{o.castShadow=false;o.receiveShadow=false});
+ g.scale.set(1.35,1.35,1.35);
+ return g;
+}
+function spawnCars(){
+ while(R.carsG.children.length){const c=R.carsG.children.pop();disposeObj(c)}
+ R.agents=[];
+ const rd=state.roads||[];
+ if(rd.length<2)return;
+ const n=Math.min(4,Math.max(1,Math.floor(rd.length/3)));
+ const cols=[0xff6f91,0x63c7ff,0xffd166,0x7fdcae];
+ for(let i=0;i<n;i++){
+  const from=rd[Math.floor(Math.random()*rd.length)];
+  const nbs=neighborsRoad3D(from);
+  if(!nbs.length)continue;
+  const to=nbs[Math.floor(Math.random()*nbs.length)];
+  const mesh=makeCar(cols[R.agents.length%cols.length]);
+  const f=tileXY(from),tt=tileXY(to);
+  mesh.rotation.y=Math.atan2(-(tt.z-f.z),(tt.x-f.x));
+  R.carsG.add(mesh);
+  R.agents.push({mesh,fromTile:from,toTile:to,fx:f.x,fz:f.z,tx:tt.x,tz:tt.z,p:Math.random()*.8,speed:1.1+Math.random()*.9});
+ }
+}
+function initThree(){
+ if(R.inited)return;
+ R.inited=true;
+ const host=$('#scene-canvas-host');
+ host.innerHTML='';
+ try{
+  const w=Math.max(host.clientWidth,50),h=Math.max(host.clientHeight,50);
+  R.renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'high-performance'});
+  R.renderer.setClearColor(0xcfeeff);
+  R.renderer.setPixelRatio(state.lowGfx?1:Math.min(window.devicePixelRatio||1,1.5));
+  R.renderer.setSize(w,h);
+  R.renderer.shadowMap.enabled=true;
+  R.renderer.shadowMap.type=THREE.PCFShadowMap;
+  if(THREE.sRGBEncoding)R.renderer.outputEncoding=THREE.sRGBEncoding;
+  host.appendChild(R.renderer.domElement);
+  R.scene=new THREE.Scene();
+  R.camera=new THREE.PerspectiveCamera(45,w/h,.1,200);
+  R.ray=new THREE.Raycaster();
+  R.ptr=new THREE.Vector2();
+  updateCam();
+  R.scene.add(new THREE.HemisphereLight(0xffffff,0xcdebd6,.95));
+  const sun=new THREE.DirectionalLight(0xfff2d9,.85);
+  sun.position.set(9,14,7);
+  sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);
+  Object.assign(sun.shadow.camera,{left:-16,right:16,top:16,bottom:-16});
+  sun.shadow.camera.updateProjectionMatrix();
+  sun.shadow.autoUpdate=false;
+  sun.shadow.needsUpdate=true;
+  R.sun=sun;
+  R.scene.add(sun);
+  const base=new THREE.Mesh(new THREE.BoxGeometry(PITCH*GRID+.9,.5,PITCH*GRID+.9),M(0x4f9a64,{roughness:1}));
+  base.position.y=-.32;
+  base.receiveShadow=true;
+  freeze(base);
+  R.scene.add(base);
+  const tgeo=new THREE.BoxGeometry(TILE,.22,TILE);
+  const tm=new THREE.InstancedMesh(tgeo,new THREE.MeshLambertMaterial({color:0xffffff}),GRID*GRID);
+  tm.receiveShadow=true;
+  tm.frustumCulled=false;
+  const dummy=new THREE.Object3D();
+  const col=new THREE.Color();
+  for(let t=0;t<GRID*GRID;t++){
+   const{x,z}=tileXY(t);
+   dummy.position.set(x,-.05,z);
+   dummy.rotation.set(0,0,0);
+   dummy.updateMatrix();
+   tm.setMatrixAt(t,dummy.matrix);
+   tm.setColorAt(t,col.setHex(t%2?0x7cc98f:0x8fd6a2));
+  }
+  tm.instanceMatrix.needsUpdate=true;
+  if(tm.instanceColor)tm.instanceColor.needsUpdate=true;
+  freeze(tm);
+  R.scene.add(tm);
+  R.tiles=tm;
+  R.hover=new THREE.Mesh(new THREE.BoxGeometry(TILE*.98,.08,TILE*.98),new THREE.MeshBasicMaterial({color:0xffd166,transparent:true,opacity:.9}));
+  R.hover.visible=false;
+  R.scene.add(R.hover);
+  R.city=new THREE.Group();
+  R.scene.add(R.city);
+  R.roadsG=new THREE.Group();
+  R.scene.add(R.roadsG);
+  R.carsG=new THREE.Group();
+  R.scene.add(R.carsG);
+  for(let i=0;i<3;i++)R.clouds.push(makeCloud());
+  bindSceneEvents();
+  window.addEventListener('resize',onResize);
+  R.ok=true;
+  requestAnimationFrame(loop);
+ }catch(e){R.ok=false}
+}
+function onResize(){
+ if(!R.ok)return;
+ const host=$('#scene-canvas-host');
+ const w=host.clientWidth,h=host.clientHeight;
+ if(w<10||h<10)return;
+ R.camera.aspect=w/h;
+ R.camera.updateProjectionMatrix();
+ R.renderer.setSize(w,h);
+}
+let lastFrame=0;
+function loop(t){
+ if(!R.ok)return;
+ requestAnimationFrame(loop);
+ if(!R.renderVisible)return;
+ if(t-lastFrame<33)return;
+ lastFrame=t;
+ R.clouds.forEach(c=>{
+  c.position.x+=c.userData.speed*.033;
+  if(c.position.x>24)c.position.x=-26;
+ });
+ for(let i=R.anims.length-1;i>=0;i--){
+  const a=R.anims[i];
+  a.t+=.033;
+  const k=Math.min(1,a.t/.55);
+  const c1=1.70158,c3=c1+1;
+  const e=1+c3*Math.pow(k-1,3)+c1*Math.pow(k-1,2);
+  const s=k>=1?1:Math.max(.01,e);
+  a.obj.scale.set(s,s,s);
+  if(k>=1){
+   a.obj.scale.set(1,1,1);
+   freeze(a.obj);
+   R.anims.splice(i,1);
+  }
+ }
+ R.agents.forEach(a=>{
+  a.p+=.033*a.speed;
+  if(a.p>=1){
+   const opts=neighborsRoad3D(a.toTile).filter(t=>t!==a.fromTile);
+   if(opts.length){
+    const nt=opts[Math.floor(Math.random()*opts.length)];
+    a.fromTile=a.toTile;a.toTile=nt;a.p=0;
+    const f=tileXY(a.fromTile),tt=tileXY(a.toTile);
+    a.fx=f.x;a.fz=f.z;a.tx=tt.x;a.tz=tt.z;
+    a.mesh.rotation.y=Math.atan2(-(tt.z-f.z),(tt.x-f.x));
+   }else{
+    a.p=.995;
+   }
+  }
+  const kk=Math.min(a.p,.999);
+  a.mesh.position.set(a.fx+(a.tx-a.fx)*kk,.02,a.fz+(a.tz-a.fz)*kk);
+ });
+ R.renderer.render(R.scene,R.camera);
+}
+function freeze(o){
+ o.traverse(c=>{c.matrixAutoUpdate=false;c.updateMatrix()});
+}
+function pickTile(e){
+ if(!R.tiles)return null;
+ const rect=R.renderer.domElement.getBoundingClientRect();
+ R.ptr.x=((e.clientX-rect.left)/rect.width)*2-1;
+ R.ptr.y=-((e.clientY-rect.top)/rect.height)*2+1;
+ R.ray.setFromCamera(R.ptr,R.camera);
+ const hits=R.ray.intersectObject(R.tiles);
+ if(!hits.length)return null;
+ const h=hits[0];
+ return h.object.isInstancedMesh?h.instanceId:h.object.userData.tile;
+}
+function handleHover(e){
+ const t=pickTile(e);
+ if(t==null){R.hover.visible=false;if(R.ghostLabel)R.ghostLabel.visible=false;return}
+ const occupied=!!catAt(t);
+ const{x,z}=tileXY(t);
+ R.hover.position.set(x,.14,z);
+ R.hover.visible=!occupied;
+ R.hover.material.color.setHex(occupied?0xff8888:(pendingPlace?0xffd166:0x9adcf0));
+ if(R.ghostLabel){
+  R.ghostLabel.position.set(x,1.9,z);
+  R.ghostLabel.visible=!occupied&&!!pendingPlace;
+ }
+}
+function handleTap(e){
+ const t=pickTile(e);
+ if(t!=null)onTileTap(t);
+}
+function bindSceneEvents(){
+ const el=R.renderer.domElement;
+ const ptrs=new Map();
+ let downInfo=null,lastPinch=0,lastMid=null;
+ el.addEventListener('contextmenu',e=>e.preventDefault());
+ el.addEventListener('pointerdown',e=>{
+  try{el.setPointerCapture(e.pointerId)}catch(err){}
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY,btn:e.button});
+  if(ptrs.size===1)downInfo={sx:e.clientX,sy:e.clientY,btn:e.button};
+  if(ptrs.size===2){
+   const[a,b]=[...ptrs.values()];
+   lastPinch=Math.hypot(a.x-b.x,a.y-b.y);
+   lastMid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+   downInfo=null;
+  }
+ });
+ el.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId)){handleHover(e);return}
+  const p=ptrs.get(e.pointerId);
+  const dx=e.clientX-p.x,dy=e.clientY-p.y;
+  p.x=e.clientX;p.y=e.clientY;
+   if(ptrs.size===1&&downInfo){
+    if(downInfo.btn===2||R.dragMode==='pan')panBy(dx,dy);
+   else{
+    R.cam.theta-=dx*.0055;
+    R.cam.phi=Math.min(1.32,Math.max(.32,R.cam.phi-dy*.0045));
+    updateCam();
+   }
+  }else if(ptrs.size===2){
+   const[a,b]=[...ptrs.values()];
+   const dnow=Math.hypot(a.x-b.x,a.y-b.y);
+   const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+   if(lastMid)panBy(mx-lastMid.x,my-lastMid.y);
+   if(lastPinch>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*lastPinch/dnow));
+   lastPinch=dnow;lastMid={x:mx,y:my};
+   updateCam();
+  }
+ });
+ const up=e=>{
+  ptrs.delete(e.pointerId);
+  R.lastPtrUp=Date.now();
+  if(ptrs.size<2){lastMid=null;lastPinch=0}
+  if(ptrs.size===0&&downInfo){
+   const dist=Math.hypot(e.clientX-downInfo.sx,e.clientY-downInfo.sy);
+   if(dist<12)handleTap(e);
+   downInfo=null;
+  }
+ };
+ el.addEventListener('pointerup',up);
+ el.addEventListener('pointercancel',up);
+ el.addEventListener('wheel',e=>{
+  e.preventDefault();
+  R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*(1+e.deltaY*.0012)));
+  updateCam();
+ },{passive:false});
+ el.addEventListener('click',e=>{
+  if(Date.now()-(R.lastPtrUp||0)<600)return;
+  handleTap(e);
+ });
+ if(!window.PointerEvent){
+  const tp=new Map();
+  let td=null,tpinch=0,tmid=null;
+  el.addEventListener('touchstart',e=>{
+   e.preventDefault();
+   R.usedTouch=true;
+   for(const t of e.changedTouches)tp.set(t.identifier,{x:t.clientX,y:t.clientY});
+   if(tp.size===1){const t=e.changedTouches[0];td={sx:t.clientX,sy:t.clientY,x:t.clientX,y:t.clientY}}
+   else{td=null}
+   if(tp.size===2){const v=[...tp.values()];tpinch=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);tmid={x:(v[0].x+v[1].x)/2,y:(v[0].y+v[1].y)/2}}
+  },{passive:false});
+  el.addEventListener('touchmove',e=>{
+   e.preventDefault();
+   let ddx=0,ddy=0;
+   for(const t of e.changedTouches){
+    const p=tp.get(t.identifier);
+    if(!p)continue;
+    ddx=t.clientX-p.x;ddy=t.clientY-p.y;
+    p.x=t.clientX;p.y=t.clientY;
+   }
+   if(tp.size===1&&td){
+    td.x+=ddx;td.y+=ddy;
+    R.cam.theta-=ddx*.0055;
+    R.cam.phi=Math.min(1.32,Math.max(.32,R.cam.phi-ddy*.0045));
+    updateCam();
+   }else if(tp.size===2){
+    const v=[...tp.values()];
+    const dn=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);
+    const mx=(v[0].x+v[1].x)/2,my=(v[0].y+v[1].y)/2;
+    if(tmid)panBy(mx-tmid.x,my-tmid.y);
+    if(tpinch>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*tpinch/dn));
+    tpinch=dn;tmid={x:mx,y:my};
+    updateCam();
+   }
+  },{passive:false});
+  const tend=e=>{
+   for(const t of e.changedTouches)tp.delete(t.identifier);
+   if(tp.size<2){tmid=null;tpinch=0}
+   if(tp.size===0&&td){
+    R.lastPtrUp=Date.now();
+    const dist=Math.hypot(td.x-td.sx,td.y-td.sy);
+    if(dist<12)handleTap({clientX:td.x,clientY:td.y});
+    td=null;
+   }
+  };
+  el.addEventListener('touchend',tend);
+  el.addEventListener('touchcancel',tend);
+ }
+}
+function renderFallbackGrid(){
+ const g=$('#fb-grid');
+ let html='';
+ for(let t=0;t<GRID*GRID;t++){
+  const cat=catAt(t);
+  if(cat){
+   const b=B[cat],p=state.placed[cat];
+   html+=`<div class="lot built" data-tile="${t}" data-cat="${cat}">
+    ${canUpgrade(cat)?'<span class="newdot">!</span>':''}
+    <span class="lv-tag">Lv.${p.level}</span>
+    <span class="house">${b.emoji}</span>
+    <span class="stars">${'⭐'.repeat(p.level)}</span>
+    <span class="nameplate">${b.name}${neighborsRoad(t).length?' 🚗':''}</span></div>`;
+  }else if((state.roads||[]).includes(t)){
+   html+=`<div class="lot road" data-tile="${t}"><span class="house" style="font-size:30px">🛣️</span><span class="nameplate">どうろ</span></div>`;
+  }else{
+   html+=`<div class="lot empty" data-tile="${t}"><span>${FB_DECO[t%FB_DECO.length]}</span><span class="plus">＋</span></div>`;
+  }
+ }
+ g.innerHTML=html;
+ g.querySelectorAll('.lot').forEach(el=>{
+  el.onclick=()=>onTileTap(Number(el.dataset.tile));
+ });
+}
+function renderStats(){
+ $('#stat-row').innerHTML=`
+  <span class="stat-chip">⭐ 総正解 <b>${state.totalCorrect}</b></span>
+  <span class="stat-chip">📝 回答数 <b>${state.totalAnswered}</b></span>
+  <span class="stat-chip">📖 ふくしゅう待ち <b>${state.review.length}</b></span>
+  <span class="stat-chip">🛣️ 道路 <b>${(state.roads||[]).length}</b> マス</span>
+  <span class="stat-chip">🏗️ 街レベル合計 <b>${sumLevels()}</b></span>`;
+}
+function renderMap(){
+ refreshNameUI();
+ const r=rankInfo();
+ $('#rank-emoji').textContent=r.e;
+ $('#rank-name').textContent=r.n;
+ $('#town-stats').textContent=`建物 ${Object.keys(state.placed).length}/6`;
+ renderStats();
+ if(window.THREE&&isWebGLAvailable()){
+  $('#scene-fallback').classList.add('hidden');
+  initThree();
+  if(R.ok){
+   R.renderVisible=true;
+   onResize();
+   rebuildCity();
+   if(!R.compiled){
+    try{R.renderer.compile(R.scene,R.camera)}catch(e){}
+    R.compiled=true;
+   }
+   if(pendingPlace)setGhost(pendingPlace);
+  }else{
+   $('#scene-fallback').classList.remove('hidden');
+   renderFallbackGrid();
+  }
+ }else{
+  $('#scene-canvas-host').innerHTML='';
+  $('#scene-fallback').classList.remove('hidden');
+  renderFallbackGrid();
+ }
+ refreshHUD();
+}
+
+function openBuildingMenu(cat){
+ const b=B[cat],p=state.placed[cat],prog=state.progress[cat]||0;
+ const upDis=!canUpgrade(cat);
+ const nextTh=p.level<3?TH[p.level]:null;
+const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
+ openModal(`<h3>${b.emoji} ${b.name} <small>Lv.${p.level}</small></h3>
+ <p class="sub">${CAT_TAG[cat]}・これまでの正解 ${prog} 問</p>
+ <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${progTxt}</p>
+ <div class="close-row" style="flex-direction:column">
+ <button class="btn minty big" id="bm-start">▶️ クイズをはじめる!</button>
+ <button class="btn sunny" id="bm-up" ${upDis?'disabled':''}>⬆️ レベルアップする(💰${UP_COST[p.level]})</button>
+ <button class="btn ghosty small" onclick="closeModal()">とじる</button>
+ </div>`);
+ $('#bm-start').onclick=()=>{closeModal();startSession(cat,false)};
+ $('#bm-up').onclick=()=>{
+  if(!canUpgrade(cat))return;
+  state.coins-=UP_COST[p.level];
+  p.level++;
+  save();closeModal();
+  sfx('level');confetti(40);
+  toast(`🎉 ${b.name}が Lv.${p.level} になったよ!`);
+  renderMap();
+ };
+}
+
+function pickDifficulty(level,rnd){
+ if(level===1)return 1;
+ if(level===2)return rnd<.6?2:1;
+ return rnd<.7?3:2;
+}
+function buildSession(cat,isReview){
+ if(isReview){
+  const ids=shuffle(state.review).slice(0,5);
+  return{cat:null,isReview:true,i:0,streak:0,coinsEarned:0,log:[],results:[],qs:ids.map(id=>{const[c,idx]=id.split(':');return{cat:c,idx,q:QUESTIONS[c][idx],id}})};
+ }
+ const level=state.placed[cat].level;
+ const len=cat==='flower'?2:5;
+ const poolByD={1:[],2:[],3:[]};
+ QUESTIONS[cat].forEach((q,idx)=>{
+  (poolByD[q.d]=poolByD[q.d]||[]).push({idx,q});
+ });
+ const qs=[];const used=new Set();
+ for(let k=0;k<len;k++){
+  const d=pickDifficulty(level,Math.random());
+  let cand=shuffle(poolByD[d]).filter(o=>!used.has(o.idx));
+  if(!cand.length)cand=shuffle(poolByD[d===3?2:d===2?1:3]).filter(o=>!used.has(o.idx));
+  if(!cand.length)cand=shuffle(poolByD[d]);
+  const pick=cand[0];
+  used.add(pick.idx);
+  qs.push({cat,idx:pick.idx,q:pick.q});
+ }
+ return{cat,isReview:false,i:0,streak:0,coinsEarned:0,log:[],results:[],qs};
+}
+
+function startSession(cat,isReview){
+ exitPlace();closeModal();
+ session=buildSession(cat,isReview);
+ $('#q-building').textContent=isReview?'📖 ふくしゅう':`${B[cat].emoji} ${B[cat].name} Lv.${state.placed[cat].level}`;
+ show('scr-quiz');
+ renderQuestion();
+}
+
+function updateDots(){
+ const box=$('#q-dots');
+ box.innerHTML=session.qs.map((_,k)=>{
+  let c='dot';
+  if(k<session.i)c+=session.results[k]?' done-ok':' done-ng';
+  if(k===session.i)c+=' now';
+  return`<span class="${c}"></span>`;
+ }).join('');
+ const st=$('#q-streak');
+ if(session.streak>=2&&!session.isReview){st.textContent=`🔥 ${session.streak} れんぞく!`;st.classList.remove('hidden')}
+ else st.classList.add('hidden');
+}
+
+function feedbackHTML(ok,exp,extra=''){
+ return`<div class="feedback ${ok?'good':'bad'}">
+  <div class="fb-head">${ok?'⭕️ せいかい!':'❌️ ざんねん…'}</div>
+  <div class="fb-exp">${exp}${extra?('<br>'+extra):''}</div>
+  <div class="fb-next"><button class="btn lavvy" id="fb-next">${session.i<session.qs.length-1?'つぎへ ▶':'結果をみる 🎉'}</button></div>
+ </div>`;
+}
+function bindFeedback(ok){
+ $('#fb-next').onclick=()=>{
+  session.i++;
+  if(session.i>=session.qs.length)finishSession();
+  else renderQuestion();
+ };
+}
+
+function addCoins(n){
+ state.coins+=n;
+ session.coinsEarned+=n;
+ refreshHUD();
+ if(n>0)sfx('coin');
+}
+function recordResult(ok,baseCoins,label){
+ session.results[session.i]=ok;
+ state.totalAnswered++;
+ let amount=0;
+ if(ok){
+  state.totalCorrect++;
+  if(session.isReview){
+   amount=4;
+   state.review=state.review.filter(x=>x!==session.qs[session.i].id);
+  }else{
+   session.streak++;
+   amount=baseCoins+(session.streak>=2?Math.min(session.streak-1,4)*2:0);
+   const cat=session.qs[session.i].cat;
+   state.progress[cat]=(state.progress[cat]||0)+1;
+  }
+ }else{
+  session.streak=0;
+  if(!session.isReview&&session.qs[session.i].cat!=='flower'){
+   const id=session.qs[session.i].cat+':'+session.qs[session.i].idx;
+   if(!state.review.includes(id))state.review.push(id);
+  }
+ }
+ session.log.push({label:`Q${session.i+1} ${label}`,amount});
+ addCoins(amount);
+ save();
+}
+
+function renderQuestion(){
+ updateDots();
+ const item=session.qs[session.i];
+ const q=item.q;
+ const zone=$('#q-answer-zone');
+ const card=$('#q-card');
+ if(item.cat==='flower')return renderWriting(card,zone,item);
+ if(item.cat==='station')return renderOrder(card,zone,item);
+ if(q.t==='pic')return renderListening(card,zone,item,true);
+ if(q.t==='qa')return renderListening(card,zone,item,false);
+ return renderChoice(card,zone,item);
+}
+
+function renderChoice(card,zone,item){
+ const q=item.q;
+ card.innerHTML=`<span class="qcat-tag">${CAT_TAG[item.cat]}</span>
+ <div class="qtext">${q.q.replace(/_{2,}/g,'<span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>').replace(/\n/g,'<br>')}</div>`;
+ const opts=shuffle(q.c.map((t,k)=>({t,ok:k===q.a})));
+ zone.innerHTML=`<div class="choices panel" style="margin-top:14px;background:transparent;border:none;box-shadow:none;padding:0">
+ ${opts.map((o,k)=>`<button class="choice" data-ok="${o.ok}"><span class="ckey">${'ABCD'[k]}</span>${o.t}</button>`).join('')}
+ </div>`;
+ zone.querySelectorAll('.choice').forEach(btn=>{
+  btn.onclick=()=>{
+   const ok=btn.dataset.ok==='true';
+   zone.querySelectorAll('.choice').forEach(b=>{b.disabled=true;if(b.dataset.ok==='true')b.classList.add('ok')});
+   if(!ok)btn.classList.add('ng');
+   sfx(ok?'ok':'ng');
+   recordResult(ok,3+2*q.d,'正解ボーナス');
+   updateDots();
+   zone.insertAdjacentHTML('beforeend',feedbackHTML(ok,q.e));
+   bindFeedback(ok);
+   $('#fb-next').focus();
+  };
+ });
+}
+
+function renderOrder(card,zone,item){
+ const q=item.q;
+ card.innerHTML=`<span class="qcat-tag">🚉 じゅんじょにならべよう</span>
+ <div class="qtext">${q.jp}</div>
+ <div class="qjp">単語をタップして、正しい英語の文を作ろう!</div>`;
+ let chips=shuffle(q.words.map((w,k)=>({w,id:k})));
+ if(chips.every(c=>norm(c.w)===norm(q.words[chips.indexOf(c)])))chips=shuffle(chips);
+ const selected=[];
+ zone.innerHTML=`<div class="panel" style="margin-top:14px;padding:18px">
+  <div class="order-slots" id="or-slots"><span class="ph">ここにタップした単語が並ぶよ</span></div>
+  <div class="order-bank" id="or-bank"></div>
+  <div class="fb-next"><button class="btn minty" id="or-check" disabled>これで決定!✔</button>
+  <button class="btn ghosty small" id="or-clear">やりなおす</button></div></div>`;
+ function paintBank(){
+  $('#or-bank').innerHTML=chips.map(c=>`<button class="chip ${c.used?'hidden':''}" data-id="${c.id}">${c.w}</button>`).join('');
+  $('#or-bank').querySelectorAll('.chip').forEach(b=>{
+   b.onclick=()=>{
+    const c=chips.find(x=>String(x.id)===b.dataset.id);
+    if(c.used)return;
+    c.used=true;selected.push(c);
+    sfx('coin');
+    paintSlots();
+   };
+  });
+ }
+ function paintSlots(){
+  $('#or-slots').innerHTML=selected.length?selected.map((c,k)=>`<button class="chip in-slot" data-k="${k}">${c.w}</button>`).join('')
+   :'<span class="ph">ここにタップした単語が並ぶよ</span>';
+  $('#or-slots').querySelectorAll('.chip').forEach(b=>{
+   b.onclick=()=>{
+    const k=Number(b.dataset.k);
+    selected[k].used=false;
+    selected.splice(k,1);
+    paintSlots();
+   };
+  });
+  $('#or-check').disabled=selected.length!==q.words.length;
+ }
+ paintBank();paintSlots();
+ $('#or-clear').onclick=()=>{selected.forEach(c=>c.used=false);selected.length=0;paintBank();paintSlots()};
+ $('#or-check').onclick=()=>{
+  const ans=selected.map(c=>norm(c.w)).join(' ');
+  const ok=ans===norm(q.words.join(' '));
+  sfx(ok?'ok':'ng');
+  recordResult(ok,3+2*q.d,'並べかえボーナス');
+  $('#or-check').disabled=true;
+  $('#or-clear').disabled=true;
+  $('#or-bank').style.pointerEvents='none';
+  const extra=ok?'':'<br>正解: <b>'+q.words.join(' ')+'</b>';
+  zone.querySelector('.panel').insertAdjacentHTML('beforeend',feedbackHTML(ok,q.e,extra));
+  bindFeedback(ok);
+ };
+}
+
+function rateFor(d){return d<=1?.85:d===2?.95:1.02}
+function renderListening(card,zone,item,isPic){
+ const q=item.q;
+ const transcript=isPic?q.say:(item.cat==='park'?q.say:'');
+ card.innerHTML=`<span class="qcat-tag">👂 ちょうかいクイズ</span>
+ <div class="speak-zone">
+  <button class="speak-btn" id="speak-btn">🔊</button>
+  <span class="speak-hint">おして音を聞こう!なんどでも聞けるよ(はやさも変わるよ)</span>
+ </div>
+ ${!HAS_TTS?'<div class="feedback bad" style="margin:8px 12px"><div class="fb-exp">⚠️ このブラウザでは音が出ないみたい…下の文章を読んで答えてね!</div></div><div class="qjp" style="font-size:17px">'+transcript+'</div>':''}
+ ${isPic?'':`<div class="qtext" style="font-size:min(4.8vw,22px);margin-top:10px">${q.q}</div>`}`;
+ zone.innerHTML=isPic
+ ?`<div class="pic-grid panel" style="background:transparent;border:none;box-shadow:none;padding:0">
+   ${shuffle(q.s.map((t,k)=>({t,ok:k===q.a}))).map(o=>`<button class="pic" data-ok="${o.ok}">${o.t}</button>`).join('')}</div>`
+ :`<div class="choices panel" style="margin-top:14px;background:transparent;border:none;box-shadow:none;padding:0">
+   ${shuffle(q.s.map((t,k)=>({t,ok:k===q.a}))).map((o,k)=>`<button class="choice" data-ok="${o.ok}"><span class="ckey">${'ABCD'[k]}</span>${o.t}</button>`).join('')}</div>`;
+ const spBtn=$('#speak-btn');
+ let playCount=0;
+ async function play(){
+  if(spBtn.disabled)return;
+  spBtn.classList.add('playing');
+  await speak(q.say,rateFor(q.d));
+  spBtn.classList.remove('playing');
+ }
+ spBtn.onclick=play;
+ setTimeout(play,350);
+ zone.querySelectorAll('.choice,.pic').forEach(btn=>{
+  btn.onclick=async()=>{
+   const ok=btn.dataset.ok==='true';
+   zone.querySelectorAll('.choice,.pic').forEach(b=>{b.disabled=true;if(b.dataset.ok==='true')b.classList.add('ok')});
+   if(!ok)btn.classList.add('ng');
+   sfx(ok?'ok':'ng');
+   recordResult(ok,3+2*q.d,'リスニングボーナス');
+   updateDots();
+   zone.insertAdjacentHTML('beforeend',
+    `<details style="margin-top:10px;text-align:center;font-size:13px;color:var(--ink-soft)"><summary style="cursor:pointer">🔊 音声の文章をみる</summary><div class="panel" style="margin-top:8px;padding:12px;font-weight:700">${transcript}<br><span style="color:var(--pink-d)">訳) ${q.e.split('=')[1]||''}</span></div></details>`);
+   zone.insertAdjacentHTML('beforeend',feedbackHTML(ok,q.e));
+   bindFeedback(ok);
+   await speak(q.say,rateFor(q.d));
+  };
+ });
+}
+
+function wordCount(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).length:0}
+
+function renderWriting(card,zone,item){
+ const q=item.q;
+ card.innerHTML=`<span class="qcat-tag">✏️ ライティング</span>
+ <div class="qtext" style="font-size:min(4.8vw,23px)">${q.en}</div>
+ <div class="qjp">${q.jp}</div>
+ <div class="qjp" style="margin-top:8px">💡 ヒント: ${q.hints.join(' / ')}</div>`;
+ zone.innerHTML=`<div class="panel" style="margin-top:14px">
+  <textarea class="writebox" id="wr-box" placeholder="Write your answer here..."></textarea>
+  <div class="writing-meta"><span>目標は 15〜25語!</span><span id="wr-count">0 語</span></div>
+  <div class="fb-next"><button class="btn lavvy big" id="wr-submit" disabled>できたら提出!📮</button></div>
+  <div id="wr-checkzone"></div></div>`;
+ const box=$('#wr-box'),cnt=$('#wr-count'),sub=$('#wr-submit');
+ box.addEventListener('input',()=>{
+  const n=wordCount(box.value);
+  cnt.textContent=n+' 語';
+  cnt.className=n>=15?(n<=25?'over':'over'):'';
+  sub.disabled=n<3;
+ });
+ sub.onclick=()=>{
+  const n=wordCount(box.value);
+  box.disabled=true;sub.disabled=true;sub.textContent='提出ずみ ✔';
+  $('#wr-checkzone').innerHTML=`
+   <div style="margin-top:16px;padding:14px;border-radius:16px;background:var(--sun-l);border:2px solid #ffe6a8">
+    <div style="font-weight:900;margin-bottom:6px">🌟 お手本の答え</div>
+    <div style="font-size:15px;line-height:1.7">${q.sample}</div>
+    <div style="font-size:13px;color:var(--ink-soft);margin-top:6px">(約 ${wordCount(q.sample)} 語)</div>
+   </div>
+   <div style="font-weight:900;margin-top:16px;text-align:center">じぶんの答えをチェックしてね!</div>
+   <div class="checklist" id="wr-checks">${CHECKS.map((c,k)=>`<label class="checkrow"><input type="checkbox" data-k="${k}">${c}</label>`).join('')}</div>
+   <div class="fb-next"><button class="btn pinky big" id="wr-done">コインをもらってつぎへ 💰</button></div>`;
+  $('#wr-checks').querySelectorAll('input').forEach(inp=>{
+   inp.onchange=()=>inp.closest('.checkrow').classList.toggle('checked',inp.checked);
+  });
+  $('#wr-done').onclick=()=>{
+   const checks=$('#wr-checks').querySelectorAll('input:checked').length;
+   sfx(checks>=2?'ok':'ng');
+   recordResult(checks>=2,5+checks*5,'✍️ 作文ボーナス');
+   updateDots();
+   $('#wr-checkzone').insertAdjacentHTML('beforeend',feedbackHTML(checks>=2,q.e+'<br>お手本と見くらべて、直したいところがあれば直しておこう!'));
+   bindFeedback(checks>=2);
+  };
+ };
+}
+
+function finishSession(){
+ const n=session.qs.length;
+ const correct=session.results.filter(Boolean).length;
+ if(!session.isReview&&correct===n&&n>=3){addCoins(10);session.log.push({label:'🎉 パーフェクトボーナス',amount:10});save()}
+ if(!session.isReview&&(state.roads||[]).length){
+  const connected=Object.keys(state.placed).filter(c=>neighborsRoad(state.placed[c].tile).length>0).length;
+  if(connected>0){
+   const amt=connected*2;
+   addCoins(amt);
+   session.log.push({label:`🚗 道路ボーナス(そばに道のある建物×${connected})`,amount:amt});
+   save();
+  }
+ }
+ show('scr-result');
+ const perfect=correct===n&&n>=3;
+ $('#res-title').textContent=session.isReview?'📖 ふくしゅうクリア!':perfect?'パーフェクト!! すごい!':correct>=Math.ceil(n/2)?'よくできました!':'あと少し!がんばろう!';
+ $('#res-stars').innerHTML=('⭐'.repeat(correct)+'☆'.repeat(n-correct));
+ $('#res-coins').textContent=session.coinsEarned;
+ $('#res-detail').innerHTML=session.log.map(l=>`<div><span>${l.label}</span><span>+${l.amount} 💰</span></div>`).join('');
+ const pw=$('#res-progress-wrap');
+ const lb=$('#levelup-banner');
+ if(session.isReview||!session.cat){
+  pw.classList.add('hidden');lb.classList.add('hidden');
+ }else{
+  const b=B[session.cat],p=state.placed[session.cat],cur=state.progress[session.cat]||0;
+  pw.classList.remove('hidden');
+  if(p.level<3){
+   const target=TH[p.level];
+   $('#res-progress-label').textContent=`${b.emoji} ${b.name} Lv.${p.level}`;
+   $('#res-progress-num').textContent=Math.min(cur,target)+' / '+target;
+   setTimeout(()=>{$('#res-progress-fill').style.width=Math.min(100,cur/target*100)+'%'},80);
+  }else{
+   $('#res-progress-label').textContent=`${b.emoji} ${b.name} Lv.MAX`;
+   $('#res-progress-num').textContent='';
+   setTimeout(()=>{$('#res-progress-fill').style.width='100%'},80);
+  }
+  if(canUpgrade(session.cat)){
+   lb.classList.remove('hidden');
+   $('#levelup-text').textContent=`${b.name}をタップして、レベルアップしよう!`;
+   confetti(30);sfx('level');
+  }else lb.classList.add('hidden');
+ }
+ if(perfect&&!lb||perfect&&lb.classList.contains('hidden'))confetti(26);
+ save();
+}
+
+function startReview(){
+ if(!state.review.length){toast('ふくしゅうする問題はないよ!');return}
+ startSession(null,true);
+}
+
+function goHome(){
+ exitPlace();
+ if(session&&session.i<session.qs.length){
+  askYesNo('まちにもどる?','クイズの途中だけど、やめてまちへもどる?','もどる',()=>{session=null;if(HAS_TTS)speechSynthesis.cancel();show('scr-town');renderMap()});
+ }else{
+  session=null;show('scr-town');renderMap();
+ }
+}
+
+function wipeAndRestart(){
+ try{localStorage.removeItem(SAVE_KEY)}catch(e){}
+ exitPlace();
+ if(HAS_TTS){try{speechSynthesis.cancel()}catch(e){}}
+ session=null;
+ state=freshState();
+ freshStart=true;
+ closeModal();
+ $('#start-btn').textContent='▶️ はじめる!';
+ $('#start-btn').className='btn pinky big';
+ show('scr-title');
+ refreshHUD();
+ toast('データを消したよ!はじめからがんばろう♪');
+}
+function applyGfx(){
+ if(!R.renderer)return;
+ R.renderer.setPixelRatio(state.lowGfx?1:Math.min(window.devicePixelRatio||1,1.5));
+ if(R.sun){
+  const want=state.lowGfx?1024:2048;
+  if(R.sun.shadow.mapSize.x!==want){
+   R.sun.shadow.mapSize.set(want,want);
+   if(R.sun.shadow.map){R.sun.shadow.map.dispose();R.sun.shadow.map=null}
+   R.sun.shadow.needsUpdate=true;
+  }
+ }
+ onResize();
+}
+function openSettings(){
+ const snd=state.sound?'🔔 効果音:ON':'🔕 効果音:OFF';
+ const gfx=state.lowGfx?'🖼️ 画面: 軽いモード':'🖼️ 画面: きれい';
+ openModal(`<h3>⚙️ せってい</h3><p class="sub">まちの設定をかえられるよ</p>
+ <div class="close-row" style="flex-direction:column">
+ <button class="btn lavvy big" id="st-help">❓ 遊び方をみる</button>
+ <button class="btn ghosty big" id="st-gfx">${gfx}</button>
+ <button class="btn ghosty big" id="st-sound">${snd}</button>
+ <button class="btn ghosty" id="st-reset">💾 データを消して最初から</button>
+ <button class="btn pinky small" onclick="closeModal()">とじる</button>
+ </div>`);
+ $('#st-help').onclick=openTutorial;
+ $('#st-gfx').onclick=()=>{
+  state.lowGfx=!state.lowGfx;
+  save();
+  applyGfx();
+  toast(state.lowGfx?'軽いモードにしたよ!':'きれいモードにしたよ!');
+  openSettings();
+ };
+ $('#st-sound').onclick=()=>{state.sound=!state.sound;save();refreshHUD();openSettings()};
+ $('#st-reset').onclick=()=>askYesNo('データを消す?','いままでの街・おかね・きろくが全部消えて、最初の画面にもどるよ。いい?','消して最初から',wipeAndRestart);
+}
+$('#start-btn').onclick=()=>{
+ if(freshStart){freshStart=false;openNaming(true);return}
+ show('scr-town');renderMap();
+};
+$('#rename-btn').onclick=()=>openNaming(false);
+$('#build-open').onclick=()=>openPalette();
+$('#settings-btn').onclick=openSettings;
+$('#how-btn-title').onclick=openTutorial;
+$('#cam-reset').onclick=()=>{
+ R.cam={theta:.78,phi:1.02,radius:23};
+ R.target={x:0,z:0};
+ if(R.ok)updateCam();
+ toast('視点をもどしたよ!');
+};
+$('#pan-toggle').onclick=()=>{
+ R.dragMode=R.dragMode==='pan'?'orbit':'pan';
+ $('#pan-toggle').textContent=R.dragMode==='pan'?'🖐️':'🔄';
+ toast(R.dragMode==='pan'?'ドラッグで街をスライドできるよ!':'ドラッグで視点をまわすモードにしたよ');
+ refreshSceneHint();
+};
+$('#reset-btn-top').onclick=()=>askYesNo('データをけす?','いままでの街と記録がぜんぶ消えてしまうけどいい?','消して最初から',wipeAndRestart);
+$('#sound-btn').onclick=()=>{state.sound=!state.sound;save();refreshHUD();if(state.sound)sfx('coin')};
+$('#review-btn').onclick=startReview;
+$('#home-btn').onclick=goHome;
+$('#res-town-btn').onclick=()=>{session=null;show('scr-town');renderMap()};
+
+(function init(){
+ state=loadState();
+ freshStart=!state;
+ if(!state)state=freshState();
+ try{
+  if(freshStart&&window.matchMedia&&matchMedia('(pointer:coarse)').matches){
+   state.lowGfx=true;
+  }
+ }catch(e){}
+ refreshHUD();
+ if(!freshStart){
+  $('#start-btn').textContent='▶️ つづきから!';
+  $('#start-btn').className='btn minty big';
+  $('#reset-btn-top').classList.remove('hidden');
+ }
+})();
+</script>
+</body>
+</html>
