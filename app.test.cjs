@@ -739,6 +739,16 @@ if (require.main === module) {
     assert.equal(reloaded.get('#reset-btn-top').classList.contains('hidden'), false);
   });
 
+  test('mobile appbar wraps without shrinking or clipping the coin count', () => {
+    const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
+    const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    const mobile = css.match(/@media\(max-width:600px\)\{([\s\S]*?)\n\}/)[1];
+    assert.match(mobile, /\.appbar\{[^}]*flex-wrap:wrap/);
+    assert.match(mobile, /\.appbar \.logo-mini\{[^}]*font-size:0/);
+    assert.match(mobile, /\.appbar \.pill,\.appbar \.iconbtn\{flex-shrink:0\}/);
+    assert.doesNotMatch(css, /#coin-pill\{[^}]*(?:max-width|overflow:hidden)/);
+  });
+
   test('grade card styles provide large targets, visible focus and shrinkable narrow layouts', () => {
     const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
     const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
