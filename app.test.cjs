@@ -208,7 +208,7 @@ function assertGradeCards(app, scope, selected) {
   assert.match(group.querySelector('legend').textContent, /練習する級/);
   assert.equal(group.querySelectorAll('select').length, 0);
   const cards = group.querySelectorAll('.grade-card');
-  assert.deepEqual(cards.map(card => card.dataset.grade), ['5', '4']);
+  assert.deepEqual(cards.map(card => card.dataset.grade), ['5', '4', '3']);
   for (const card of cards) {
     const grade = card.dataset.grade;
     assert.equal(card.tagName, 'button');
@@ -241,9 +241,10 @@ if (require.main === module) {
     assert.equal(scripts.filter(script => !script.external && !script.isBank).length, 1);
     assert.ok(scripts.indexOf(banks[0]) < scripts.findIndex(script => !script.external && !script.isBank));
     const app = loadApp({ html });
-    assert.deepEqual(app.json('Object.keys(QUESTION_BANKS)'), ['4', '5']);
-    for (const grade of ['4', '5']) {
-      assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['${grade}'])`), ['library', 'school', 'cafe', 'station', 'park', 'flower']);
+    assert.deepEqual(app.json('Object.keys(QUESTION_BANKS)'), ['3', '4', '5']);
+    for (const grade of ['4', '5', '3']) {
+      const expectedCats = grade === '3' ? ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay'] : ['library', 'school', 'cafe', 'station', 'park', 'flower'];
+      assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['${grade}'])`), expectedCats);
     }
   });
 
@@ -254,8 +255,8 @@ if (require.main === module) {
     }
   });
 
-  for (const grade of ['4', '5']) {
-    for (const cat of ['library', 'school', 'cafe', 'station', 'park', 'flower']) {
+  for (const grade of ['4', '5', '3']) {
+    for (const cat of (grade === '3' ? ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay'] : ['library', 'school', 'cafe', 'station', 'park', 'flower'])) {
       for (const level of [1, 2, 3]) {
         test(`grade ${grade} ${cat} level ${level} tile opens menu and start button renders quiz`, () => {
           const { run, get, json } = loadApp();
@@ -276,17 +277,17 @@ if (require.main === module) {
           assert.equal(get('#scr-quiz').classList.contains('active'), true);
           assert.equal(run('session.grade'), grade);
           assert.equal(run('session.cat'), cat);
-          const length = cat === 'flower' ? (grade === '4' ? [2, 3, 5][level - 1] : 2) : 5;
+          const length = cat === 'essay' ? 1 : cat === 'flower' ? ((grade === '4' || grade === '3') ? [2, 3, 5][level - 1] : 2) : 5;
           assert.equal(run('session.qs.length'), length);
           assert.equal(run('new Set(session.qs.map(item=>item.id)).size'), length);
           assert.equal(run(`session.qs.every(item=>item.cat==='${cat}'&&item.id.startsWith('g${grade}-${cat}-')&&item.q===questionById(item.id,'${grade}').q)`), true);
           assert.equal(get('#q-dots').querySelectorAll('.dot').length, length);
           assert.ok(get('#q-card').innerHTML.length > 0);
           assert.ok(get('#q-answer-zone').innerHTML.length > 0);
-          if (cat === 'flower' && grade === '5') assert.ok(get('#wr-box'));
+          if ((cat === 'flower' && grade === '5') || cat === 'essay') assert.ok(get('#wr-box'));
           else assert.equal(get('#q-answer-zone').querySelectorAll('.choice').length, run('session.qs[0].q.c?.length||session.qs[0].q.pairs.length'));
           if (cat === 'station') assert.ok(get('.order-units'));
-          if (cat === 'flower' && grade === '4') assert.equal(get('.reading-passage').textContent, run('session.qs[0].q.passage'));
+          if (cat === 'flower' && (grade === '4' || grade === '3')) assert.equal(get('.reading-passage').textContent, run('session.qs[0].q.passage'));
           if (cat === 'park') assert.ok(get('#speak-btn'));
           assert.deepEqual(json('state'), before);
         });
@@ -307,8 +308,8 @@ if (require.main === module) {
         let html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
         if (replacement !== null) html = html.replace(/<script id="question-bank">[\s\S]*?<\/script>/, replacement);
         const { run, get, json, storage } = loadApp({ html, beforeApp });
-        run(`activeGrade='${grade}'; state=freshState(activeGrade); confirmBuild(0,'library'); goHome(); state.review=['g${grade}-library-001']; save()`);
-        assert.equal(run(`validReview('g${grade}-library-001')`), replacement === null);
+        run(`activeGrade='${grade}'; state=freshState(activeGrade); confirmBuild(0,'library'); goHome(); state.review=['g${grade}-library-${grade === '3' ? 101 : '001'}']; save()`);
+        assert.equal(run(`validReview('g${grade}-library-${grade === '3' ? 101 : '001'}')`), replacement === null);
         get('#fb-grid .lot[data-cat="library"]').click();
         const menu = get('#modal').innerHTML;
         const before = json('state');
@@ -394,7 +395,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
-    run("for(const t of [null,undefined,-1,49,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
+    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
     assert.deepEqual(json('state'), before);
     run("enterPlace('school'); onTileTap(1)");
     assert.equal(get('#yn-yes'), null);
@@ -411,11 +412,52 @@ if (require.main === module) {
     assert.equal(run('state.placed.school.level'), 1);
   });
 
+  test('decorations place on free tiles for coins, reject invalid spots, and remove without refund', () => {
+    const { run, get, json } = loadApp();
+    run("confirmBuild(0,'library'); tryRoad(1)");
+    const before = json('state');
+    run("for(const id of [null,undefined,'missing','__proto__','library','',0])confirmDeco(5,id)");
+    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
+    assert.deepEqual(json('state'), before);
+    run("confirmDeco(0,'bench'); confirmDeco(1,'bench')");
+    assert.deepEqual(json('state'), before);
+    run("confirmDeco(5,'flowerbed')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    assert.equal(run('state.coins'), before.coins - 5);
+    run("tryRoad(5); confirmBuild(5,'school')");
+    assert.deepEqual(json('state.roads'), [1]);
+    assert.equal(run('state.placed.school'), undefined);
+    assert.equal(run('state.coins'), before.coins - 5);
+    run("confirmDeco(5,'lamp')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    run("state.coins=0; confirmDeco(6,'lamp')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    run("state.coins=50; enterPlace('deco:lamp'); onTileTap(6)");
+    get('#yn-yes').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }, { tile: 6, kind: 'lamp' }]);
+    assert.equal(run('state.coins'), 50 - 10);
+    run("exitPlace(); enterPlace('deco:missing'); enterPlace('deco:'); enterPlace('library')");
+    assert.equal(run('pendingPlace'), null);
+    run('openPalette()');
+    assert.equal(get('[data-cat="deco:fountain"]').disabled, false);
+    get('[data-cat="deco:fountain"]').click();
+    assert.equal(run('pendingPlace'), 'deco:fountain');
+    run('exitPlace()');
+    const coinsBefore = json('state').coins;
+    run('onTileTap(5)');
+    get('#yn-no').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }, { tile: 6, kind: 'lamp' }]);
+    run('onTileTap(5)');
+    get('#yn-yes').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }]);
+    assert.equal(run('state.coins'), coinsBefore);
+  });
+
   test('core build and category actions validate input, unlocks, funds and stale selection', () => {
     const { run, get, json } = loadApp();
     const before = json('state');
     run("for(const cat of [null,undefined,'missing','__proto__','constructor','__road','school']){confirmBuild(0,cat);enterPlace(cat);openBuildingMenu(cat);canUpgrade(cat)}");
-    run("exitPlace(); for(const t of [null,undefined,-1,49,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
+    run("exitPlace(); for(const t of [null,undefined,-1,81,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
     assert.deepEqual(json('state'), before);
     run("enterPlace('library'); onTileTap(0); exitPlace()");
     get('#yn-yes').click();
@@ -605,7 +647,7 @@ if (require.main === module) {
     const { run, json } = loadApp();
     run("state=migrate({g:5,coins:Infinity,totalCorrect:-3,totalAnswered:NaN,placed:{library:{lot:5,level:2},school:{tile:1,level:1},cafe:{tile:1,level:2},station:{tile:-1,level:1},park:{tile:NaN,level:1},flower:{tile:4,level:Infinity},bad:{tile:3,level:1}},roads:[0,0,1,5,-1,2.5,null],progress:{library:6,school:-1,cafe:Infinity,park:16,bad:3},unlocked:['bad','park'],review:['library:0','library:0','bad:0','library:999','constructor:0',null]})");
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
-    assert.deepEqual(json('state.roads'), [0, 7]);
+    assert.deepEqual(json('state.roads'), [0, 9]);
     assert.equal(run('state.coins'), 50);
     assert.equal(run('state.totalCorrect'), 0);
     assert.equal(run('state.totalAnswered'), 0);
@@ -617,6 +659,57 @@ if (require.main === module) {
     assert.equal(run('migrate([])'), null);
     run('save(); state=loadState()');
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
+  });
+
+  test('migration drops off-grade buildings and sessions handle empty pools gracefully', () => {
+    const { run, get, json } = loadApp();
+    run("state=migrate({v:5,grade:'4',g:9,coins:50,placed:{library:{tile:0,level:1},essay:{tile:1,level:1}},roads:[],decorations:[],progress:{},review:[],unlocked:['library']},'4')");
+    assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 } });
+    assert.deepEqual(json('state.unlocked'), ['library', 'school']);
+    run("state.placed.essay={tile:1,level:1}; updateUnlocks(state)");
+    assert.equal(run('state.unlocked.includes("essay")'), false);
+    assert.doesNotThrow(() => run("startSession('essay',false)"));
+    assert.equal(run('session'), null);
+    assert.equal(get('#scr-quiz').classList.contains('active'), false);
+    run('renderMap()');
+    assert.equal(get('#town-stats').textContent, '建物 1/6');
+  });
+
+  test('empty reading groups end the session attempt without errors', () => {
+    const { run, get } = loadApp();
+    run("state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); QUESTION_BANKS[state.grade].flower=QUESTION_BANKS[state.grade].flower.filter(q=>q.d!==1)");
+    run("startSession('flower',false)");
+    assert.equal(run('session'), null);
+    assert.equal(get('#scr-quiz').classList.contains('active'), false);
+    assert.match(get('#toast-root').children.at(-1).textContent, /問題が見つかりません/);
+  });
+
+  test('road rebuild disposes old meshes including instance buffers', () => {
+    const { run } = loadApp();
+    run(`R.roadsG={children:[{geometry:{dispose(){globalThis.__d=(globalThis.__d||0)+1}},dispose(){globalThis.__d=(globalThis.__d||0)+10}}]}`);
+    run('rebuildRoads()');
+    assert.equal(run('globalThis.__d'), 11);
+    assert.equal(run('R.roadsG.children.length'), 0);
+  });
+
+  test('migration normalizes flags, names and numeric counters', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({v:5,grade:'4',g:9,coins:12.7,totalCorrect:3.9,totalAnswered:1e10,townName:'あいうえおかきくけこさしすせそ',sound:'false',lowGfx:1,progress:{library:2.5,school:1e10},placed:{},roads:[],decorations:[],review:[],unlocked:['library']},'4')");
+    assert.equal(run('state.coins'), 12);
+    assert.equal(run('state.totalCorrect'), 3);
+    assert.equal(run('state.totalAnswered'), 9999999);
+    assert.equal(run('state.townName'), 'あいうえおかきくけこさし');
+    assert.equal(run('state.sound'), true);
+    assert.equal(run('state.lowGfx'), true);
+    assert.deepEqual(json('state.progress'), { library: 2, school: 9999999 });
+  });
+
+  test('migration sanitizes decorations, remaps legacy tiles and drops collisions', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({g:7,placed:{library:{tile:0,level:1}},roads:[1],decorations:[{tile:2,kind:'bench'},{tile:9,kind:'fountain'},{tile:16,kind:'lamp'},{tile:0,kind:'sign'},{tile:1,kind:'flowerbed'},{tile:2,kind:'lamp'},{tile:48,kind:'bench'},{tile:3,kind:'missing'},null,'x',{tile:4},{}]})");
+    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 11, kind: 'fountain' }, { tile: 20, kind: 'lamp' }, { tile: 60, kind: 'bench' }]);
+    assert.deepEqual(json('migrate({}).decorations'), []);
+    assert.deepEqual(json("migrate({decorations:'nope'}).decorations"), []);
   });
 
   test('city rebuild drops animations referencing removed objects', () => {
@@ -686,6 +779,25 @@ if (require.main === module) {
     }
   });
 
+  test('mobile readability uses mobile-only breaks in long explanations', () => {
+    const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
+    const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    assert.match(css, /br\.mbr\{display:none\}/);
+    assert.match(css, /br\.wbr\{display:block\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.mbr\{display:block\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.wbr\{display:none\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?\.modal \.sub\{[^}]*line-height/);
+    const app = loadApp();
+    for (const page of app.json('TUT')) {
+      assert.match(page.d, /<br class="mbr">/);
+      assert.match(page.d, /<br class="wbr">/);
+    }
+    assert.match(app.run('flowerGuide("4")'), /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("5")'), /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("4")'), /<br class="wbr">/);
+    assert.match(app.run('flowerGuide("5")'), /<br class="wbr">/);
+  });
+
   test('level-up tutorial describes practice without claiming exam equivalence', () => {
     const app = loadApp();
     const description = app.run("TUT.find(page => page.t === 'レベルアップで成長').d");
@@ -739,6 +851,16 @@ if (require.main === module) {
     assert.equal(reloaded.get('#reset-btn-top').classList.contains('hidden'), false);
   });
 
+  test('mobile appbar wraps without shrinking or clipping the coin count', () => {
+    const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
+    const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    const mobile = css.match(/@media\(max-width:600px\)\{([\s\S]*?)\n\}/)[1];
+    assert.match(mobile, /\.appbar\{[^}]*flex-wrap:wrap/);
+    assert.match(mobile, /\.appbar \.logo-mini\{[^}]*font-size:0/);
+    assert.match(mobile, /\.appbar \.pill,\.appbar \.iconbtn\{flex-shrink:0\}/);
+    assert.doesNotMatch(css, /#coin-pill\{[^}]*(?:max-width|overflow:hidden)/);
+  });
+
   test('grade card styles provide large targets, visible focus and shrinkable narrow layouts', () => {
     const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
     const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
@@ -747,13 +869,13 @@ if (require.main === module) {
     for (const [, rule] of cards) assert.ok(Number(rule.match(/min-height:(\d+)px/)[1]) >= 64);
     assert.match(css, /\.grade-selector\{[^}]*width:100%[^}]*min-width:0/);
     assert.match(css, /\.grade-card\{[^}]*min-width:0[^}]*overflow-wrap:anywhere/);
-    assert.match(css, /\.grade-options\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+    assert.match(css, /\.grade-options\{[^}]*grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
     assert.match(css, /@media\(max-width:480px\)\{\.grade-options\{grid-template-columns:minmax\(0,1fr\)/);
     assert.match(css, /\.grade-card:focus-visible\{outline:4px solid [^;]+;outline-offset:4px/);
     assert.match(css, /\.grade-card\[aria-pressed="true"\]\{[^}]*border-color:[^;]+;background:/);
   });
 
-  for (const grade of ['4', '5']) {
+  for (const grade of ['4', '5', '3']) {
     test(`settings card clicks from grade ${grade} preserve saves through same-grade, cancel and accept`, () => {
       const app = loadApp();
       const other = grade === '4' ? '5' : '4';
@@ -1063,6 +1185,77 @@ if (require.main === module) {
     assert.equal(get('.reading-passage').textContent, passage, 'review shows self-contained passage');
   });
 
+  test('grade3 flower reading sessions use one grouped passage and record wrong ids', () => {
+    const app = loadApp();
+    const { run, get, json } = app;
+    run("activeGrade='3'; state=freshState('3'); state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); state.placed.flower.level=2; startSession('flower',false)");
+    assert.equal(run('session.grade'), '3');
+    assert.equal(run('session.qs.length'), 3);
+    assert.equal(run('new Set(session.qs.map(item=>item.q.group)).size'), 1, 'single group');
+    assert.equal(run('session.qs.every(item=>questionKind(item.q)==="reading")'), true);
+    assert.equal(run('session.qs.every(item=>item.id.startsWith("g3-flower-"))'), true);
+    const passage = run('session.qs[0].q.passage');
+    assert.equal(get('.reading-passage').textContent, passage);
+    get('.choice[data-ok="false"]').click();
+    get('#fb-next').click();
+    assert.deepEqual(json('state.review'), json('session.qs.slice(0,1).map(item=>item.id)'));
+  });
+
+  test('grade3 banks hold full practice sets with grouped reading passages', () => {
+    const app = loadApp();
+    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['3'][c].length)`), [18, 18, 18, 18, 18]);
+    assert.equal(app.run(`QUESTION_BANKS['3'].flower.length`), 20);
+    assert.equal(app.run(`QUESTION_BANKS['3'].essay.length`), 6);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['3'].flower.map(q=>q.group))].sort()`), ['g3-reading-email-1', 'g3-reading-email-2', 'g3-reading-notice-1', 'g3-reading-notice-2', 'g3-reading-story-1', 'g3-reading-story-2']);
+    assert.equal(app.run(`QUESTION_BANKS['3'].station.every(q=>q.positions.join()==='2,4')`), true);
+    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['3'].park.filter(q=>q.part===part).length===6)`), true);
+  });
+
+  test('grade3 essay sessions use real-exam format with POINTS and 25-50 word target', () => {
+    const app = loadApp();
+    const { run, get, json } = app;
+    run("activeGrade='3'; state=freshState('3'); state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); startSession('essay',false)");
+    assert.equal(run('session.grade'), '3');
+    assert.equal(run('session.qs.length'), 1);
+    assert.equal(run('questionKind(session.qs[0].q)'), 'writing');
+    assert.equal(run('session.qs[0].q.points.length'), 3);
+    assert.match(get('#q-card').textContent, /本番形式/);
+    assert.match(get('#q-card').textContent, /POINTS/);
+    assert.match(get('#q-card').textContent, /25〜50語/);
+    assert.ok(get('#wr-box'));
+    const box = get('#wr-box');
+    box.value = 'I think summer is the best season for many reasons. First, I can swim in the sea. Second, I can enjoy festivals with my friends every weekend in August.';
+    box.dispatchEvent({ type: 'input' });
+    get('#wr-submit').click();
+    for (const input of get('#wr-checks').querySelectorAll('input')) {
+      input.checked = true;
+      input.dispatchEvent({ type: 'change' });
+    }
+    get('#wr-done').click();
+    assert.equal(run('session.coinsEarned') > 0, true);
+    assert.deepEqual(json('state.review'), []);
+  });
+
+  test('essay workshop unlocks after flower in grade 3 and stays hidden in grades 4 and 5', () => {
+    const app = loadApp();
+    const { run, get, json } = app;
+    run("activeGrade='3'; state=freshState('3'); state.coins=1000");
+    assert.equal(run('state.unlocked.includes("essay")'), false);
+    run('openPalette()');
+    assert.equal(get('[data-cat="essay"]').disabled, true);
+    run("closeModal(); ['library','school','cafe','station','park'].forEach((c,i)=>confirmBuild(i,c)); openPalette()");
+    assert.equal(get('[data-cat="essay"]').disabled, true);
+    run("closeModal(); confirmBuild(5,'flower'); openPalette()");
+    assert.equal(run('state.unlocked.includes("essay")'), true);
+    assert.equal(get('[data-cat="essay"]').disabled, false);
+    get('[data-cat="essay"]').click();
+    assert.equal(run('pendingPlace'), 'essay');
+    run("exitPlace(); closeModal(); activeGrade='4'; state=freshState('4'); openPalette()");
+    assert.equal(get('[data-cat="essay"]'), null);
+    assert.deepEqual(json('state.unlocked'), ['library']);
+    assert.equal(run(`'essay' in B && B.essay.req`), 'flower');
+  });
+
   test('order-pair renders fixed numbered units, requested positions and correct pair feedback', () => {
     const app = loadApp();
     const { run, get, json } = app;
@@ -1164,12 +1357,16 @@ if (require.main === module) {
   test('grade4 flower metadata is reading while grade5 remains optional writing', () => {
     const app = loadApp();
     assert.equal(app.run('catTag("flower","4")'), '読解（どっかい）');
+    assert.equal(app.run('catTag("flower","3")'), '読解（どっかい）');
     assert.match(app.run('catTag("flower","5")'), /さくぶん/);
     assert.equal(app.run('buildingDesc("flower","4")').includes('読解'), true);
+    assert.equal(app.run('buildingDesc("flower","3")').includes('読解'), true);
     assert.equal(app.run('buildingDesc("flower","5")').includes('本番の試験ではありません'), true);
     assert.equal(app.run('flowerGuide("4")').includes('読解'), true);
+    assert.equal(app.run('flowerGuide("3")').includes('読解'), true);
     assert.equal(app.run('flowerGuide("5")').includes('本番の試験ではありません'), true);
     assert.equal(app.run('questionKind(QUESTION_BANKS["4"].flower[0])'), 'reading');
+    assert.equal(app.run('questionKind(QUESTION_BANKS["3"].flower[0])'), 'reading');
     assert.equal(app.run('questionKind(QUESTION_BANKS["5"].flower[0])'), 'writing');
     app.run("state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); startSession('flower',false)");
     assert.equal(app.get('#title-flower').textContent.includes('読解'), true);
