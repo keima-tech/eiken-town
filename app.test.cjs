@@ -424,6 +424,10 @@ if (require.main === module) {
     run("confirmDeco(5,'flowerbed')");
     assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
     assert.equal(run('state.coins'), before.coins - 5);
+    run("tryRoad(5); confirmBuild(5,'school')");
+    assert.deepEqual(json('state.roads'), [1]);
+    assert.equal(run('state.placed.school'), undefined);
+    assert.equal(run('state.coins'), before.coins - 5);
     run("confirmDeco(5,'lamp')");
     assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
     run("state.coins=0; confirmDeco(6,'lamp')");
@@ -655,6 +659,49 @@ if (require.main === module) {
     assert.equal(run('migrate([])'), null);
     run('save(); state=loadState()');
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
+  });
+
+  test('migration drops off-grade buildings and sessions handle empty pools gracefully', () => {
+    const { run, get, json } = loadApp();
+    run("state=migrate({v:5,grade:'4',g:9,coins:50,placed:{library:{tile:0,level:1},essay:{tile:1,level:1}},roads:[],decorations:[],progress:{},review:[],unlocked:['library']},'4')");
+    assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 } });
+    assert.deepEqual(json('state.unlocked'), ['library', 'school']);
+    run("state.placed.essay={tile:1,level:1}; updateUnlocks(state)");
+    assert.equal(run('state.unlocked.includes("essay")'), false);
+    assert.doesNotThrow(() => run("startSession('essay',false)"));
+    assert.equal(run('session'), null);
+    assert.equal(get('#scr-quiz').classList.contains('active'), false);
+    run('renderMap()');
+    assert.equal(get('#town-stats').textContent, '建物 1/6');
+  });
+
+  test('empty reading groups end the session attempt without errors', () => {
+    const { run, get } = loadApp();
+    run("state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); QUESTION_BANKS[state.grade].flower=QUESTION_BANKS[state.grade].flower.filter(q=>q.d!==1)");
+    run("startSession('flower',false)");
+    assert.equal(run('session'), null);
+    assert.equal(get('#scr-quiz').classList.contains('active'), false);
+    assert.match(get('#toast-root').children.at(-1).textContent, /問題が見つかりません/);
+  });
+
+  test('road rebuild disposes old meshes including instance buffers', () => {
+    const { run } = loadApp();
+    run(`R.roadsG={children:[{geometry:{dispose(){globalThis.__d=(globalThis.__d||0)+1}},dispose(){globalThis.__d=(globalThis.__d||0)+10}}]}`);
+    run('rebuildRoads()');
+    assert.equal(run('globalThis.__d'), 11);
+    assert.equal(run('R.roadsG.children.length'), 0);
+  });
+
+  test('migration normalizes flags, names and numeric counters', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({v:5,grade:'4',g:9,coins:12.7,totalCorrect:3.9,totalAnswered:1e10,townName:'あいうえおかきくけこさしすせそ',sound:'false',lowGfx:1,progress:{library:2.5,school:1e10},placed:{},roads:[],decorations:[],review:[],unlocked:['library']},'4')");
+    assert.equal(run('state.coins'), 12);
+    assert.equal(run('state.totalCorrect'), 3);
+    assert.equal(run('state.totalAnswered'), 9999999);
+    assert.equal(run('state.townName'), 'あいうえおかきくけこさし');
+    assert.equal(run('state.sound'), true);
+    assert.equal(run('state.lowGfx'), true);
+    assert.deepEqual(json('state.progress'), { library: 2, school: 9999999 });
   });
 
   test('migration sanitizes decorations, remaps legacy tiles and drops collisions', () => {

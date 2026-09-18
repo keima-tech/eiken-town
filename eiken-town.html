@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>えいけんタウン | 英検5級・4級・3級クエスト</title>
+<title>えいけんタウン | 英語で街づくり</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23ffe1ee'/><rect x='4' y='4' width='56' height='56' rx='11' fill='none' stroke='%23f06ba3' stroke-width='3'/><text x='32' y='47' font-size='36' text-anchor='middle'>🏙️</text></svg>">
 <meta name="theme-color" content="#f06ba3">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1279,8 +1279,7 @@ function questionById(id,grade=state?.grade||'4'){
 function questionKind(q){return q.kind||(q.en?'writing':q.words?'order':q.t==='pic'||q.t==='qa'?'legacy-listening':'choice')}
 const $=s=>document.querySelector(s);
 const SAVE_KEY='eikenTownSave_v1';
-const TH=[0,6,16];
-const UP_COST=[0,40,100];
+const LV_NEED={1:6,2:16},LV_COST={1:40,2:100};
 const GRID=9,TILE=3.0,PITCH=2.9;
 const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','こはる村','スターヒルズ','にじがわ町','あおぞらシティ'];
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
@@ -1312,6 +1311,7 @@ const D=Object.fromEntries(DECOS.map(d=>[d.id,d]));
 function validDeco(id){return typeof id==='string'&&Object.hasOwn(D,id)}
 function decoIdOf(sel){return typeof sel==='string'&&sel.startsWith('deco:')?sel.slice(5):null}
 function decoAt(t){return (state.decorations||[]).find(d=>d.tile===t)}
+function roads(){return state.roads||[]}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
@@ -1339,10 +1339,13 @@ function migrate(d,grade='4'){
  s.v=5;
  s.grade=grade;
  if(typeof s.townName!=='string')s.townName='';
+ s.townName=s.townName.slice(0,12);
+ s.sound=!!s.sound;s.lowGfx=!!s.lowGfx;
  for(const key of ['coins','totalCorrect','totalAnswered']){
   if(!Number.isFinite(s[key])||s[key]<0)s[key]=defaults[key];
+  else s[key]=Math.min(9999999,Math.floor(s[key]));
  }
- s.progress=Object.fromEntries(Object.entries(s.progress&&typeof s.progress==='object'&&!Array.isArray(s.progress)?s.progress:{}).filter(([cat,n])=>validCat(cat)&&Number.isFinite(n)&&n>=0));
+ s.progress=Object.fromEntries(Object.entries(s.progress&&typeof s.progress==='object'&&!Array.isArray(s.progress)?s.progress:{}).filter(([cat,n])=>validCat(cat)&&Number.isFinite(n)&&n>=0).map(([cat,n])=>[cat,Math.min(9999999,Math.floor(n))]));
  s.review=[...new Set((Array.isArray(s.review)?s.review:[]).map(id=>{
   if(validReview(id,grade))return id;
   if(grade!=='4'||(d.v!==undefined&&d.v>4)||typeof id!=='string')return null;
@@ -1363,7 +1366,7 @@ function migrate(d,grade='4'){
  };
  const fixed={},occ=new Set();
  Object.entries(s.placed||{}).forEach(([cat,p])=>{
-  if(!validCat(cat)||!p||typeof p!=='object'||!Number.isFinite(p.level)||p.level<0)return;
+  if(!validCat(cat)||!buildingGrades(B[cat]).includes(grade)||!p||typeof p!=='object'||!Number.isFinite(p.level)||p.level<0)return;
   let t;
   if('lot' in p){
    if(!Number.isInteger(p.lot)||p.lot<0||p.lot>=16)return;
@@ -1588,7 +1591,7 @@ function canUpgrade(cat){
  if(!validCat(cat)||activeSession())return false;
  const p=state.placed[cat];
  if(!p||p.level>=3)return false;
- return state.progress[cat]>=TH[p.level]&&state.coins>=UP_COST[p.level];
+ return state.progress[cat]>=LV_NEED[p.level]&&state.coins>=LV_COST[p.level];
 }
 function townNameText(){return state.townName||'ちいさな村'}
 function refreshNameUI(){
@@ -1661,12 +1664,12 @@ function onTileTap(t){
   const did=decoIdOf(pendingPlace);
   if(did){
    if(!validDeco(did)){exitPlace();return}
-   if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには置けないよ。別の場所にしてね');return}
+   if(decoAt(t)||catAt(t)||roads().includes(t)){toast('そこには置けないよ。別の場所にしてね');return}
    const d=D[did];
    askYesNo(`${d.emoji} ${d.name}`,`${d.desc}<br>この場所に置く?`,`💰${d.cost===0?'無料':d.cost}で ここに置く!`,()=>{if(pendingPlace==='deco:'+did)confirmDeco(t,did)});
    return;
   }
-  if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
+  if(decoAt(t)||catAt(t)||roads().includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
   const cat=pendingPlace;
   if(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat]){exitPlace();return}
   const b=B[cat];
@@ -1675,7 +1678,7 @@ function onTileTap(t){
  }
  const cat=catAt(t);
  if(cat)openBuildingMenu(cat);
- else if(state.roads.includes(t))openRemoval(t,'__road');
+ else if(roads().includes(t))openRemoval(t,'__road');
  else if(decoAt(t))openRemoval(t,'deco:'+decoAt(t).kind);
  else openPalette();
 }
@@ -1685,15 +1688,15 @@ function openRemoval(t,cat){
  const road=cat==='__road';
  if(did){
   if(decoAt(t)?.kind!==did)return;
- }else if(road?!state.roads.includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
+ }else if(road?!roads().includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
  const placed=!did&&!road?state.placed[cat]:null,owner=state;
  const name=road?ROAD.name:did?D[did].name:B[cat].name;
  const note=did?'コインは戻らないよ。':'コインは戻らないよ。学習の記録と解放した建物は残るよ。建て直すとレベル1になるよ。';
  askYesNo(`${name}を撤去する?`,note,'撤去する',()=>{
   if(activeSession()||state!==owner)return;
   if(road){
-   if(!state.roads.includes(t))return;
-   state.roads=state.roads.filter(tile=>tile!==t);
+   if(!roads().includes(t))return;
+   state.roads=roads().filter(tile=>tile!==t);
   }else if(did){
    if(decoAt(t)?.kind!==did)return;
    state.decorations=state.decorations.filter(d=>d.tile!==t);
@@ -1715,9 +1718,11 @@ function tryRoad(t){
  if(loadBlocked){toast('セーブデータの確認ができていないため、まだ操作できません');return}
  if(!validTile(t)||activeSession())return;
  if(catAt(t)){toast('建物の上には道はひけないよ!');return}
+ if(decoAt(t)){toast('かざりの上には道はひけないよ!');return}
  if((state.roads||[]).includes(t)){toast('ここにはもう道があるよ');return}
  if(state.coins<ROAD.cost){toast('💰 コインが足りない…');exitPlace();return}
  state.coins-=ROAD.cost;
+ if(!Array.isArray(state.roads))state.roads=[];
  state.roads.push(t);
  save();sfx('coin');
  if(R.ok){
@@ -1735,7 +1740,7 @@ function confirmBuild(t,cat){
  if(loadBlocked||activeSession()||!validTile(t)||!validCat(cat)||!state.unlocked.includes(cat))return;
  exitPlace();
  const b=B[cat];
- if(state.placed[cat]||catAt(t)||state.roads.includes(t)||state.coins<b.cost){toast(state.coins<b.cost?'💰 コインが足りない…':'そこには建てられないよ…');renderMap();return}
+ if(state.placed[cat]||catAt(t)||decoAt(t)||roads().includes(t)||state.coins<b.cost){toast(state.coins<b.cost?'💰 コインが足りない…':'そこには建てられないよ…');renderMap();return}
  state.coins-=b.cost;
  state.placed[cat]={tile:t,level:1};
  state.progress[cat]=state.progress[cat]||0;
@@ -1749,7 +1754,7 @@ function confirmDeco(t,id){
  if(loadBlocked||activeSession()||!validTile(t)||!validDeco(id))return;
  exitPlace();
  const d=D[id];
- if(decoAt(t)||catAt(t)||state.roads.includes(t)||state.coins<d.cost){toast(state.coins<d.cost?'💰 コインが足りない…':'そこには置けないよ…');renderMap();return}
+ if(decoAt(t)||catAt(t)||roads().includes(t)||state.coins<d.cost){toast(state.coins<d.cost?'💰 コインが足りない…':'そこには置けないよ…');renderMap();return}
  state.coins-=d.cost;
  state.decorations.push({tile:t,kind:id});
  save();
@@ -1990,7 +1995,7 @@ function makeBuilding(cat,level){
   sph(.06,0xff6f91,.98,.38,-.28,g);sph(.06,0xffd166,1.12,.38,-.12,g);sph(.06,0xb79cff,1.27,.38,-.25,g);
   cyl(.03,.03,.55,0x8a8a8a,-1.0,.28,.62,g,6);
   sph(.11,0xff6f91,-1.0,.62,.62,g);sph(.1,0xffd166,-.87,.58,.62,g);sph(.09,0xb79cff,-1.13,.57,.62,g);
- }else{
+ }else if(cat==='essay'){
   box(2.2,1.1,1.6,0xf3e5c8,0,.55,-.1,g);
   pyr(1.75,.55,0x7fb4e8,0,1.38,-.1,g);
   box(.5,.62,.06,0x8a6a4f,-.6,.43,.72,g);
@@ -2047,9 +2052,15 @@ function makeDeco(kind){
  return g;
 }
 function disposeObj(o){
+ const shared=new Set([...Object.values(MATS),...Object.values(ROADMATS||{})]);
  o.traverse(c=>{
   if(c.geometry)c.geometry.dispose();
-  if(c.material&&c.material.map&&c.material.map.dispose)c.material.map.dispose();
+  if(c.material){
+   (Array.isArray(c.material)?c.material:[c.material]).forEach(m=>{
+    if(m.map&&m.map.dispose)m.map.dispose();
+    if(!shared.has(m)&&m.dispose)m.dispose();
+   });
+  }
  });
 }
 function makeLabel(cat,level,noStars){
@@ -2128,9 +2139,11 @@ function rebuildRoads(){
  while(R.roadsG.children.length){
   const c=R.roadsG.children.pop();
   if(c.geometry)c.geometry.dispose();
+  if(c.dispose)c.dispose();
  }
  const rd=state.roads||[];
  if(!rd.length)return;
+ const rdSet=new Set(rd);
  const mats=roadMats();
  const dummy=new THREE.Object3D();
  const curb=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE*.96,.1,TILE*.96),mats.curb,rd.length);
@@ -2140,10 +2153,10 @@ function rebuildRoads(){
  let sc=0;
  rd.forEach(t=>{
   const c=t%GRID,r=(t/GRID)|0;
-  if(r>0&&rd.includes((r-1)*GRID+c))sc++;
-  if(r<GRID-1&&rd.includes((r+1)*GRID+c))sc++;
-  if(c>0&&rd.includes(r*GRID+c-1))sc++;
-  if(c<GRID-1&&rd.includes(r*GRID+c+1))sc++;
+  if(r>0&&rdSet.has((r-1)*GRID+c))sc++;
+  if(r<GRID-1&&rdSet.has((r+1)*GRID+c))sc++;
+  if(c>0&&rdSet.has(r*GRID+c-1))sc++;
+  if(c<GRID-1&&rdSet.has(r*GRID+c+1))sc++;
  });
  let stripes=null,ci=0;
  if(sc>0){
@@ -2165,10 +2178,10 @@ function rebuildRoads(){
    dummy.updateMatrix();
    stripes.setMatrixAt(ci++,dummy.matrix);
   };
-  if(r>0&&rd.includes((r-1)*GRID+c))add(false,0,-TILE*.27);
-  if(r<GRID-1&&rd.includes((r+1)*GRID+c))add(false,0,TILE*.27);
-  if(c>0&&rd.includes(r*GRID+c-1))add(true,-TILE*.27,0);
-  if(c<GRID-1&&rd.includes(r*GRID+c+1))add(true,TILE*.27,0);
+  if(r>0&&rdSet.has((r-1)*GRID+c))add(false,0,-TILE*.27);
+  if(r<GRID-1&&rdSet.has((r+1)*GRID+c))add(false,0,TILE*.27);
+  if(c>0&&rdSet.has(r*GRID+c-1))add(true,-TILE*.27,0);
+  if(c<GRID-1&&rdSet.has(r*GRID+c+1))add(true,TILE*.27,0);
  });
  [curb,asp,stripes].forEach(m=>{
   if(!m)return;
@@ -2178,7 +2191,6 @@ function rebuildRoads(){
   R.roadsG.add(m);
  });
 }
-function neighborsRoad3D(t){return neighborsRoad(t)}
 function makeCar(col){
  const g=new THREE.Group();
  box(.6,.22,.38,col,0,.2,0,g);
@@ -2202,7 +2214,7 @@ function spawnCars(){
  const cols=[0xff6f91,0x63c7ff,0xffd166,0x7fdcae];
  for(let i=0;i<n;i++){
   const from=rd[Math.floor(Math.random()*rd.length)];
-  const nbs=neighborsRoad3D(from);
+  const nbs=neighborsRoad(from);
   if(!nbs.length)continue;
   const to=nbs[Math.floor(Math.random()*nbs.length)];
   const mesh=makeCar(cols[R.agents.length%cols.length]);
@@ -2320,7 +2332,7 @@ function loop(t){
  R.agents.forEach(a=>{
   a.p+=.033*a.speed;
   if(a.p>=1){
-   const opts=neighborsRoad3D(a.toTile).filter(t=>t!==a.fromTile);
+   const opts=neighborsRoad(a.toTile).filter(t=>t!==a.fromTile);
    if(opts.length){
     const nt=opts[Math.floor(Math.random()*opts.length)];
     a.fromTile=a.toTile;a.toTile=nt;a.p=0;
@@ -2401,7 +2413,7 @@ function bindSceneEvents(){
    const dnow=Math.hypot(a.x-b.x,a.y-b.y);
    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
    if(lastMid)panBy(mx-lastMid.x,my-lastMid.y);
-   if(lastPinch>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*lastPinch/dnow));
+   if(lastPinch>0&&dnow>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*lastPinch/dnow));
    lastPinch=dnow;lastMid={x:mx,y:my};
    updateCam();
   }
@@ -2457,7 +2469,7 @@ function bindSceneEvents(){
     const dn=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);
     const mx=(v[0].x+v[1].x)/2,my=(v[0].y+v[1].y)/2;
     if(tmid)panBy(mx-tmid.x,my-tmid.y);
-    if(tpinch>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*tpinch/dn));
+    if(tpinch>0&&dn>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*tpinch/dn));
     tpinch=dn;tmid={x:mx,y:my};
     updateCam();
    }
@@ -2492,7 +2504,7 @@ function renderFallbackGrid(){
   }else if((state.roads||[]).includes(t)){
    html+=`<div class="lot road" data-tile="${t}"><span class="house" style="font-size:30px">🛣️</span><span class="nameplate">どうろ</span></div>`;
   }else if(decoAt(t)){
-   const dd=D[decoAt(t).kind];
+   const dd=D[decoAt(t).kind]||{emoji:'🌼',name:'かざり'};
    html+=`<div class="lot deco" data-tile="${t}"><span class="house" style="font-size:30px">${dd.emoji}</span><span class="nameplate">${dd.name}</span></div>`;
   }else{
    html+=`<div class="lot empty" data-tile="${t}"><span>${FB_DECO[t%FB_DECO.length]}</span><span class="plus">＋</span></div>`;
@@ -2516,7 +2528,7 @@ function renderMap(){
  const r=rankInfo();
  $('#rank-emoji').textContent=r.e;
  $('#rank-name').textContent=r.n;
- $('#town-stats').textContent=`建物 ${Object.keys(state.placed).length}/${BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length}`;
+ $('#town-stats').textContent=`建物 ${Object.keys(state.placed).filter(c=>B[c]&&buildingGrades(B[c]).includes(state.grade)).length}/${BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length}`;
  renderStats();
  if(window.THREE&&isWebGLAvailable()){
   $('#scene-fallback').classList.add('hidden');
@@ -2546,14 +2558,14 @@ function openBuildingMenu(cat){
  if(loadBlocked||activeSession()||!validCat(cat)||!state.placed[cat])return;
  const b=B[cat],p=state.placed[cat],prog=state.progress[cat]||0;
  const upDis=!canUpgrade(cat);
- const nextTh=p.level<3?TH[p.level]:null;
-const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="wbr"><br class="mbr">(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
+ const nextTh=p.level<3?LV_NEED[p.level]:null;
+const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="wbr"><br class="mbr">(アップグレードにはコイン 💰${LV_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
  openModal(`<h3>${b.emoji} ${b.name} <small>Lv.${p.level}</small></h3>
  <p class="sub">${catTag(cat)}・これまでの正解 ${prog} 問</p>
  <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${progTxt}</p>
  <div class="close-row" style="flex-direction:column">
  <button class="btn minty big" id="bm-start">▶️ クイズをはじめる!</button>
- <button class="btn sunny" id="bm-up" ${upDis?'disabled':''}>⬆️ レベルアップする(💰${UP_COST[p.level]})</button>
+ <button class="btn sunny" id="bm-up" ${upDis?'disabled':''}>⬆️ レベルアップする(💰${LV_COST[p.level]})</button>
  <button class="btn ghosty small" id="bm-remove">撤去する</button>
  <button class="btn ghosty small" onclick="closeModal()">とじる</button>
  </div>`);
@@ -2561,7 +2573,7 @@ const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でア�
  $('#bm-remove').onclick=()=>{if(state.placed[cat]===p)openRemoval(p.tile,cat)};
  $('#bm-up').onclick=()=>{
   if(state.placed[cat]!==p||!canUpgrade(cat))return;
-  state.coins-=UP_COST[p.level];
+  state.coins-=LV_COST[p.level];
   p.level++;
   save();closeModal();
   sfx('level');confetti(40);
@@ -2583,7 +2595,8 @@ function buildSession(cat,isReview){
   return{...base,cat:null,qs:ids.map(id=>questionById(id,grade))};
  }
  const level=state.placed[cat].level;
- const pool=questionsForGrade(grade)[cat];
+ const pool=questionsForGrade(grade)?.[cat];
+ if(!Array.isArray(pool)||!pool.length)return{...base,qs:[]};
  const wrap=q=>({cat,q,id:q.id});
  if(cat==='flower'&&grade!=='5'){
   const groups=[...new Set(pool.filter(q=>q.kind==='reading'&&q.d===level).map(q=>q.group))];
@@ -2617,6 +2630,7 @@ function startSession(cat,isReview){
  stopSpeech();
  exitPlace();closeModal();
  session=buildSession(cat,isReview);
+ if(!session.qs.length){session=null;toast('問題が見つかりませんでした');return}
  $('#q-building').textContent=isReview?'📖 ふくしゅう':`${B[cat].emoji} ${B[cat].name} Lv.${state.placed[cat].level}`;
  show('scr-quiz');
  renderQuestion();
@@ -3021,7 +3035,7 @@ function finishSession(){
   const b=B[session.cat],p=state.placed[session.cat],cur=state.progress[session.cat]||0;
   pw.classList.remove('hidden');
   if(p.level<3){
-   const target=TH[p.level];
+   const target=LV_NEED[p.level];
    $('#res-progress-label').textContent=`${b.emoji} ${b.name} Lv.${p.level}`;
    $('#res-progress-num').textContent=Math.min(cur,target)+' / '+target;
    setTimeout(()=>{$('#res-progress-fill').style.width=Math.min(100,cur/target*100)+'%'},80);
