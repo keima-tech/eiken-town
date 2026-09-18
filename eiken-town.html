@@ -1586,7 +1586,7 @@ function openPalette(){
  });
 }
 
-const R={inited:false,ok:false,compiled:false,lastPtrUp:0,renderer:null,scene:null,camera:null,sun:null,renderVisible:false,tiles:[],city:null,roadsG:null,carsG:null,agents:[],clouds:[],anims:[],ghostLabel:null,ghostCat:null,hover:null,ray:null,ptr:null,cam:{theta:.78,phi:1.02,radius:23},target:{x:0,z:0},dragMode:'orbit'};
+const R={inited:false,ok:false,compiled:false,lastPtrUp:0,renderer:null,scene:null,camera:null,sun:null,renderVisible:false,tiles:[],city:null,roadsG:null,carsG:null,agents:[],clouds:[],anims:[],ghostLabel:null,ghostCat:null,hover:null,ray:null,ptr:null,cam:{theta:.78,phi:1.02,radius:26},target:{x:0,z:0},dragMode:'orbit'};
 function isWebGLAvailable(){try{const c=document.createElement('canvas');return !!(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')))}catch(e){return false}}
 function tileXY(t){const c=t%GRID,rw=Math.floor(t/GRID);return{x:(c-(GRID-1)/2)*PITCH,z:(rw-(GRID-1)/2)*PITCH}}
 function updateCam(){
@@ -2780,7 +2780,7 @@ function refreshGradeUI(){
 }
 function clearGradeActivity(){
  stopSpeech();session=null;exitPlace();closeModal();
- R.cam={theta:.78,phi:1.02,radius:23};
+ R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};R.dragMode='orbit';R.lastPtrUp=Date.now();
  R.clearPointers?.();
  if(R.hover)R.hover.visible=false;
@@ -2883,7 +2883,7 @@ $('#build-open').onclick=()=>openPalette();
 $('#settings-btn').onclick=openSettings;
 $('#how-btn-title').onclick=openTutorial;
 $('#cam-reset').onclick=()=>{
- R.cam={theta:.78,phi:1.02,radius:23};
+ R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};
  if(R.ok)updateCam();
  toast('視点をもどしたよ!');
