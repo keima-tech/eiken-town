@@ -1645,7 +1645,7 @@ function openPalette(){
    <span class="bc-cost">💰${d.cost}</span></button>`;
  }).join('');
  openModal(`<h3>🏗️ 何を建てる?</h3><p class="sub">建物や道路をえらんで、好きな場所に置こう!</p>${items}${roadCard}
- <h3 style="margin-top:14px">🌼 かざり（見た目だけ・効果なし）</h3><p class="sub">まちをかわいくデコレーションしよう!</p>${decoCards}
+ <h3 style="margin-top:14px">🌼 かざり</h3><p class="sub">見た目だけ・効果なし。<br class="mbr">まちをかわいくデコレーションしよう!</p>${decoCards}
  <div class="close-row"><button class="btn ghosty" onclick="closeModal()">やめる</button></div>`);
  document.querySelectorAll('#modal .bcard:not(:disabled)').forEach(el=>{
   el.onclick=()=>{closeModal();enterPlace(el.dataset.cat)};
