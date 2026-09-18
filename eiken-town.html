@@ -1101,7 +1101,7 @@ for(const grade of ['4','5']){
 }
 </script>
 <script>
-function validGrade(grade){return grade==='4'||grade==='5'}
+function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'}
 function questionsForGrade(grade=state?.grade||'4'){return typeof QUESTION_BANKS==='undefined'?undefined:QUESTION_BANKS?.[grade]}
 function reviewBanks(grade){return[questionsForGrade(grade),typeof REVIEW_ARCHIVE==='undefined'?undefined:REVIEW_ARCHIVE?.[grade]].filter(bank=>bank&&typeof bank==='object')}
 function questionById(id,grade=state?.grade||'4'){
@@ -1123,9 +1123,9 @@ const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','�
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
 const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん'};
-function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='4'?'読解（どっかい）':'✏️ さくぶん'):CAT_TAG[cat]}
-function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade==='4'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
-function flowerGuide(grade){return grade==='4'?'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。':'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。'}
+function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):CAT_TAG[cat]}
+function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
+function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
 function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
 const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
@@ -1257,7 +1257,7 @@ function loadState(){
  if(d&&typeof d==='object'&&!Array.isArray(d)&&d.v===5){
   if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns)){loadBlockError('malformed');return null}
   const next={},nextGrade=validGrade(d.activeGrade)?d.activeGrade:'4';
-  for(const grade of ['4','5']){
+  for(const grade of ['4','5','3']){
    if(!Object.hasOwn(d.towns,grade))continue;
    const town=migrate(d.towns[grade],grade);
    if(!town){loadBlockError('malformed');return null}
@@ -2406,7 +2406,7 @@ function buildSession(cat,isReview){
  const level=state.placed[cat].level;
  const pool=questionsForGrade(grade)[cat];
  const wrap=q=>({cat,q,id:q.id});
- if(cat==='flower'&&grade==='4'){
+ if(cat==='flower'&&grade!=='5'){
   const groups=[...new Set(pool.filter(q=>q.kind==='reading'&&q.d===level).map(q=>q.group))];
   const group=shuffle(groups)[0];
   return{...base,qs:pool.filter(q=>q.kind==='reading'&&q.group===group).map(wrap)};
