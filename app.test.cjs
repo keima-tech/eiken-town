@@ -394,7 +394,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
-    run("for(const t of [null,undefined,-1,49,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
+    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
     assert.deepEqual(json('state'), before);
     run("enterPlace('school'); onTileTap(1)");
     assert.equal(get('#yn-yes'), null);
@@ -415,7 +415,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     const before = json('state');
     run("for(const cat of [null,undefined,'missing','__proto__','constructor','__road','school']){confirmBuild(0,cat);enterPlace(cat);openBuildingMenu(cat);canUpgrade(cat)}");
-    run("exitPlace(); for(const t of [null,undefined,-1,49,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
+    run("exitPlace(); for(const t of [null,undefined,-1,81,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
     assert.deepEqual(json('state'), before);
     run("enterPlace('library'); onTileTap(0); exitPlace()");
     get('#yn-yes').click();
@@ -605,7 +605,7 @@ if (require.main === module) {
     const { run, json } = loadApp();
     run("state=migrate({g:5,coins:Infinity,totalCorrect:-3,totalAnswered:NaN,placed:{library:{lot:5,level:2},school:{tile:1,level:1},cafe:{tile:1,level:2},station:{tile:-1,level:1},park:{tile:NaN,level:1},flower:{tile:4,level:Infinity},bad:{tile:3,level:1}},roads:[0,0,1,5,-1,2.5,null],progress:{library:6,school:-1,cafe:Infinity,park:16,bad:3},unlocked:['bad','park'],review:['library:0','library:0','bad:0','library:999','constructor:0',null]})");
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
-    assert.deepEqual(json('state.roads'), [0, 7]);
+    assert.deepEqual(json('state.roads'), [0, 9]);
     assert.equal(run('state.coins'), 50);
     assert.equal(run('state.totalCorrect'), 0);
     assert.equal(run('state.totalAnswered'), 0);
