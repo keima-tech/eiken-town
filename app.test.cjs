@@ -394,7 +394,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
-    run("for(const t of [null,undefined,-1,49,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
+    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
     assert.deepEqual(json('state'), before);
     run("enterPlace('school'); onTileTap(1)");
     assert.equal(get('#yn-yes'), null);
@@ -411,11 +411,48 @@ if (require.main === module) {
     assert.equal(run('state.placed.school.level'), 1);
   });
 
+  test('decorations place on free tiles for coins, reject invalid spots, and remove without refund', () => {
+    const { run, get, json } = loadApp();
+    run("confirmBuild(0,'library'); tryRoad(1)");
+    const before = json('state');
+    run("for(const id of [null,undefined,'missing','__proto__','library','',0])confirmDeco(5,id)");
+    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
+    assert.deepEqual(json('state'), before);
+    run("confirmDeco(0,'bench'); confirmDeco(1,'bench')");
+    assert.deepEqual(json('state'), before);
+    run("confirmDeco(5,'flowerbed')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    assert.equal(run('state.coins'), before.coins - 5);
+    run("confirmDeco(5,'lamp')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    run("state.coins=0; confirmDeco(6,'lamp')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    run("state.coins=50; enterPlace('deco:lamp'); onTileTap(6)");
+    get('#yn-yes').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }, { tile: 6, kind: 'lamp' }]);
+    assert.equal(run('state.coins'), 50 - 10);
+    run("exitPlace(); enterPlace('deco:missing'); enterPlace('deco:'); enterPlace('library')");
+    assert.equal(run('pendingPlace'), null);
+    run('openPalette()');
+    assert.equal(get('[data-cat="deco:fountain"]').disabled, false);
+    get('[data-cat="deco:fountain"]').click();
+    assert.equal(run('pendingPlace'), 'deco:fountain');
+    run('exitPlace()');
+    const coinsBefore = json('state').coins;
+    run('onTileTap(5)');
+    get('#yn-no').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }, { tile: 6, kind: 'lamp' }]);
+    run('onTileTap(5)');
+    get('#yn-yes').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }]);
+    assert.equal(run('state.coins'), coinsBefore);
+  });
+
   test('core build and category actions validate input, unlocks, funds and stale selection', () => {
     const { run, get, json } = loadApp();
     const before = json('state');
     run("for(const cat of [null,undefined,'missing','__proto__','constructor','__road','school']){confirmBuild(0,cat);enterPlace(cat);openBuildingMenu(cat);canUpgrade(cat)}");
-    run("exitPlace(); for(const t of [null,undefined,-1,49,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
+    run("exitPlace(); for(const t of [null,undefined,-1,81,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
     assert.deepEqual(json('state'), before);
     run("enterPlace('library'); onTileTap(0); exitPlace()");
     get('#yn-yes').click();
@@ -605,7 +642,7 @@ if (require.main === module) {
     const { run, json } = loadApp();
     run("state=migrate({g:5,coins:Infinity,totalCorrect:-3,totalAnswered:NaN,placed:{library:{lot:5,level:2},school:{tile:1,level:1},cafe:{tile:1,level:2},station:{tile:-1,level:1},park:{tile:NaN,level:1},flower:{tile:4,level:Infinity},bad:{tile:3,level:1}},roads:[0,0,1,5,-1,2.5,null],progress:{library:6,school:-1,cafe:Infinity,park:16,bad:3},unlocked:['bad','park'],review:['library:0','library:0','bad:0','library:999','constructor:0',null]})");
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
-    assert.deepEqual(json('state.roads'), [0, 7]);
+    assert.deepEqual(json('state.roads'), [0, 9]);
     assert.equal(run('state.coins'), 50);
     assert.equal(run('state.totalCorrect'), 0);
     assert.equal(run('state.totalAnswered'), 0);
@@ -617,6 +654,14 @@ if (require.main === module) {
     assert.equal(run('migrate([])'), null);
     run('save(); state=loadState()');
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
+  });
+
+  test('migration sanitizes decorations, remaps legacy tiles and drops collisions', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({g:7,placed:{library:{tile:0,level:1}},roads:[1],decorations:[{tile:2,kind:'bench'},{tile:9,kind:'fountain'},{tile:16,kind:'lamp'},{tile:0,kind:'sign'},{tile:1,kind:'flowerbed'},{tile:2,kind:'lamp'},{tile:48,kind:'bench'},{tile:3,kind:'missing'},null,'x',{tile:4},{}]})");
+    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 11, kind: 'fountain' }, { tile: 20, kind: 'lamp' }, { tile: 60, kind: 'bench' }]);
+    assert.deepEqual(json('migrate({}).decorations'), []);
+    assert.deepEqual(json("migrate({decorations:'nope'}).decorations"), []);
   });
 
   test('city rebuild drops animations referencing removed objects', () => {
@@ -684,6 +729,25 @@ if (require.main === module) {
       const question = app.json(`REVIEW_ARCHIVE['4']['${cat}'].find(q => q.id === '${id}')`);
       assert.deepEqual({ id: question.id, legacyIndex: question.legacyIndex, d: question.d, c: question.c, a: question.a, e: question.e }, { id, legacyIndex, d, c, a: 0, e });
     }
+  });
+
+  test('mobile readability uses mobile-only breaks in long explanations', () => {
+    const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
+    const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    assert.match(css, /br\.mbr\{display:none\}/);
+    assert.match(css, /br\.wbr\{display:block\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.mbr\{display:block\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.wbr\{display:none\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?\.modal \.sub\{[^}]*line-height/);
+    const app = loadApp();
+    for (const page of app.json('TUT')) {
+      assert.match(page.d, /<br class="mbr">/);
+      assert.match(page.d, /<br class="wbr">/);
+    }
+    assert.match(app.run('flowerGuide("4")'), /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("5")'), /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("4")'), /<br class="wbr">/);
+    assert.match(app.run('flowerGuide("5")'), /<br class="wbr">/);
   });
 
   test('level-up tutorial describes practice without claiming exam equivalence', () => {
