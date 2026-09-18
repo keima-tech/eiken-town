@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>えいけんタウン | 英検5級・4級クエスト</title>
+<title>えいけんタウン | 英語で街づくり</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23ffe1ee'/><rect x='4' y='4' width='56' height='56' rx='11' fill='none' stroke='%23f06ba3' stroke-width='3'/><text x='32' y='47' font-size='36' text-anchor='middle'>🏙️</text></svg>">
 <meta name="theme-color" content="#f06ba3">
 <meta name="mobile-web-app-capable" content="yes">
@@ -135,7 +135,7 @@ button:disabled{cursor:not-allowed}
 .title-menu{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:30px}
 .grade-selector{width:100%;max-width:560px;min-width:0;padding:0;border:0;text-align:left}
 .grade-selector legend{font-size:21px;font-weight:900;margin-bottom:12px}
-.grade-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grade-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .grade-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%;min-width:0;min-height:128px;padding:16px;border:3px solid var(--ink-soft);border-radius:20px;background:var(--paper);text-align:left;overflow-wrap:anywhere}
 .grade-card:hover{background:var(--lav-l)}
 .grade-card[aria-pressed="true"]{border-color:var(--ink);background:var(--mint-l);box-shadow:inset 0 0 0 2px var(--ink)}
@@ -464,12 +464,15 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
             <button type="button" class="grade-card" data-grade="4" aria-pressed="true" aria-label="英検4級" aria-describedby="title-grade-4-description">
               <span class="grade-name">英検4級</span><span class="grade-description" id="title-grade-4-description">きほんの次のステップへ</span><span class="grade-status">選択中</span>
             </button>
+            <button type="button" class="grade-card" data-grade="3" aria-pressed="false" aria-label="英検3級" aria-describedby="title-grade-3-description">
+              <span class="grade-name">英検3級</span><span class="grade-description" id="title-grade-3-description">4級の次のステップへ</span><span class="grade-status">選ぶ</span>
+            </button>
           </div>
         </fieldset>
         <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
         <button class="btn ghosty small hidden" id="reset-btn-top">今の級の街だけを消して最初から</button>
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
-        <p class="save-note">英検5級・4級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
+        <p class="save-note">英検5級・4級・3級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
       </div>
     </div>
   </section>
@@ -857,6 +860,79 @@ flower:[
 {id:'g5-flower-005',d:3,en:"What are you doing now?",jp:"任意の追加練習です。本番の英作文ではありません。今していることを1文で書こう。",hints:["I am ...","studying English / reading a book"],sample:"I am studying English.",e:"I am + 動詞の -ing 形で、今していることを書こう。"},
 {id:'g5-flower-006',d:3,en:"Where is your bag?",jp:"任意の追加練習です。本番の英作文ではありません。かばんの場所を1文で書こう。想像でもOK。",hints:["My bag is ...","on the desk / under the chair"],sample:"My bag is on the desk.",e:"My bag is のあとに場所を書く。on は「〜の上に」、under は「〜の下に」。"}
 ]
+},
+'3': {
+library:[
+{id:'g3-library-101',d:1,q:"I have an ___ with Dr. Brown at two o'clock.",c:["appointment","promise","dream","excuse"],a:0,e:"「ブラウン先生と2時に約束があります」。appointment は(病院などの)予約・約束。"},
+{id:'g3-library-102',d:1,q:"The train ___ changed last month. Now it leaves at eight.",c:["menu","schedule","diary","letter"],a:1,e:"「電車の時刻表が先月変わりました」。schedule は時刻表・予定表。"},
+{id:'g3-library-103',d:1,q:"Thank you for your ___ to the concert. I enjoyed it very much.",c:["invention","invitation","question","station"],a:1,e:"「コンサートへのご招待ありがとう。とても楽しかった」。invitation は招待。"},
+{id:'g3-library-104',d:1,q:"Mina had a long ___ with her friend on the phone.",c:["conversation","celebration","collection","vacation"],a:0,e:"「ミナは友達と電話で長く話しました」。conversation は会話。"},
+{id:'g3-library-105',d:1,q:"It was sunny this morning, but it ___ started to rain.",c:["loudly","suddenly","widely","nearly"],a:1,e:"「今朝は晴れていたのに、突然雨が降り出しました」。suddenly は突然に。"},
+{id:'g3-library-106',d:1,q:"The ___ is terrible today. Take an umbrella.",c:["letter","dinner","weather","answer"],a:2,e:"「今日は天気がひどいです。傘を持って行きなさい」。weather は天気。"},
+{id:'g3-library-107',d:2,q:"We wanted tea, but there was only coffee, so we drank coffee ___.",c:["instead","indeed","inside","alike"],a:0,e:"「紅茶が欲しかったがコーヒーしかなく、代わりにコーヒーを飲んだ」。instead は代わりに。"},
+{id:'g3-library-108',d:2,q:"We must ___ for the test. Let's study together tonight.",c:["protect","prepare","promise","praise"],a:1,e:"「テストに備えなければ。今夜一緒に勉強しよう」。prepare for は〜に備える。"},
+{id:'g3-library-109',d:2,q:"Don't ___ water. Turn off the tap while you brush your teeth.",c:["drop","waste","lose","burn"],a:1,e:"「水を無駄にしないで。歯を磨く間は蛇口を閉めて」。waste は無駄にする。"},
+{id:'g3-library-110',d:2,q:"Exercise is part of my ___ life. I jog every morning.",c:["noisy","lucky","daily","silly"],a:2,e:"「運動は日常生活の一部です。毎朝ジョギングします」。daily life は日常生活。"},
+{id:'g3-library-111',d:2,q:"My uncle moved here ___. He doesn't know the town well yet.",c:["nearly","loudly","recently","widely"],a:2,e:"「おじは最近ここに引っ越しました。まだ町をよく知りません」。recently は最近。"},
+{id:'g3-library-112',d:2,q:"We must ___ nature for our children.",c:["predict","present","prefer","protect"],a:3,e:"「子どもたちのために自然を守らなければ」。protect は守る。"},
+{id:'g3-library-113',d:3,q:"The doctor's ___ was very useful. I feel better now.",c:["promise","advice","dream","song"],a:1,e:"「医師の助言はとても役に立ちました。気分がよくなりました」。advice は助言(数えられない名詞)。"},
+{id:'g3-library-114',d:3,q:"If you practice every day, you will ___.",c:["success","successful","successfully","succeed"],a:3,e:"「毎日練習すれば成功するでしょう」。will の後は動詞の原形 succeed。success は名詞。"},
+{id:'g3-library-115',d:3,q:"To save money, we should ___ how much electricity we use.",c:["reuse","repeat","reduce","reply"],a:2,e:"「節約のため、電気の使用量を減らすべきです」。reduce は減らす。"},
+{id:'g3-library-116',d:3,q:"May I ___ my friend Yuki to you?",c:["invite","invent","introduce","inform"],a:2,e:"「友達のユキを紹介してもいいですか」。introduce は紹介する。"},
+{id:'g3-library-117',d:3,q:"I ___ seeing you again soon.",c:["look for","look after","look at","look forward to"],a:3,e:"「またすぐ会えるのを楽しみにしています」。look forward to + 動名詞で〜を楽しみにする。"},
+{id:'g3-library-118',d:3,q:"Each country has its own ___. We should respect them.",c:["nature","future","culture","picture"],a:2,e:"「それぞれの国には独自の文化があります。尊重すべきです」。culture は文化。"}
+],
+school:[
+{id:'g3-school-101',d:1,q:"This watch ___ in Japan.",c:["made","is made","makes","making"],a:1,e:"「この時計は日本で作られています」。is made で受動態(作られる)ことを表す。"},
+{id:'g3-school-102',d:1,q:"I have never ___ such a big fish.",c:["seeing","saw","see","seen"],a:3,e:"「こんなに大きな魚は見たことがありません」。have never + 過去分詞で〜したことがない。"},
+{id:'g3-school-103',d:1,q:"The boy ___ is playing the piano is my brother.",c:["which","who","whose","whom"],a:1,e:"「ピアノを弾いている男の子は私の弟です」。人を説明する関係代名詞は who。"},
+{id:'g3-school-104',d:1,q:"They enjoyed ___ baseball last Sunday.",c:["play","to play","played","playing"],a:3,e:"「彼らは先週の日曜日野球を楽しみました」。enjoy の後は動名詞 playing。"},
+{id:'g3-school-105',d:1,q:"You must ___ your hands before lunch.",c:["washes","washed","wash","washing"],a:2,e:"「昼食の前に手を洗いなさい」。must の後は動詞の原形 wash。"},
+{id:'g3-school-106',d:1,q:"My bag is ___ than yours.",c:["heavy","heaviest","heavier","more heavy"],a:2,e:"「私のかばんはあなたのより重い」。than と比べるので比較級 heavier。"},
+{id:'g3-school-107',d:2,q:"How long ___ you lived in Osaka?",c:["have","has","did","do"],a:0,e:"「大阪にどのくらい住んでいますか」。How long have you lived で期間を聞く。you には have。"},
+{id:'g3-school-108',d:2,q:"This bridge ___ in 1990.",c:["built","is built","was built","has built"],a:2,e:"「この橋は1990年に建てられました」。過去の受動態は was built。"},
+{id:'g3-school-109',d:2,q:"I lost the pen ___ my father gave me.",c:["who","which","whose","whom"],a:1,e:"「父がくれたペンをなくしました」。物を説明する関係代名詞は which。"},
+{id:'g3-school-110',d:2,q:"I look forward to ___ you at the party.",c:["see","to see","seen","seeing"],a:3,e:"「パーティーで会えるのを楽しみにしています」。look forward to の後は動名詞 seeing。"},
+{id:'g3-school-111',d:2,q:"He is too young ___ alone.",c:["travel","traveling","to travel","traveled"],a:2,e:"「彼は若すぎて一人旅できない」。too + 形容詞 + to で〜するには…すぎる。"},
+{id:'g3-school-112',d:2,q:"If it ___ tomorrow, we will stay home.",c:["rain","rains","will rain","rained"],a:1,e:"「明日雨なら家にいます」。if の中は現在形で未来を表す。三人称単数なので rains。"},
+{id:'g3-school-113',d:3,q:"She has lived here ___ 2015.",c:["for","from","at","since"],a:3,e:"「彼女は2015年からここに住んでいます」。起点を表す since + 年。"},
+{id:'g3-school-114',d:3,q:"Can you tell me ___ to get to the station?",c:["which","how","what","where"],a:1,e:"「駅への行き方を教えてくれますか」。how to で〜の方法。"},
+{id:'g3-school-115',d:3,q:"The test was ___ difficult that I couldn't finish it.",c:["very","too","so","such"],a:2,e:"「テストは難しすぎて終えられなかった」。so + 形容詞 + that でとても〜なので…。"},
+{id:'g3-school-116',d:3,q:"English is ___ in many countries.",c:["spoke","speaks","spoken","speaking"],a:2,e:"「英語は多くの国で話されています」。is spoken で受動態。"},
+{id:'g3-school-117',d:3,q:"I ___ study late last night.",c:["have to","has to","had to","must"],a:2,e:"「昨夜は遅くまで勉強しなければなりませんでした」。過去の must は had to。"},
+{id:'g3-school-118',d:3,q:"Mt. Fuji is higher than any ___ mountain in Japan.",c:["others","another","other","else"],a:2,e:"「富士山は日本の他のどの山より高い」。any other + 単数名詞。"}
+],
+cafe:[
+{id:'g3-cafe-101',d:1,q:"A: Would you like to come to my birthday party on Sunday?\nB: ___",c:["Sure, I'd love to.","I went there yesterday.","It's my birthday.","At three o'clock."],a:0,e:"「日曜の誕生日会に来ませんか」「ぜひ行きたいです」。誘いへの返事は Sure, I'd love to.。"},
+{id:'g3-cafe-102',d:1,q:"A: Hello, this is Yuki. May I speak to Ken?\nB: ___",c:["Just a moment, please.","Nice to meet you.","I'm fine, thank you.","Good night."],a:0,e:"「ユキです。ケンと話せますか」「少々お待ちください」。電話の取次ぎは Just a moment, please.。"},
+{id:'g3-cafe-103',d:1,q:"A: How much is this T-shirt?\nB: ___",c:["It's red.","It's new.","It's 2,000 yen.","It's mine."],a:2,e:"「このTシャツはいくらですか」「2,000円です」。How much は値段を聞く。"},
+{id:'g3-cafe-104',d:1,q:"A: You look tired. Shall I carry your bag?\nB: ___",c:["That's very kind of you.","I'm tired.","It's heavy.","Carry this."],a:0,e:"「疲れているようですね。かばんを持ちましょうか」「ご親切にありがとう」。申し出へのお礼は That's very kind of you.。"},
+{id:'g3-cafe-105',d:1,q:"A: Excuse me. Where is the post office?\nB: ___",c:["It's two o'clock.","I went there.","Very far.","Go straight for two blocks."],a:3,e:"「郵便局はどこですか」「2ブロックまっすぐ行ってください」。道順を答える。"},
+{id:'g3-cafe-106',d:1,q:"A: It will rain tomorrow. What shall we do?\nB: ___",c:["Let's play tennis.","Let's swim.","Let's visit the museum.","Let's play baseball."],a:2,e:"「明日は雨です。どうしましょう」「博物館へ行こう」。雨の日に合うのは博物館。"},
+{id:'g3-cafe-107',d:2,q:"A: I'm free this Sunday. What shall we do?\nB: ___",c:["We are free.","Sunday is fun.","Why don't we go fishing?","I like Sundays."],a:2,e:"「今週の日曜は空いています。何をしよう」「釣りに行くのはどう」。提案は Why don't we ...?。"},
+{id:'g3-cafe-108',d:2,q:"A: Are you ready to order?\nB: ___",c:["I cooked curry yesterday.","My mother likes curry.","Yes. I'll have curry and rice.","Curry comes from India."],a:2,e:"「ご注文はお決まりですか」「はい。カレーとごはんをください」。注文は I'll have ... で伝える。"},
+{id:'g3-cafe-109',d:2,q:"A: Could you take a picture of us?\nB: ___",c:["I like pictures.","This is a camera.","Sure. Say cheese!","We are three."],a:2,e:"「写真を撮ってもらえますか」「もちろん。はいチーズ!」。依頼への返事は Sure.。"},
+{id:'g3-cafe-110',d:2,q:"A: I'm sorry I'm late. The bus was late.\nB: ___",c:["You are late.","The bus is late.","Hurry up.","That's all right."],a:3,e:"「遅れてごめんなさい。バスが遅れて」「大丈夫ですよ」。謝罪への返事は That's all right.。"},
+{id:'g3-cafe-111',d:2,q:"A: What's the matter? You look pale.\nB: ___",c:["I have a stomachache.","I'm very happy.","I won the game.","I love summer."],a:0,e:"「どうしたの。顔色が悪いよ」「おなかが痛いんだ」。pale は青白い。体調不良を答える。"},
+{id:'g3-cafe-112',d:2,q:"A: How are you going to Hokkaido in winter?\nB: ___",c:["In winter.","Hokkaido is cold.","By plane.","I like trips."],a:2,e:"「冬にどうやって北海道へ行くの」「飛行機で」。交通手段を答える。"},
+{id:'g3-cafe-113',d:3,q:"A: Which do you like better, the red sweater or the blue one?\nB: ___",c:["I like sweaters.","Red and blue.","The blue is blue.","I prefer the blue one."],a:3,e:"「赤と青のセーター、どちらが好き」「青の方が好きです」。prefer は〜を好む。"},
+{id:'g3-cafe-114',d:3,q:"A: May I use your pen?\nB: ___",c:["It's my pen.","Use it yesterday.","Pens are useful.","Of course. Here you are."],a:3,e:"「ペンを使ってもいいですか」「もちろん。どうぞ」。許可は Of course.。"},
+{id:'g3-cafe-115',d:3,q:"A: What will you do after you graduate from high school?\nB: ___",c:["I graduated yesterday.","High school is fun.","I like studying.","I'll study abroad in Canada."],a:3,e:"「高校を卒業したら何をしますか」「カナダに留学します」。未来の予定を答える。"},
+{id:'g3-cafe-116',d:3,q:"A: This camera doesn't work. I bought it here yesterday.\nB: ___",c:["It works well.","Cameras are expensive.","I like this shop.","I'm sorry. We'll fix it right away."],a:3,e:"「このカメラは動きません。昨日ここで買いました」「申し訳ありません。すぐ修理します」。店員の対応は謝罪から。"},
+{id:'g3-cafe-117',d:3,q:"A: Can you come to my house on Saturday?\nB: ___",c:["Yes, I like houses.","Saturday is Saturday.","I live near you.","I'm sorry, I have to visit my grandmother."],a:3,e:"「土曜にうちに来られますか」「ごめんなさい。祖母を訪ねないと」。断りは I'm sorry から。"},
+{id:'g3-cafe-118',d:3,q:"A: I can't sleep well these days. What should I do?\nB: ___",c:["Sleep is important.","I sleep well.","Good night.","Why don't you drink warm milk before bed?"],a:3,e:"「最近よく眠れません。どうすればいい」「寝る前に温かい牛乳を飲むのはどう」。助言は Why don't you ...?。"}
+],
+station:[],
+park:[],
+flower:[],
+essay:[
+{id:'g3-essay-101',d:1,kind:'writing',en:"Do you think students should study English every day?",points:["communication","future","fun"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think students should study English every day. First, English helps them talk with people around the world. Second, it will be useful for their future jobs. Also, studying a little every day is fun.",e:"I think ... で考えを書き、First, ... Second, ... で理由を2つ書くのが3級英作文の基本形。"},
+{id:'g3-essay-102',d:1,kind:'writing',en:"Do you think it is good for children to have a pet?",points:["happy","responsibility","family"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think it is good for children to have a pet. First, pets make children happy every day. Second, taking care of a pet teaches responsibility. Also, pets make the family closer.",e:"理由は観点(POINTS)に沿って2つ書こう。taking care of ... で〜の世話をすること。"},
+{id:'g3-essay-103',d:2,kind:'writing',en:"Which do you like better, summer or winter?",points:["weather","activities","food"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I like ... better ...","First, ...","Second, ..."],sample:"I like summer better than winter. First, the weather is warm and I can swim. Second, I can enjoy many outdoor activities with my friends. Also, summer food like ice cream is delicious.",e:"Which do you like better ...? には I like ... better ... で答え、理由を2つ続ける。"},
+{id:'g3-essay-104',d:2,kind:'writing',en:"Do you want to live in a big city in the future?",points:["convenient","jobs","nature"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I want to ...","First, ...","Second, ..."],sample:"I want to live in a big city in the future. First, big cities are convenient because there are many shops and stations. Second, I can find an interesting job there. However, I know there is little nature.",e:"I want to ... で希望を書き、because で理由をつなげると説得力が増す。"},
+{id:'g3-essay-105',d:3,kind:'writing',en:"Do you think children should help with housework?",points:["family","skill","time"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think children should help with housework. First, helping is good for the family. Second, they can learn important life skills. Also, working together saves everyone's time.",e:"should で〜すべきという意見を表す。life skills は生活の技能。"},
+{id:'g3-essay-106',d:3,kind:'writing',en:"Which do you like better, reading books or watching TV?",points:["learning","fun","time"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I like ... better ...","First, ...","Second, ..."],sample:"I like reading books better than watching TV. First, I can learn many new things from books. Second, reading is quiet and fun. Also, I can enjoy books any time I want.",e:"動名詞を主語にした I like reading ... better ... の形に注意。any time でいつでも。"}
+]
 }
 };
 const PRACTICE_PICTURES = {
@@ -879,7 +955,13 @@ const PRACTICE_PASSAGES = {
 'g4-reading-email-1':"Hi Rina,\nThank you for inviting me to lunch on Saturday. I can come to your house at twelve. My brother has a soccer game that morning, so my father will drive me to your house after the game. I will bring some apple juice. Can we make sandwiches together? I want to learn your special recipe.\nSee you soon,\nMeg",
 'g4-reading-email-2':"Hi Leo,\nI visited the new sports shop with my mother yesterday. I needed shoes for tennis, but the tennis shoes were too expensive. I bought a blue cap instead. The shop also has some good bags. You need a bag for swimming, right? Let's go there after school on Wednesday. It is next to the post office.\nYour friend,\nDan",
 'g4-reading-story-1':"Aya likes animals, but she does not have a pet. Last month, her neighbor Mrs. Green went to another town for three days. She asked Aya to feed her rabbit.\nEvery morning, Aya walked to Mrs. Green's house before school. She gave the rabbit fresh water and food. On the second day, Aya could not find the rabbit in its box. She looked around the room and found it under a chair.\nWhen Mrs. Green came home, she thanked Aya and gave her a book about rabbits. Aya enjoyed the job. Now she wants to learn more about small animals.",
-'g4-reading-story-2':"Last Sunday, Ben and his sister Lisa wanted to ride their bikes to a lake. When they woke up, it was raining. They decided to stay home and cook lunch for their parents.\nBen found a recipe for vegetable soup in a cookbook. Lisa washed the carrots and potatoes, and Ben cut them. They cooked the vegetables in a big pot. Their father came into the kitchen and helped them make bread.\nAt noon, the family ate together. Their mother liked the soup very much. In the afternoon, the rain stopped. Ben and Lisa took a short walk instead of riding their bikes."
+'g4-reading-story-2':"Last Sunday, Ben and his sister Lisa wanted to ride their bikes to a lake. When they woke up, it was raining. They decided to stay home and cook lunch for their parents.\nBen found a recipe for vegetable soup in a cookbook. Lisa washed the carrots and potatoes, and Ben cut them. They cooked the vegetables in a big pot. Their father came into the kitchen and helped them make bread.\nAt noon, the family ate together. Their mother liked the soup very much. In the afternoon, the rain stopped. Ben and Lisa took a short walk instead of riding their bikes.",
+'g3-reading-notice-1':"Basketball Club Tryouts\nDo you want to play basketball? Our team is looking for new players. Tryouts are on Friday afternoon at the school gym. Please bring sports shoes and a towel. You do not need a ball. The team practices twice a week. If you have questions, ask Mr. Sato in Room Two.",
+'g3-reading-notice-2':"Christmas Concert\nThe school music club will have a Christmas concert on December twentieth. It starts at six in the evening in the school hall. The club members have practiced many songs since October. Tickets are free, but you need one to enter. You can get a ticket at the school office. Small children must come with their parents.",
+'g3-reading-email-1':"Hi Ken,\nThank you for your letter. I was happy to hear that you won the speech contest. You practiced hard for a month, so I am not surprised.\nOur family moved to a new house last week. It is bigger than our old house, and I have my own room now. There is a park near our house. I often play soccer there with my new friends.\nPlease come and visit us soon.\nYuki",
+'g3-reading-email-2':"Dear Ms. Green,\nI am sorry I was absent from your class yesterday. I had a bad cold and stayed home all day. My mother took me to the hospital in the morning. The doctor gave me some medicine and told me to rest for two days.\nI missed the English test. Can I take it next week? Please tell me what I should study.\nThank you,\nTaro",
+'g3-reading-story-1':"Last summer, Riku visited his grandmother in the countryside. She lives alone in a small house near the sea. Every morning, Riku helped her carry water from the well. In the afternoon, they walked on the beach and looked for shells.\nOne day, Riku found a small black dog near the house. It was hungry, so he gave it some bread. The dog came back the next day, too. Soon it came every day.\nWhen summer ended, Riku had to go home. He was sad to leave the dog. His grandmother smiled and said, \"Don't worry. I will take care of it.\" Now the dog lives with his grandmother.",
+'g3-reading-story-2':"Mia has kept a diary since she was ten. She writes about interesting things every night. Last month, something surprising happened.\nMia was walking home from school when she saw an old wallet on the road. There were some bills and a card in it. She took it to the police station near her house. The officer thanked her and asked for her name and address.\nA week later, Mia got a letter. It was from the man who lost the wallet. He wrote, \"Thank you very much. You are an honest girl.\" Mia was very happy. She wrote about the letter in her diary that night."
 };
 const QUESTION_BANKS = {
 '4': {
@@ -951,9 +1033,18 @@ flower:[]
 library:REVIEW_ARCHIVE['5'].library,
 school:REVIEW_ARCHIVE['5'].school,
 cafe:REVIEW_ARCHIVE['5'].cafe,
+ station:[],
+ park:[],
+ flower:REVIEW_ARCHIVE['5'].flower
+},
+'3': {
+library:REVIEW_ARCHIVE['3'].library,
+school:REVIEW_ARCHIVE['3'].school,
+cafe:REVIEW_ARCHIVE['3'].cafe,
 station:[],
 park:[],
-flower:REVIEW_ARCHIVE['5'].flower
+flower:[],
+essay:REVIEW_ARCHIVE['3'].essay
 }
 };
 const PRACTICE_ORDER_DATA = {
@@ -975,7 +1066,27 @@ const PRACTICE_ORDER_DATA = {
 ["あなたはどこで昼食を食べますか。",["you","Where","eat lunch","do"],[2,4,1,3],"","?","Where do you eat lunch? の順。Where は場所を聞く。eat lunch は固定のひとまとまり。"],
 ["あなたはペンを何本持っていますか。",["do","have","How many pens","you"],[3,1,4,2],"","?","How many pens do you have? の順。How many pens をまとめて先頭に置く。"],
 ["彼は今何を読んでいますか。",["he","reading","is","What"],[4,3,1,2],""," now?","What is he reading now? の順。now は固定の文末で「今」。"],
-["あなたの妹はどこで英語を勉強しますか。",["your sister","Where","study English","does"],[2,4,1,3],"","?","Where does your sister study English? の順。your sister は単数なので does。"]
+ ["あなたの妹はどこで英語を勉強しますか。",["your sister","Where","study English","does"],[2,4,1,3],"","?","Where does your sister study English? の順。your sister は単数なので does。"]
+],
+'3':[
+ ["私は去年京都を訪れました。",["Kyoto","visited","I","last","year"],[3,2,1,4,5],"",".","I visited Kyoto last year. の順。visited は visit の過去形。last year は去年。"],
+ ["彼は毎朝6時に起きます。",["gets","He","six","up","at"],[2,1,4,5,3],""," every morning.","He gets up at six every morning. の順。get up で起きる。every morning は毎朝。"],
+ ["私の母は毎晩本を読みます。",["reads","My mother","evening","a book","every"],[2,1,4,5,3],"",".","My mother reads a book every evening. の順。三人称単数なので reads。every evening は毎晩。"],
+ ["あなたは傘を持っていくべきです。",["should","You","umbrella","take","an"],[2,1,4,5,3],""," with you.","You should take an umbrella with you. の順。should は〜すべき。"],
+ ["昨夜あなたは夕食に何を食べましたか。",["did","you","eat","What","for dinner"],[4,1,2,3,5],""," last night?","What did you eat for dinner last night? の順。did の後は原形 eat。"],
+ ["私たちは図書館で勉強します。",["study","We","the","library","in"],[2,1,5,3,4],"",".","We study in the library. の順。in the library は図書館で。"],
+ ["彼女はテニスをするのがとても好きです。",["likes","She","playing","tennis","very much"],[2,1,3,4,5],"",".","She likes playing tennis very much. の順。like + 動名詞で〜するのが好き。"],
+ ["彼らは来週大阪へ行く予定です。",["going","They","visit","are","to"],[2,4,1,5,3],""," Osaka next week.","They are going to visit Osaka next week. の順。are going to + 原形で予定。"],
+ ["彼らは8時に家を出なければなりません。",["They","must","leave home","eight","at"],[1,2,3,5,4],"",".","They must leave home at eight. の順。must + 原形で〜しなければならない。"],
+ ["あなたはこの機械の使い方を知っていますか。",["know","Do","to use","you","how"],[2,4,1,5,3],""," this machine?","Do you know how to use this machine? の順。how to use は使い方。"],
+ ["動物の写真を撮るのは楽しいです。",["pictures","Taking","fun","is","of animals"],[2,1,5,4,3],"",".","Taking pictures of animals is fun. の順。動名詞が主語。"],
+ ["この本はあの本より面白いです。",["is","This book","more","interesting","than"],[2,1,3,4,5],""," that one.","This book is more interesting than that one. の順。more interesting はより面白い。"],
+ ["あなたはこの本をもう読みましたか。",["you","Have","yet","read","this book"],[2,1,4,5,3],"","?","Have you read this book yet? の順。Have you + 過去分詞で経験を聞く。yet はもう。"],
+ ["この時計はスイスで作られました。",["made","was","This watch","Switzerland","in"],[3,2,1,5,4],"",".","This watch was made in Switzerland. の順。was made で作られた。"],
+ ["彼女は3年前からここに住んでいます。",["has","She","here","lived","since"],[2,1,4,3,5],""," three years ago.","She has lived here since three years ago. の順。has lived since で〜以来住んでいる。"],
+ ["富士山は日本で最も高い山です。",["Mt. Fuji","is","highest","mountain","the"],[1,2,5,3,4],""," in Japan.","Mt. Fuji is the highest mountain in Japan. の順。the highest は最も高い。"],
+ ["ケンは私より速く走れます。",["can","Ken","faster","run","than me"],[2,1,4,3,5],"",".","Ken can run faster than me. の順。faster than で〜より速く。"],
+ ["私たちは昨夜宿題をしなければなりませんでした。",["had","We","homework","to do","our"],[2,1,4,5,3],""," last night.","We had to do our homework last night. の順。had to で過去の〜しなければならなかった。"]
 ],
 '4':[
 ["あなたは昨日何色を選びましたか。",["choose","you","What","did","color"],[3,5,4,2,1],""," yesterday?","What color did you choose yesterday? の順。What color は何色。did の後は原形 choose。"],
@@ -1017,7 +1128,27 @@ const PRACTICE_LISTENING_DATA = {
 ['picture',2,[],"",["There are two apples on the plate.","There are three apples on the plate.","There are two bananas on the plate."],0,"皿の上にりんごが二つある。「皿の上にりんごが二つあります」が合う。two apples はりんご二つ。",'apples'],
 ['picture',2,[],"",["The girl is riding a bike.","The girl is holding an umbrella.","The girl is carrying a box."],1,"女の子は雨の中で傘を持っている。「女の子は傘を持っています」。holding an umbrella は傘を持っている。",'umbrella'],
 ['picture',3,[],"",["The bird is on a chair.","The bird is under a bed.","The bird is in a cage."],2,"鳥は鳥かごの中にいる。「鳥はかごの中にいます」。in a cage はかごの中に。",'bird'],
-['picture',3,[],"",["The two children are raising their hands.","The two children are washing their hands.","The two children are sleeping."],0,"二人とも両手を上げている。「二人の子どもが手を上げています」。raising their hands は手を上げている。",'raisedHands']
+ ['picture',3,[],"",["The two children are raising their hands.","The two children are washing their hands.","The two children are sleeping."],0,"二人とも両手を上げている。「二人の子どもが手を上げています」。raising their hands は手を上げている。",'raisedHands']
+],
+'3':[
+ ['response',1,[{speaker:'A',text:"When is your birthday?"}],"",["It's on May third.","I'm twelve years old.","I like cake."],0,"「誕生日はいつですか」「5月3日です」。When is ...? は時期を聞く。",'shop'],
+ ['response',1,[{speaker:'A',text:"What do you want to drink?"}],"",["Orange juice, please.","Yesterday.","With my brother."],0,"「何を飲みたいですか」「オレンジジュースをください」。飲み物を聞いているので飲み物を答える。",'picnic'],
+ ['response',2,[{speaker:'A',text:"How did you come here today?"}],"",["By bus.","At eight.","For lunch."],0,"「今日はどうやって来ましたか」「バスで」。How は手段を聞く。",'school'],
+ ['response',2,[{speaker:'A',text:"Whose umbrella is this?"}],"",["It's mine.","It's raining.","It's blue."],0,"「これは誰の傘ですか」「私のです」。Whose は誰のものかを聞く。mine は私のもの。",'library'],
+ ['response',3,[{speaker:'A',text:"How often do you go swimming?"}],"",["Twice a month.","For two hours.","At the pool."],0,"「どのくらいの頻度で泳ぎに行きますか」「月に2回」。How often は頻度。",'sports'],
+ ['response',3,[{speaker:'A',text:"Can I use your phone?"}],"",["It's new.","Sure. Here you are.","I like phones."],1,"「電話を使ってもいいですか」「もちろん。どうぞ」。許可を求められたら Sure.。",'phone'],
+ ['dialogue',1,[{speaker:'A',text:"What are you doing, Sara?"},{speaker:'B',text:"I'm cooking dinner. Can you help me?"}],"What is Sara doing?",["Cooking dinner.","Helping Sara.","Eating dinner.","Washing dishes."],0,"「サラ、何をしているの」「夕食を作っているの。手伝ってくれる」。サラがしているのは夕食作り。"],
+ ['dialogue',1,[{speaker:'A',text:"Do you have a pet, Tom?"},{speaker:'B',text:"Yes. I have two cats."}],"How many cats does Tom have?",["One.","Two.","Three.","He has no cats."],1,"「ペットを飼っているの」「うん。猫を2匹」。two cats は2匹。"],
+ ['dialogue',2,[{speaker:'A',text:"Where were you yesterday afternoon, Emma?"},{speaker:'B',text:"I was at the museum with my class."}],"Where was Emma yesterday afternoon?",["At school.","At the museum.","At home.","At the zoo."],1,"「昨日の午後どこにいたの」「クラスで博物館にいた」。was at the museum は博物館にいた。"],
+ ['dialogue',2,[{speaker:'A',text:"What did you buy at the store, Dad?"},{speaker:'B',text:"Some apples and milk."}],"What did Dad buy?",["Apples and milk.","Bread and eggs.","Fish and meat.","Books and pens."],0,"「店で何を買ったの」「りんごと牛乳」。some apples and milk に注意。"],
+ ['dialogue',3,[{speaker:'A',text:"Have you finished your homework, Leo?"},{speaker:'B',text:"Not yet. I will finish it after dinner."}],"Has Leo finished his homework?",["Yes, he has.","No, he hasn't.","He doesn't have homework.","He finished it yesterday."],1,"「宿題は終わったの」「まだだよ。夕食後に終える」。Not yet はまだ〜していない。"],
+ ['dialogue',3,[{speaker:'A',text:"Why were you absent from school last Friday, Ann?"},{speaker:'B',text:"I had a bad cold, so I stayed home."}],"Why was Ann absent?",["She went shopping.","She had a bad cold.","She visited her friend.","She played tennis."],1,"「先週金曜に学校を休んだのはなぜ」「ひどい風邪をひいたから」。had a bad cold が理由。"],
+ ['passage',1,[{speaker:'narrator',text:"I am Ken. I get up at six every morning. I eat breakfast with my family. Then I walk to school."}],"How does Ken go to school?",["By bus.","On foot.","By bike.","By car."],1,"「ケンです。毎朝6時に起き、家族と朝食を食べ、それから歩いて登校します」。walk to school は歩いて登校。"],
+ ['passage',1,[{speaker:'narrator',text:"This is our classroom. There are twenty desks. The windows are big and clean. We like our classroom."}],"How many desks are there?",["Ten.","Fifteen.","Twenty.","Thirty."],2,"「ここは私たちの教室です。机が20あります」。twenty desks は20の机。"],
+ ['passage',2,[{speaker:'narrator',text:"Last Saturday, my family went to the zoo. We saw lions and elephants. My little brother liked the monkeys best. We ate ice cream for lunch."}],"What did the brother like best?",["Lions.","Elephants.","Monkeys.","Ice cream."],2,"「先週土曜に家族で動物園へ。ライオンと象を見た。弟が一番気に入ったのは猿」。liked best は一番好きだった。"],
+ ['passage',2,[{speaker:'narrator',text:"Ms. White is our new English teacher. She comes from Canada. She speaks English and French. Her classes are interesting."}],"Where does Ms. White come from?",["America.","England.","Canada.","Australia."],2,"「ホワイト先生は新しい英語の先生で、カナダ出身。英語とフランス語を話す」。comes from Canada はカナダ出身。"],
+ ['passage',3,[{speaker:'narrator',text:"Tom wanted to buy a birthday present for his mother. He saved his money for three months. Last Sunday, he bought a beautiful scarf. His mother was very happy."}],"How long did Tom save money?",["For a week.","For a month.","For three months.","For a year."],2,"「トムは母への誕生日プレゼントを買いたく、3か月お金を貯めた。先週日曜に美しいスカーフを買うと母はとても喜んだ」。for three months は3か月間。"],
+ ['passage',3,[{speaker:'narrator',text:"Our town has a new library. It opens at nine in the morning and closes at seven in the evening. It is closed on Mondays. Many children read books there on weekends."}],"When is the library closed?",["On Sundays.","On Mondays.","In the morning.","In the evening."],1,"「町に新しい図書館ができた。午前9時開館、午後7時閉館。月曜休館」。closed on Mondays は月曜休み。"]
 ],
 '4':[
 ['response',1,[{speaker:'A',text:"Where did you buy your new shoes?"}],"",["Last Saturday.","At the sports shop.","They were twenty dollars."],1,"「新しい靴はどこで買ったの」「スポーツ用品店で」。Where did you buy は買った場所を聞く。",'shop'],
@@ -1040,55 +1171,87 @@ const PRACTICE_LISTENING_DATA = {
 ['passage',3,[{speaker:'narrator',text:"Last month, Emma joined a running club. She wanted to run faster, but she did not enjoy practicing alone. Now she runs with five other students twice a week. They encourage each other. Emma likes running much more now and wants to enter a race in October."}],"Why did Emma join the running club?",["To teach young children.","To spend less time running.","To practice alone every day.","To learn to run faster with other people."],3,"「先月エマは走るクラブに入りました。もっと速くなりたかったが一人での練習は楽しくありませんでした。今は他の生徒5人と週2回走り、互いに励まし合っています。10月の大会に出たいと思っています」。他の人と練習して速く走れるようになるために入部。"]
 ]
 };
-for(const grade of ['4','5']){
+for(const grade of ['4','5','3']){
  QUESTION_BANKS[grade].park=PRACTICE_LISTENING_DATA[grade].map(([part,d,segments,q,c,a,e,scene],i)=>({
   id:`g${grade}-park-${101+i}`,d,kind:'listening',part,segments,q,c,a,e,
   ...(scene?{scene,picture:PRACTICE_PICTURES[scene]}:{})
  }));
 }
 const PRACTICE_READING_DATA = [
-['notice',1,[
+['4','notice',1,[
 ["Where should students meet Mr. Hill?",["In their classroom.","At the garden gate.","At the library door.","In the school hall."],1,"集合場所は庭の門。Meet Mr. Hill at the garden gate. は「庭の門でヒル先生と会ってください」。"],
 ["What should students bring?",["Flowers and tools.","Lunch and a book.","A hat and some water.","Paper and pencils."],2,"持ち物は帽子と水。Bring a hat and some water. とあり、道具は不要。土曜9時から11時に花を植える活動。"]
 ]],
-['notice',2,[
+['4','notice',2,[
 ["What can children draw in the class?",["Their school.","Their family.","Their favorite food.","Their favorite animal."],3,"好きな動物を描ける。You can draw your favorite animal. は「好きな動物を描けます」。"],
 ["How can children join the class?",["Call the library by Friday.","Visit the post office on Sunday.","Send an email to their teacher.","Buy paper at the library."],0,"金曜までに図書館へ電話する。Call the library by Friday to join. の by Friday は金曜までに。授業は日曜午後2時で、紙は無料。"]
 ]],
-['email',1,[
+['4','email',1,[
 ["What time can Meg come to Rina's house?",["At ten.","At twelve.","At one.","At two."],1,"メグは12時に来られる。I can come to your house at twelve. は「あなたの家に12時に行けます」。土曜の昼食への招待の返事。"],
 ["How will Meg get to Rina's house?",["She will walk alone.","She will take a bus.","Her father will drive her.","Her brother will ride with her on a train."],2,"父が車で送る。my father will drive me to your house after the game は「試合の後、父があなたの家まで車で送ってくれる」。"],
 ["What does Meg want to do with Rina?",["Play soccer.","Buy apple juice.","Visit her brother.","Make sandwiches."],3,"一緒にサンドイッチを作りたい。Can we make sandwiches together? と聞き、特別なレシピを習いたいと続けている。りんごジュースは持参する。"]
 ]],
-['email',2,[
+['4','email',2,[
 ["Why didn't Dan buy tennis shoes?",["They cost too much.","They were too small.","The shop had no tennis shoes.","He needed shoes for swimming."],0,"値段が高すぎたから。the tennis shoes were too expensive は「テニス用の靴は高すぎました」。代わりに青い帽子を買った。"],
 ["What does Leo need?",["A cap for tennis.","A bag for swimming.","A new tennis racket.","Some shoes for school."],1,"レオには水泳用のかばんが必要。You need a bag for swimming, right? は「水泳用のかばんが必要なんだよね」。"],
 ["When does Dan want to visit the shop with Leo?",["On Wednesday morning.","On Sunday afternoon.","After school on Wednesday.","After school on Friday."],2,"水曜の放課後に行きたい。Let's go there after school on Wednesday. は「水曜の放課後そこへ行こう」。店は郵便局の隣。"]
 ]],
-['story',1,[
+['4','story',1,[
 ["Why did Mrs. Green ask Aya to feed her rabbit?",["Aya wanted to buy a rabbit.","Mrs. Green was sick in bed.","The rabbit needed a new home.","Mrs. Green was going to another town."],3,"グリーンさんは別の町へ3日間行くため、アヤにうさぎの餌やりを頼んだ。went to another town for three days が理由。"],
 ["When did Aya go to Mrs. Green's house?",["Before school every morning.","After school every afternoon.","At lunchtime every day.","After dinner every night."],0,"毎朝学校へ行く前。Every morning, Aya walked to Mrs. Green's house before school. は「毎朝、登校前にグリーンさんの家まで歩いた」。"],
 ["Where did Aya find the rabbit on the second day?",["In its box.","Under a chair.","In the garden.","Under a bed."],1,"2日目にうさぎを見つけたのは椅子の下。found it under a chair。最初に探した箱の中にはいなかった。"],
 ["What did Mrs. Green give Aya?",["A new pet.","A small chair.","A book about rabbits.","A box of food."],2,"お礼にうさぎについての本をあげた。gave her a book about rabbits は「彼女にうさぎの本をあげた」。"],
 ["What does Aya want to do now?",["Go to another town.","Buy a bigger house.","Write a book for Mrs. Green.","Learn more about small animals."],3,"今は小動物についてもっと知りたい。Now she wants to learn more about small animals. が結末。アヤは世話の仕事を楽しんだ。"]
 ]],
-['story',2,[
+['4','story',2,[
 ["Why did Ben and Lisa stay home on Sunday morning?",["It was raining.","Their bikes were broken.","They were sick.","Their parents were at the lake."],0,"起きたとき雨が降っていたから。When they woke up, it was raining. 自転車で湖へ行く予定を変え、家で昼食を作ることにした。"],
 ["Where did Ben find the soup recipe?",["In an email.","In a cookbook.","On a TV show.","In a letter from Lisa."],1,"料理本の中で見つけた。Ben found a recipe for vegetable soup in a cookbook. は「ベンは料理本で野菜スープのレシピを見つけた」。"],
 ["What did Lisa do before Ben cut the vegetables?",["She bought a pot.","She made some bread.","She washed the vegetables.","She went to the lake."],2,"リサはにんじんとじゃがいもを洗った。Lisa washed the carrots and potatoes, and Ben cut them. の順で分担している。"],
 ["Who helped Ben and Lisa make bread?",["Their mother.","Their teacher.","Their neighbor.","Their father."],3,"父がパン作りを手伝った。Their father came into the kitchen and helped them make bread. は「父が台所に来てパン作りを手伝った」。"],
-["What did Ben and Lisa do in the afternoon?",["They took a short walk.","They rode their bikes to the lake.","They bought a cookbook.","They washed their bikes."],0,"午後は雨がやみ、自転車に乗る代わりに少し散歩した。took a short walk instead of riding their bikes の instead of は〜の代わりに。"]
+ ["What did Ben and Lisa do in the afternoon?",["They took a short walk.","They rode their bikes to the lake.","They bought a cookbook.","They washed their bikes."],0,"午後は雨がやみ、自転車に乗る代わりに少し散歩した。took a short walk instead of riding their bikes の instead of は〜の代わりに。"]
+]],
+['3','notice',1,[
+ ["When are the basketball tryouts?",["On Friday morning.","On Friday afternoon.","On Saturday morning.","On Sunday afternoon."],1,"トライアウトは金曜の午後。Tryouts are on Friday afternoon at the school gym. とある。"],
+ ["What should students bring?",["A ball and shoes.","Sports shoes and a towel.","A uniform and money.","Books and pencils."],1,"持ち物は運動靴とタオル。Please bring sports shoes and a towel. とあり、ボールは不要。"]
+]],
+['3','notice',2,[
+ ["When will the concert start?",["At six in the morning.","At six in the evening.","At seven in the evening.","At eight in the morning."],1,"開演は夜6時。It starts at six in the evening in the school hall. とある。"],
+ ["What do children need to enter the concert?",["Some money.","A ticket.","An instrument.","A uniform."],1,"入場にはチケットが必要。Tickets are free, but you need one to enter. とある。無料だがチケットは要る。"]
+]],
+['3','email',1,[
+ ["Why is Yuki not surprised that Ken won?",["Ken practiced hard for a month.","Ken is good at writing letters.","Ken won last year, too.","Ken likes contests."],0,"1か月一生懸命練習したから驚かない。You practiced hard for a month, so I am not surprised. とある。"],
+ ["How is Yuki's new house different?",["It is smaller.","It is bigger.","It is noisier.","It is darker."],1,"新しい家は前の家より大きい。It is bigger than our old house とある。"],
+ ["What does Yuki often do with her new friends?",["Swim in the pool.","Play soccer in the park.","Ride bikes to school.","Watch movies at home."],1,"新しい友達と公園でサッカーをすることが多い。I often play soccer there with my new friends. とある。"]
+]],
+['3','email',2,[
+ ["Why was Taro absent yesterday?",["He had a bad cold.","He took an English test.","He visited his friend.","He lost his bag."],0,"ひどい風邪で休んだ。I had a bad cold and stayed home all day. とある。"],
+ ["What did Taro miss at school?",["A soccer game.","A music class.","An English test.","A school trip."],2,"英語のテストを受けられなかった。I missed the English test. とある。"],
+ ["What does Taro want Ms. Green to tell him?",["What he should study.","Where the hospital is.","Why he was absent.","How to write a letter."],0,"何を勉強すべきか教えてほしい。Please tell me what I should study. とある。"]
+]],
+['3','story',1,[
+ ["Where does Riku's grandmother live?",["In a big city.","Near the sea.","On a mountain.","Near a station."],1,"祖母は海の近くの小さな家に一人で住む。in a small house near the sea とある。"],
+ ["What did Riku do every morning?",["Carried water from the well.","Cooked breakfast.","Walked to school.","Fed the dog."],0,"毎朝井戸から水を運ぶ手伝いをした。helped her carry water from the well とある。"],
+ ["What did Riku give the dog?",["Some milk.","Some bread.","Some fish.","Some rice."],1,"おなかをすかせていたのでパンをあげた。he gave it some bread とある。"],
+ ["Why was Riku sad at the end of summer?",["He lost his bag.","He had to go home.","The dog was sick.","His grandmother was sick."],1,"夏が終わり家に帰らねばならず、犬と別れるのが悲しかった。He had to go home. とある。"],
+ ["Who will take care of the dog?",["Riku.","His mother.","His grandmother.","Nobody."],2,"祖母が世話をすると言った。I will take care of it. とある。"]
+]],
+['3','story',2,[
+ ["How long has Mia kept a diary?",["Since she was ten.","For a month.","Since last week.","For a year."],0,"10歳のときから日記をつけている。has kept a diary since she was ten とある。"],
+ ["What did Mia find on the road?",["A bag.","A key.","An old wallet.","A letter."],2,"道で古い財布を拾った。she saw an old wallet on the road とある。"],
+ ["Where did Mia take the wallet?",["To her school.","To the police station.","To her house.","To the store."],1,"家の近くの交番へ届けた。took it to the police station near her house とある。"],
+ ["What was in the wallet?",["Some bills and a card.","Some photos and keys.","A phone and money.","Books and pencils."],0,"お札とカードが入っていた。There were some bills and a card in it. とある。"],
+ ["Who wrote a letter to Mia?",["The police officer.","The man who lost the wallet.","Her teacher.","Her friend."],1,"財布をなくした男性からの手紙だった。from the man who lost the wallet とある。"]
 ]]
 ];
-for(const [genre,n,questions] of PRACTICE_READING_DATA){
- const group=`g4-reading-${genre}-${n}`;
+for(const [rg,genre,n,questions] of PRACTICE_READING_DATA){
+ const group=`g${rg}-reading-${genre}-${n}`;
  const d={notice:1,email:2,story:3}[genre];
- for(const [q,c,a,e] of questions)QUESTION_BANKS['4'].flower.push({
-  id:`g4-flower-${101+QUESTION_BANKS['4'].flower.length}`,d,kind:'reading',group,genre,
+ for(const [q,c,a,e] of questions)QUESTION_BANKS[rg].flower.push({
+  id:`g${rg}-flower-${101+QUESTION_BANKS[rg].flower.length}`,d,kind:'reading',group,genre,
   passage:PRACTICE_PASSAGES[group],q,c,a,e
  });
 }
-for(const grade of ['4','5']){
+for(const grade of ['4','5','3']){
  QUESTION_BANKS[grade].station=PRACTICE_ORDER_DATA[grade].map(([jp,units,order,prefix,suffix,e],i)=>{
   const positions=grade==='5'?[1,3]:[2,4];
   const answer=positions.map(p=>order[p-1]);
@@ -1101,7 +1264,7 @@ for(const grade of ['4','5']){
 }
 </script>
 <script>
-function validGrade(grade){return grade==='4'||grade==='5'}
+function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'}
 function questionsForGrade(grade=state?.grade||'4'){return typeof QUESTION_BANKS==='undefined'?undefined:QUESTION_BANKS?.[grade]}
 function reviewBanks(grade){return[questionsForGrade(grade),typeof REVIEW_ARCHIVE==='undefined'?undefined:REVIEW_ARCHIVE?.[grade]].filter(bank=>bank&&typeof bank==='object')}
 function questionById(id,grade=state?.grade||'4'){
@@ -1116,26 +1279,27 @@ function questionById(id,grade=state?.grade||'4'){
 function questionKind(q){return q.kind||(q.en?'writing':q.words?'order':q.t==='pic'||q.t==='qa'?'legacy-listening':'choice')}
 const $=s=>document.querySelector(s);
 const SAVE_KEY='eikenTownSave_v1';
-const TH=[0,6,16];
-const UP_COST=[0,40,100];
+const LV_NEED={1:6,2:16},LV_COST={1:40,2:100};
 const GRID=9,TILE=3.0,PITCH=2.9;
 const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','こはる村','スターヒルズ','にじがわ町','あおぞらシティ'];
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
-const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん'};
-function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='4'?'読解（どっかい）':'✏️ さくぶん'):CAT_TAG[cat]}
-function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade==='4'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
-function flowerGuide(grade){return grade==='4'?'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。':'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。'}
-function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
+const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん',essay:'✍️ さくぶん'};
+function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):CAT_TAG[cat]}
+function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
+function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
+function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
 const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
 {id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',desc:'文法(ぶんぽう)クイズ'},
 {id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',desc:'会話(かいわ)クイズ'},
 {id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',desc:'並べかえ(じゅんばん)クイズ'},
 {id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',desc:'リスニング(ちょうかい)'},
-{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'}
+{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'},
+{id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3'],desc:'本番形式の英作文（3級のみ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
+function buildingGrades(b){return b.grades||['4','5','3']}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -1147,6 +1311,7 @@ const D=Object.fromEntries(DECOS.map(d=>[d.id,d]));
 function validDeco(id){return typeof id==='string'&&Object.hasOwn(D,id)}
 function decoIdOf(sel){return typeof sel==='string'&&sel.startsWith('deco:')?sel.slice(5):null}
 function decoAt(t){return (state.decorations||[]).find(d=>d.tile===t)}
+function roads(){return state.roads||[]}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
@@ -1159,7 +1324,7 @@ function updateUnlocks(s){
  unlocked.add('library');
  BUILDINGS.forEach((b,i)=>{
   if(s.placed[b.cat]){
-   BUILDINGS.slice(0,i+2).forEach(item=>unlocked.add(item.cat));
+   BUILDINGS.slice(0,i+2).forEach(item=>{if(buildingGrades(item).includes(s.grade))unlocked.add(item.cat)});
   }
  });
  s.unlocked=[...unlocked];
@@ -1174,10 +1339,13 @@ function migrate(d,grade='4'){
  s.v=5;
  s.grade=grade;
  if(typeof s.townName!=='string')s.townName='';
+ s.townName=s.townName.slice(0,12);
+ s.sound=!!s.sound;s.lowGfx=!!s.lowGfx;
  for(const key of ['coins','totalCorrect','totalAnswered']){
   if(!Number.isFinite(s[key])||s[key]<0)s[key]=defaults[key];
+  else s[key]=Math.min(9999999,Math.floor(s[key]));
  }
- s.progress=Object.fromEntries(Object.entries(s.progress&&typeof s.progress==='object'&&!Array.isArray(s.progress)?s.progress:{}).filter(([cat,n])=>validCat(cat)&&Number.isFinite(n)&&n>=0));
+ s.progress=Object.fromEntries(Object.entries(s.progress&&typeof s.progress==='object'&&!Array.isArray(s.progress)?s.progress:{}).filter(([cat,n])=>validCat(cat)&&Number.isFinite(n)&&n>=0).map(([cat,n])=>[cat,Math.min(9999999,Math.floor(n))]));
  s.review=[...new Set((Array.isArray(s.review)?s.review:[]).map(id=>{
   if(validReview(id,grade))return id;
   if(grade!=='4'||(d.v!==undefined&&d.v>4)||typeof id!=='string')return null;
@@ -1198,7 +1366,7 @@ function migrate(d,grade='4'){
  };
  const fixed={},occ=new Set();
  Object.entries(s.placed||{}).forEach(([cat,p])=>{
-  if(!validCat(cat)||!p||typeof p!=='object'||!Number.isFinite(p.level)||p.level<0)return;
+  if(!validCat(cat)||!buildingGrades(B[cat]).includes(grade)||!p||typeof p!=='object'||!Number.isFinite(p.level)||p.level<0)return;
   let t;
   if('lot' in p){
    if(!Number.isInteger(p.lot)||p.lot<0||p.lot>=16)return;
@@ -1257,7 +1425,7 @@ function loadState(){
  if(d&&typeof d==='object'&&!Array.isArray(d)&&d.v===5){
   if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns)){loadBlockError('malformed');return null}
   const next={},nextGrade=validGrade(d.activeGrade)?d.activeGrade:'4';
-  for(const grade of ['4','5']){
+  for(const grade of ['4','5','3']){
    if(!Object.hasOwn(d.towns,grade))continue;
    const town=migrate(d.towns[grade],grade);
    if(!town){loadBlockError('malformed');return null}
@@ -1423,7 +1591,7 @@ function canUpgrade(cat){
  if(!validCat(cat)||activeSession())return false;
  const p=state.placed[cat];
  if(!p||p.level>=3)return false;
- return state.progress[cat]>=TH[p.level]&&state.coins>=UP_COST[p.level];
+ return state.progress[cat]>=LV_NEED[p.level]&&state.coins>=LV_COST[p.level];
 }
 function townNameText(){return state.townName||'ちいさな村'}
 function refreshNameUI(){
@@ -1467,9 +1635,10 @@ function openTutorial(){
 function renderTut(){
  const p=TUT[tutPage];
  const last=tutPage===TUT.length-1;
+ const body=tutPage===0?p.d.replace('6つの建物',(state.grade==='3'?'7つの建物':'6つの建物')):p.d;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
-   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${p.d}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
+  <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${body}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
  <div class="dots" style="justify-content:center;margin-top:14px">
  ${TUT.map((_,k)=>`<span class="dot ${k===tutPage?'now':(k<tutPage?' done-ok':'')}"></span>`).join('')}
  </div>
@@ -1495,12 +1664,12 @@ function onTileTap(t){
   const did=decoIdOf(pendingPlace);
   if(did){
    if(!validDeco(did)){exitPlace();return}
-   if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには置けないよ。別の場所にしてね');return}
+   if(decoAt(t)||catAt(t)||roads().includes(t)){toast('そこには置けないよ。別の場所にしてね');return}
    const d=D[did];
    askYesNo(`${d.emoji} ${d.name}`,`${d.desc}<br>この場所に置く?`,`💰${d.cost===0?'無料':d.cost}で ここに置く!`,()=>{if(pendingPlace==='deco:'+did)confirmDeco(t,did)});
    return;
   }
-  if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
+  if(decoAt(t)||catAt(t)||roads().includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
   const cat=pendingPlace;
   if(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat]){exitPlace();return}
   const b=B[cat];
@@ -1509,7 +1678,7 @@ function onTileTap(t){
  }
  const cat=catAt(t);
  if(cat)openBuildingMenu(cat);
- else if(state.roads.includes(t))openRemoval(t,'__road');
+ else if(roads().includes(t))openRemoval(t,'__road');
  else if(decoAt(t))openRemoval(t,'deco:'+decoAt(t).kind);
  else openPalette();
 }
@@ -1519,15 +1688,15 @@ function openRemoval(t,cat){
  const road=cat==='__road';
  if(did){
   if(decoAt(t)?.kind!==did)return;
- }else if(road?!state.roads.includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
+ }else if(road?!roads().includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
  const placed=!did&&!road?state.placed[cat]:null,owner=state;
  const name=road?ROAD.name:did?D[did].name:B[cat].name;
  const note=did?'コインは戻らないよ。':'コインは戻らないよ。学習の記録と解放した建物は残るよ。建て直すとレベル1になるよ。';
  askYesNo(`${name}を撤去する?`,note,'撤去する',()=>{
   if(activeSession()||state!==owner)return;
   if(road){
-   if(!state.roads.includes(t))return;
-   state.roads=state.roads.filter(tile=>tile!==t);
+   if(!roads().includes(t))return;
+   state.roads=roads().filter(tile=>tile!==t);
   }else if(did){
    if(decoAt(t)?.kind!==did)return;
    state.decorations=state.decorations.filter(d=>d.tile!==t);
@@ -1549,9 +1718,11 @@ function tryRoad(t){
  if(loadBlocked){toast('セーブデータの確認ができていないため、まだ操作できません');return}
  if(!validTile(t)||activeSession())return;
  if(catAt(t)){toast('建物の上には道はひけないよ!');return}
+ if(decoAt(t)){toast('かざりの上には道はひけないよ!');return}
  if((state.roads||[]).includes(t)){toast('ここにはもう道があるよ');return}
  if(state.coins<ROAD.cost){toast('💰 コインが足りない…');exitPlace();return}
  state.coins-=ROAD.cost;
+ if(!Array.isArray(state.roads))state.roads=[];
  state.roads.push(t);
  save();sfx('coin');
  if(R.ok){
@@ -1569,7 +1740,7 @@ function confirmBuild(t,cat){
  if(loadBlocked||activeSession()||!validTile(t)||!validCat(cat)||!state.unlocked.includes(cat))return;
  exitPlace();
  const b=B[cat];
- if(state.placed[cat]||catAt(t)||state.roads.includes(t)||state.coins<b.cost){toast(state.coins<b.cost?'💰 コインが足りない…':'そこには建てられないよ…');renderMap();return}
+ if(state.placed[cat]||catAt(t)||decoAt(t)||roads().includes(t)||state.coins<b.cost){toast(state.coins<b.cost?'💰 コインが足りない…':'そこには建てられないよ…');renderMap();return}
  state.coins-=b.cost;
  state.placed[cat]={tile:t,level:1};
  state.progress[cat]=state.progress[cat]||0;
@@ -1583,7 +1754,7 @@ function confirmDeco(t,id){
  if(loadBlocked||activeSession()||!validTile(t)||!validDeco(id))return;
  exitPlace();
  const d=D[id];
- if(decoAt(t)||catAt(t)||state.roads.includes(t)||state.coins<d.cost){toast(state.coins<d.cost?'💰 コインが足りない…':'そこには置けないよ…');renderMap();return}
+ if(decoAt(t)||catAt(t)||roads().includes(t)||state.coins<d.cost){toast(state.coins<d.cost?'💰 コインが足りない…':'そこには置けないよ…');renderMap();return}
  state.coins-=d.cost;
  state.decorations.push({tile:t,kind:id});
  save();
@@ -1622,7 +1793,7 @@ function setPlaceBar(on){
 function openPalette(){
  if(loadBlocked||activeSession())return;
  exitPlace();closeModal();
- const items=BUILDINGS.filter(b=>!state.placed[b.cat]).sort((a,b)=>a.cost-b.cost).map(b=>{
+ const items=BUILDINGS.filter(b=>!state.placed[b.cat]&&buildingGrades(b).includes(state.grade)).sort((a,b)=>a.cost-b.cost).map(b=>{
   const locked=!state.unlocked.includes(b.cat);
   const poor=state.coins<b.cost;
   const dis=locked||poor?'disabled':'';
@@ -1705,11 +1876,11 @@ function gable(w,hgt,depth,color,x,y,z,g){
  const l=box(len,.1,depth,color,x-w/4-.005,y,z,g);l.rotation.z=slope;
  const r=box(len,.1,depth,color,x+w/4+.005,y,z,g);r.rotation.z=-slope;
 }
-const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4};
+const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4,essay:2.6};
 
 function makeBuilding(cat,level){
  const g=new THREE.Group();
- if(cat==='library'||cat==='school'||cat==='cafe'||cat==='flower')box(2.9,.12,2.9,0xf1e9d8,0,.06,0,g);
+ if(cat==='library'||cat==='school'||cat==='cafe'||cat==='flower'||cat==='essay')box(2.9,.12,2.9,0xf1e9d8,0,.06,0,g);
  if(cat==='library'){
   box(2.5,.12,.6,0xe3dcc9,0,.06,1.28,g);
   box(2.3,.12,.48,0xe9e2d0,0,.18,1.18,g);
@@ -1809,7 +1980,7 @@ function makeBuilding(cat,level){
   box(.18,.04,.24,0xffd166,-1.05,.4,-.6,g);
   cyl(.012,.012,.5,0xdddddd,-1.13,.66,-.6,g,6);cyl(.012,.012,.5,0xdddddd,-.97,.66,-.6,g,6);
   flowerDot(-.2,.78,0xff6f91,g);flowerDot(.05,.84,0xffd166,g);flowerDot(.32,.78,0xb79cff,g);
- }else{
+ }else if(cat==='flower'){
   box(1.6,1.0,1.3,0xffc9dd,0,.5,-.25,g);
   pyr(1.22,.6,0xff9fc0,0,1.3,-.25,g);
   box(.34,.52,.07,0x9a6b4f,0,.26,.42,g);
@@ -1824,6 +1995,19 @@ function makeBuilding(cat,level){
   sph(.06,0xff6f91,.98,.38,-.28,g);sph(.06,0xffd166,1.12,.38,-.12,g);sph(.06,0xb79cff,1.27,.38,-.25,g);
   cyl(.03,.03,.55,0x8a8a8a,-1.0,.28,.62,g,6);
   sph(.11,0xff6f91,-1.0,.62,.62,g);sph(.1,0xffd166,-.87,.58,.62,g);sph(.09,0xb79cff,-1.13,.57,.62,g);
+ }else if(cat==='essay'){
+  box(2.2,1.1,1.6,0xf3e5c8,0,.55,-.1,g);
+  pyr(1.75,.55,0x7fb4e8,0,1.38,-.1,g);
+  box(.5,.62,.06,0x8a6a4f,-.6,.43,.72,g);
+  box(1.1,.12,.9,0x9a6b4f,.25,.78,.35,g);
+  [-.45,.95].forEach(x=>{[-.05,.75].forEach(z=>{box(.1,.66,.1,0x9a6b4f,x,.45,z,g)})});
+  const paper=box(.8,.02,.6,0xfffdf5,.25,.86,.35,g);paper.rotation.y=.2;
+  const pencil=cyl(.05,.05,1.0,0xe8a913,.75,1.0,.1,g,6);pencil.rotation.z=1.1;
+  cone(.05,.12,0xff8fa3,1.18,.82,-.08,g,6);
+  box(.5,.7,.3,0xb08968,-.95,.47,-.75,g);
+  [.25,.45,.65].forEach(y=>{box(.44,.05,.26,0xff6f91,-.95,y,-.75,g)});
+  cyl(.09,.11,.22,0x3a3a55,.75,.2,-.5,g,10);
+  tree(1.25,.5,.7,g);
  }
  if(level>=2)box(2.35,.1,2.1,0xffd166,0,cat==='park'?.09:.17,0,g);
  if(level>=3){
@@ -1868,9 +2052,15 @@ function makeDeco(kind){
  return g;
 }
 function disposeObj(o){
+ const shared=new Set([...Object.values(MATS),...Object.values(ROADMATS||{})]);
  o.traverse(c=>{
   if(c.geometry)c.geometry.dispose();
-  if(c.material&&c.material.map&&c.material.map.dispose)c.material.map.dispose();
+  if(c.material){
+   (Array.isArray(c.material)?c.material:[c.material]).forEach(m=>{
+    if(m.map&&m.map.dispose)m.map.dispose();
+    if(!shared.has(m)&&m.dispose)m.dispose();
+   });
+  }
  });
 }
 function makeLabel(cat,level,noStars){
@@ -1949,9 +2139,11 @@ function rebuildRoads(){
  while(R.roadsG.children.length){
   const c=R.roadsG.children.pop();
   if(c.geometry)c.geometry.dispose();
+  if(c.dispose)c.dispose();
  }
  const rd=state.roads||[];
  if(!rd.length)return;
+ const rdSet=new Set(rd);
  const mats=roadMats();
  const dummy=new THREE.Object3D();
  const curb=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE*.96,.1,TILE*.96),mats.curb,rd.length);
@@ -1961,10 +2153,10 @@ function rebuildRoads(){
  let sc=0;
  rd.forEach(t=>{
   const c=t%GRID,r=(t/GRID)|0;
-  if(r>0&&rd.includes((r-1)*GRID+c))sc++;
-  if(r<GRID-1&&rd.includes((r+1)*GRID+c))sc++;
-  if(c>0&&rd.includes(r*GRID+c-1))sc++;
-  if(c<GRID-1&&rd.includes(r*GRID+c+1))sc++;
+  if(r>0&&rdSet.has((r-1)*GRID+c))sc++;
+  if(r<GRID-1&&rdSet.has((r+1)*GRID+c))sc++;
+  if(c>0&&rdSet.has(r*GRID+c-1))sc++;
+  if(c<GRID-1&&rdSet.has(r*GRID+c+1))sc++;
  });
  let stripes=null,ci=0;
  if(sc>0){
@@ -1986,10 +2178,10 @@ function rebuildRoads(){
    dummy.updateMatrix();
    stripes.setMatrixAt(ci++,dummy.matrix);
   };
-  if(r>0&&rd.includes((r-1)*GRID+c))add(false,0,-TILE*.27);
-  if(r<GRID-1&&rd.includes((r+1)*GRID+c))add(false,0,TILE*.27);
-  if(c>0&&rd.includes(r*GRID+c-1))add(true,-TILE*.27,0);
-  if(c<GRID-1&&rd.includes(r*GRID+c+1))add(true,TILE*.27,0);
+  if(r>0&&rdSet.has((r-1)*GRID+c))add(false,0,-TILE*.27);
+  if(r<GRID-1&&rdSet.has((r+1)*GRID+c))add(false,0,TILE*.27);
+  if(c>0&&rdSet.has(r*GRID+c-1))add(true,-TILE*.27,0);
+  if(c<GRID-1&&rdSet.has(r*GRID+c+1))add(true,TILE*.27,0);
  });
  [curb,asp,stripes].forEach(m=>{
   if(!m)return;
@@ -1999,7 +2191,6 @@ function rebuildRoads(){
   R.roadsG.add(m);
  });
 }
-function neighborsRoad3D(t){return neighborsRoad(t)}
 function makeCar(col){
  const g=new THREE.Group();
  box(.6,.22,.38,col,0,.2,0,g);
@@ -2023,7 +2214,7 @@ function spawnCars(){
  const cols=[0xff6f91,0x63c7ff,0xffd166,0x7fdcae];
  for(let i=0;i<n;i++){
   const from=rd[Math.floor(Math.random()*rd.length)];
-  const nbs=neighborsRoad3D(from);
+  const nbs=neighborsRoad(from);
   if(!nbs.length)continue;
   const to=nbs[Math.floor(Math.random()*nbs.length)];
   const mesh=makeCar(cols[R.agents.length%cols.length]);
@@ -2141,7 +2332,7 @@ function loop(t){
  R.agents.forEach(a=>{
   a.p+=.033*a.speed;
   if(a.p>=1){
-   const opts=neighborsRoad3D(a.toTile).filter(t=>t!==a.fromTile);
+   const opts=neighborsRoad(a.toTile).filter(t=>t!==a.fromTile);
    if(opts.length){
     const nt=opts[Math.floor(Math.random()*opts.length)];
     a.fromTile=a.toTile;a.toTile=nt;a.p=0;
@@ -2222,7 +2413,7 @@ function bindSceneEvents(){
    const dnow=Math.hypot(a.x-b.x,a.y-b.y);
    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
    if(lastMid)panBy(mx-lastMid.x,my-lastMid.y);
-   if(lastPinch>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*lastPinch/dnow));
+   if(lastPinch>0&&dnow>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*lastPinch/dnow));
    lastPinch=dnow;lastMid={x:mx,y:my};
    updateCam();
   }
@@ -2278,7 +2469,7 @@ function bindSceneEvents(){
     const dn=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y);
     const mx=(v[0].x+v[1].x)/2,my=(v[0].y+v[1].y)/2;
     if(tmid)panBy(mx-tmid.x,my-tmid.y);
-    if(tpinch>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*tpinch/dn));
+    if(tpinch>0&&dn>0)R.cam.radius=Math.min(42,Math.max(10,R.cam.radius*tpinch/dn));
     tpinch=dn;tmid={x:mx,y:my};
     updateCam();
    }
@@ -2313,7 +2504,7 @@ function renderFallbackGrid(){
   }else if((state.roads||[]).includes(t)){
    html+=`<div class="lot road" data-tile="${t}"><span class="house" style="font-size:30px">🛣️</span><span class="nameplate">どうろ</span></div>`;
   }else if(decoAt(t)){
-   const dd=D[decoAt(t).kind];
+   const dd=D[decoAt(t).kind]||{emoji:'🌼',name:'かざり'};
    html+=`<div class="lot deco" data-tile="${t}"><span class="house" style="font-size:30px">${dd.emoji}</span><span class="nameplate">${dd.name}</span></div>`;
   }else{
    html+=`<div class="lot empty" data-tile="${t}"><span>${FB_DECO[t%FB_DECO.length]}</span><span class="plus">＋</span></div>`;
@@ -2337,7 +2528,7 @@ function renderMap(){
  const r=rankInfo();
  $('#rank-emoji').textContent=r.e;
  $('#rank-name').textContent=r.n;
- $('#town-stats').textContent=`建物 ${Object.keys(state.placed).length}/6`;
+ $('#town-stats').textContent=`建物 ${Object.keys(state.placed).filter(c=>B[c]&&buildingGrades(B[c]).includes(state.grade)).length}/${BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length}`;
  renderStats();
  if(window.THREE&&isWebGLAvailable()){
   $('#scene-fallback').classList.add('hidden');
@@ -2367,14 +2558,14 @@ function openBuildingMenu(cat){
  if(loadBlocked||activeSession()||!validCat(cat)||!state.placed[cat])return;
  const b=B[cat],p=state.placed[cat],prog=state.progress[cat]||0;
  const upDis=!canUpgrade(cat);
- const nextTh=p.level<3?TH[p.level]:null;
-const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="wbr"><br class="mbr">(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
+ const nextTh=p.level<3?LV_NEED[p.level]:null;
+const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="wbr"><br class="mbr">(アップグレードにはコイン 💰${LV_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
  openModal(`<h3>${b.emoji} ${b.name} <small>Lv.${p.level}</small></h3>
  <p class="sub">${catTag(cat)}・これまでの正解 ${prog} 問</p>
  <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${progTxt}</p>
  <div class="close-row" style="flex-direction:column">
  <button class="btn minty big" id="bm-start">▶️ クイズをはじめる!</button>
- <button class="btn sunny" id="bm-up" ${upDis?'disabled':''}>⬆️ レベルアップする(💰${UP_COST[p.level]})</button>
+ <button class="btn sunny" id="bm-up" ${upDis?'disabled':''}>⬆️ レベルアップする(💰${LV_COST[p.level]})</button>
  <button class="btn ghosty small" id="bm-remove">撤去する</button>
  <button class="btn ghosty small" onclick="closeModal()">とじる</button>
  </div>`);
@@ -2382,7 +2573,7 @@ const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でア�
  $('#bm-remove').onclick=()=>{if(state.placed[cat]===p)openRemoval(p.tile,cat)};
  $('#bm-up').onclick=()=>{
   if(state.placed[cat]!==p||!canUpgrade(cat))return;
-  state.coins-=UP_COST[p.level];
+  state.coins-=LV_COST[p.level];
   p.level++;
   save();closeModal();
   sfx('level');confetti(40);
@@ -2404,14 +2595,15 @@ function buildSession(cat,isReview){
   return{...base,cat:null,qs:ids.map(id=>questionById(id,grade))};
  }
  const level=state.placed[cat].level;
- const pool=questionsForGrade(grade)[cat];
+ const pool=questionsForGrade(grade)?.[cat];
+ if(!Array.isArray(pool)||!pool.length)return{...base,qs:[]};
  const wrap=q=>({cat,q,id:q.id});
- if(cat==='flower'&&grade==='4'){
+ if(cat==='flower'&&grade!=='5'){
   const groups=[...new Set(pool.filter(q=>q.kind==='reading'&&q.d===level).map(q=>q.group))];
   const group=shuffle(groups)[0];
   return{...base,qs:pool.filter(q=>q.kind==='reading'&&q.group===group).map(wrap)};
  }
- const len=cat==='flower'?2:5;
+ const len=cat==='essay'?1:cat==='flower'?2:5;
  const qs=[],used=new Set();
  const parts=cat==='park'?[...new Set(pool.map(q=>q.part))]:[];
  for(let k=0;k<len;k++){
@@ -2431,13 +2623,14 @@ function buildSession(cat,isReview){
 function startSession(cat,isReview){
  if(loadBlocked)return;
  const bank=questionsForGrade();
- if(!bank||!BUILDINGS.every(b=>Array.isArray(bank[b.cat])&&bank[b.cat].length)){
+ if(!bank||!BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).every(b=>Array.isArray(bank[b.cat])&&bank[b.cat].length)){
   toast('問題データを読み込めません。完全なHTMLファイルを開き直してください。');return;
  }
  if(isReview?!state.review.some(id=>validReview(id)):!validCat(cat)||!state.placed[cat])return;
  stopSpeech();
  exitPlace();closeModal();
  session=buildSession(cat,isReview);
+ if(!session.qs.length){session=null;toast('問題が見つかりませんでした');return}
  $('#q-building').textContent=isReview?'📖 ふくしゅう':`${B[cat].emoji} ${B[cat].name} Lv.${state.placed[cat].level}`;
  show('scr-quiz');
  renderQuestion();
@@ -2763,9 +2956,10 @@ function wordCount(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).leng
 function renderWriting(card,zone,item){
  const s=session,i=s.i;
  const q=item.q;
- const min=s.grade==='5'?5:15,max=s.grade==='5'?15:25;
- card.innerHTML=`<span class="qcat-tag">追加作文練習（本番の試験ではありません）</span>
+ const min=s.grade==='5'?5:s.grade==='3'?25:15,max=s.grade==='5'?15:s.grade==='3'?50:25;
+ card.innerHTML=`<span class="qcat-tag">${s.grade==='3'?'英作文（本番形式）':'追加作文練習（本番の試験ではありません）'}</span>
  <div class="qtext" style="font-size:min(4.8vw,23px)">${q.en}</div>
+ ${q.points?`<div class="order-frame" style="margin-top:10px"><b>📝 POINTS（観点）:</b><br>${q.points.map((p,k)=>`${k+1}. ${p}`).join('<br>')}</div>`:''}
  <div class="qjp">${q.jp}</div>
  <div class="qjp" style="margin-top:8px">💡 ヒント: ${q.hints.join(' / ')}</div>`;
  zone.innerHTML=`<div class="panel" style="margin-top:14px">
@@ -2841,7 +3035,7 @@ function finishSession(){
   const b=B[session.cat],p=state.placed[session.cat],cur=state.progress[session.cat]||0;
   pw.classList.remove('hidden');
   if(p.level<3){
-   const target=TH[p.level];
+   const target=LV_NEED[p.level];
    $('#res-progress-label').textContent=`${b.emoji} ${b.name} Lv.${p.level}`;
    $('#res-progress-num').textContent=Math.min(cur,target)+' / '+target;
    setTimeout(()=>{$('#res-progress-fill').style.width=Math.min(100,cur/target*100)+'%'},80);
@@ -2961,6 +3155,9 @@ function openSettings(){
    </button>
    <button type="button" class="grade-card" data-grade="4" aria-pressed="${activeGrade==='4'}" aria-label="英検4級" aria-describedby="settings-grade-4-description">
     <span class="grade-name">英検4級</span><span class="grade-description" id="settings-grade-4-description">きほんの次のステップへ</span><span class="grade-status">${activeGrade==='4'?'選択中':'選ぶ'}</span>
+   </button>
+   <button type="button" class="grade-card" data-grade="3" aria-pressed="${activeGrade==='3'}" aria-label="英検3級" aria-describedby="settings-grade-3-description">
+    <span class="grade-name">英検3級</span><span class="grade-description" id="settings-grade-3-description">4級の次のステップへ</span><span class="grade-status">${activeGrade==='3'?'選択中':'選ぶ'}</span>
    </button>
   </div>
  </fieldset>
