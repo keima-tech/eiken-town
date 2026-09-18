@@ -924,7 +924,15 @@ cafe:[
 ],
 station:[],
 park:[],
-flower:[]
+flower:[],
+essay:[
+{id:'g3-essay-101',d:1,kind:'writing',en:"Do you think students should study English every day?",points:["communication","future","fun"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think students should study English every day. First, English helps them talk with people around the world. Second, it will be useful for their future jobs. Also, studying a little every day is fun.",e:"I think ... で考えを書き、First, ... Second, ... で理由を2つ書くのが3級英作文の基本形。"},
+{id:'g3-essay-102',d:1,kind:'writing',en:"Do you think it is good for children to have a pet?",points:["happy","responsibility","family"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think it is good for children to have a pet. First, pets make children happy every day. Second, taking care of a pet teaches responsibility. Also, pets make the family closer.",e:"理由は観点(POINTS)に沿って2つ書こう。taking care of ... で〜の世話をすること。"},
+{id:'g3-essay-103',d:2,kind:'writing',en:"Which do you like better, summer or winter?",points:["weather","activities","food"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I like ... better ...","First, ...","Second, ..."],sample:"I like summer better than winter. First, the weather is warm and I can swim. Second, I can enjoy many outdoor activities with my friends. Also, summer food like ice cream is delicious.",e:"Which do you like better ...? には I like ... better ... で答え、理由を2つ続ける。"},
+{id:'g3-essay-104',d:2,kind:'writing',en:"Do you want to live in a big city in the future?",points:["convenient","jobs","nature"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I want to ...","First, ...","Second, ..."],sample:"I want to live in a big city in the future. First, big cities are convenient because there are many shops and stations. Second, I can find an interesting job there. However, I know there is little nature.",e:"I want to ... で希望を書き、because で理由をつなげると説得力が増す。"},
+{id:'g3-essay-105',d:3,kind:'writing',en:"Do you think children should help with housework?",points:["family","skill","time"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think children should help with housework. First, helping is good for the family. Second, they can learn important life skills. Also, working together saves everyone's time.",e:"should で〜すべきという意見を表す。life skills は生活の技能。"},
+{id:'g3-essay-106',d:3,kind:'writing',en:"Which do you like better, reading books or watching TV?",points:["learning","fun","time"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I like ... better ...","First, ...","Second, ..."],sample:"I like reading books better than watching TV. First, I can learn many new things from books. Second, reading is quiet and fun. Also, I can enjoy books any time I want.",e:"動名詞を主語にした I like reading ... better ... の形に注意。any time でいつでも。"}
+]
 }
 };
 const PRACTICE_PICTURES = {
@@ -1035,7 +1043,8 @@ school:REVIEW_ARCHIVE['3'].school,
 cafe:REVIEW_ARCHIVE['3'].cafe,
 station:[],
 park:[],
-flower:[]
+flower:[],
+essay:REVIEW_ARCHIVE['3'].essay
 }
 };
 const PRACTICE_ORDER_DATA = {
@@ -1276,20 +1285,22 @@ const GRID=9,TILE=3.0,PITCH=2.9;
 const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','こはる村','スターヒルズ','にじがわ町','あおぞらシティ'];
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
-const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん'};
+const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん',essay:'✍️ さくぶん'};
 function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):CAT_TAG[cat]}
 function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
 function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
-function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
+function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
 const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
 {id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',desc:'文法(ぶんぽう)クイズ'},
 {id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',desc:'会話(かいわ)クイズ'},
 {id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',desc:'並べかえ(じゅんばん)クイズ'},
 {id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',desc:'リスニング(ちょうかい)'},
-{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'}
+{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'},
+{id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3'],desc:'本番形式の英作文（3級のみ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
+function buildingGrades(b){return b.grades||['4','5','3']}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -1313,7 +1324,7 @@ function updateUnlocks(s){
  unlocked.add('library');
  BUILDINGS.forEach((b,i)=>{
   if(s.placed[b.cat]){
-   BUILDINGS.slice(0,i+2).forEach(item=>unlocked.add(item.cat));
+   BUILDINGS.slice(0,i+2).forEach(item=>{if(buildingGrades(item).includes(s.grade))unlocked.add(item.cat)});
   }
  });
  s.unlocked=[...unlocked];
@@ -1621,9 +1632,10 @@ function openTutorial(){
 function renderTut(){
  const p=TUT[tutPage];
  const last=tutPage===TUT.length-1;
+ const body=tutPage===0?p.d.replace('6つの建物',(state.grade==='3'?'7つの建物':'6つの建物')):p.d;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
-   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${p.d}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
+  <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${body}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
  <div class="dots" style="justify-content:center;margin-top:14px">
  ${TUT.map((_,k)=>`<span class="dot ${k===tutPage?'now':(k<tutPage?' done-ok':'')}"></span>`).join('')}
  </div>
@@ -1776,7 +1788,7 @@ function setPlaceBar(on){
 function openPalette(){
  if(loadBlocked||activeSession())return;
  exitPlace();closeModal();
- const items=BUILDINGS.filter(b=>!state.placed[b.cat]).sort((a,b)=>a.cost-b.cost).map(b=>{
+ const items=BUILDINGS.filter(b=>!state.placed[b.cat]&&buildingGrades(b).includes(state.grade)).sort((a,b)=>a.cost-b.cost).map(b=>{
   const locked=!state.unlocked.includes(b.cat);
   const poor=state.coins<b.cost;
   const dis=locked||poor?'disabled':'';
@@ -1859,11 +1871,11 @@ function gable(w,hgt,depth,color,x,y,z,g){
  const l=box(len,.1,depth,color,x-w/4-.005,y,z,g);l.rotation.z=slope;
  const r=box(len,.1,depth,color,x+w/4+.005,y,z,g);r.rotation.z=-slope;
 }
-const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4};
+const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4,essay:2.6};
 
 function makeBuilding(cat,level){
  const g=new THREE.Group();
- if(cat==='library'||cat==='school'||cat==='cafe'||cat==='flower')box(2.9,.12,2.9,0xf1e9d8,0,.06,0,g);
+ if(cat==='library'||cat==='school'||cat==='cafe'||cat==='flower'||cat==='essay')box(2.9,.12,2.9,0xf1e9d8,0,.06,0,g);
  if(cat==='library'){
   box(2.5,.12,.6,0xe3dcc9,0,.06,1.28,g);
   box(2.3,.12,.48,0xe9e2d0,0,.18,1.18,g);
@@ -1963,7 +1975,7 @@ function makeBuilding(cat,level){
   box(.18,.04,.24,0xffd166,-1.05,.4,-.6,g);
   cyl(.012,.012,.5,0xdddddd,-1.13,.66,-.6,g,6);cyl(.012,.012,.5,0xdddddd,-.97,.66,-.6,g,6);
   flowerDot(-.2,.78,0xff6f91,g);flowerDot(.05,.84,0xffd166,g);flowerDot(.32,.78,0xb79cff,g);
- }else{
+ }else if(cat==='flower'){
   box(1.6,1.0,1.3,0xffc9dd,0,.5,-.25,g);
   pyr(1.22,.6,0xff9fc0,0,1.3,-.25,g);
   box(.34,.52,.07,0x9a6b4f,0,.26,.42,g);
@@ -1978,6 +1990,19 @@ function makeBuilding(cat,level){
   sph(.06,0xff6f91,.98,.38,-.28,g);sph(.06,0xffd166,1.12,.38,-.12,g);sph(.06,0xb79cff,1.27,.38,-.25,g);
   cyl(.03,.03,.55,0x8a8a8a,-1.0,.28,.62,g,6);
   sph(.11,0xff6f91,-1.0,.62,.62,g);sph(.1,0xffd166,-.87,.58,.62,g);sph(.09,0xb79cff,-1.13,.57,.62,g);
+ }else{
+  box(2.2,1.1,1.6,0xf3e5c8,0,.55,-.1,g);
+  pyr(1.75,.55,0x7fb4e8,0,1.38,-.1,g);
+  box(.5,.62,.06,0x8a6a4f,-.6,.43,.72,g);
+  box(1.1,.12,.9,0x9a6b4f,.25,.78,.35,g);
+  [-.45,.95].forEach(x=>{[-.05,.75].forEach(z=>{box(.1,.66,.1,0x9a6b4f,x,.45,z,g)})});
+  const paper=box(.8,.02,.6,0xfffdf5,.25,.86,.35,g);paper.rotation.y=.2;
+  const pencil=cyl(.05,.05,1.0,0xe8a913,.75,1.0,.1,g,6);pencil.rotation.z=1.1;
+  cone(.05,.12,0xff8fa3,1.18,.82,-.08,g,6);
+  box(.5,.7,.3,0xb08968,-.95,.47,-.75,g);
+  [.25,.45,.65].forEach(y=>{box(.44,.05,.26,0xff6f91,-.95,y,-.75,g)});
+  cyl(.09,.11,.22,0x3a3a55,.75,.2,-.5,g,10);
+  tree(1.25,.5,.7,g);
  }
  if(level>=2)box(2.35,.1,2.1,0xffd166,0,cat==='park'?.09:.17,0,g);
  if(level>=3){
@@ -2491,7 +2516,7 @@ function renderMap(){
  const r=rankInfo();
  $('#rank-emoji').textContent=r.e;
  $('#rank-name').textContent=r.n;
- $('#town-stats').textContent=`建物 ${Object.keys(state.placed).length}/6`;
+ $('#town-stats').textContent=`建物 ${Object.keys(state.placed).length}/${BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length}`;
  renderStats();
  if(window.THREE&&isWebGLAvailable()){
   $('#scene-fallback').classList.add('hidden');
@@ -2565,7 +2590,7 @@ function buildSession(cat,isReview){
   const group=shuffle(groups)[0];
   return{...base,qs:pool.filter(q=>q.kind==='reading'&&q.group===group).map(wrap)};
  }
- const len=cat==='flower'?2:5;
+ const len=cat==='essay'?1:cat==='flower'?2:5;
  const qs=[],used=new Set();
  const parts=cat==='park'?[...new Set(pool.map(q=>q.part))]:[];
  for(let k=0;k<len;k++){
@@ -2585,7 +2610,7 @@ function buildSession(cat,isReview){
 function startSession(cat,isReview){
  if(loadBlocked)return;
  const bank=questionsForGrade();
- if(!bank||!BUILDINGS.every(b=>Array.isArray(bank[b.cat])&&bank[b.cat].length)){
+ if(!bank||!BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).every(b=>Array.isArray(bank[b.cat])&&bank[b.cat].length)){
   toast('問題データを読み込めません。完全なHTMLファイルを開き直してください。');return;
  }
  if(isReview?!state.review.some(id=>validReview(id)):!validCat(cat)||!state.placed[cat])return;
@@ -2917,9 +2942,10 @@ function wordCount(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).leng
 function renderWriting(card,zone,item){
  const s=session,i=s.i;
  const q=item.q;
- const min=s.grade==='5'?5:15,max=s.grade==='5'?15:25;
- card.innerHTML=`<span class="qcat-tag">追加作文練習（本番の試験ではありません）</span>
+ const min=s.grade==='5'?5:s.grade==='3'?25:15,max=s.grade==='5'?15:s.grade==='3'?50:25;
+ card.innerHTML=`<span class="qcat-tag">${s.grade==='3'?'英作文（本番形式）':'追加作文練習（本番の試験ではありません）'}</span>
  <div class="qtext" style="font-size:min(4.8vw,23px)">${q.en}</div>
+ ${q.points?`<div class="order-frame" style="margin-top:10px"><b>📝 POINTS（観点）:</b><br>${q.points.map((p,k)=>`${k+1}. ${p}`).join('<br>')}</div>`:''}
  <div class="qjp">${q.jp}</div>
  <div class="qjp" style="margin-top:8px">💡 ヒント: ${q.hints.join(' / ')}</div>`;
  zone.innerHTML=`<div class="panel" style="margin-top:14px">
