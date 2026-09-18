@@ -1709,10 +1709,10 @@ function makeBuilding(cat,level){
   box(2.3,.12,.48,0xe9e2d0,0,.18,1.18,g);
   box(2.1,.12,.36,0xefe8d6,0,.30,1.08,g);
   box(2.4,.4,1.7,0xded5bf,0,.20,-.05,g);
-  box(2.2,1.0,1.5,0xf2ead6,0,.90,-.08,g);
+  box(2.2,1.0,1.5,0xe7d5b0,0,.90,-.08,g);
   box(2.32,.14,1.62,0xe0d7c1,0,1.47,-.08,g);
-  [-.78,-.26,.26,.78].forEach(x=>{cyl(.09,.10,.85,0xffffff,x,.82,1.02,g,12)});
-  box(2.0,.18,.52,0xffffff,0,1.33,1.02,g);
+  [-.78,-.26,.26,.78].forEach(x=>{cyl(.09,.10,.85,0xe9edf3,x,.82,1.02,g,12)});
+  box(2.0,.18,.52,0xe9edf3,0,1.33,1.02,g);
   gable(2.0,.4,.54,0xf2a0bd,0,1.60,1.02,g);
   box(.46,.8,.08,0x8a6a4f,0,.80,1.04,g);
   [-1.13,1.13].forEach(x=>{
@@ -1723,12 +1723,12 @@ function makeBuilding(cat,level){
   cyl(.02,.02,.16,0xE8B84B,0,2.14,-.08,g,6);
   sph(.055,0xE8B84B,0,2.26,-.08,g);
   box(.92,.05,.64,0xd9577f,1.18,.20,1.18,g);
-  const pl=box(.4,.05,.54,0xfffdf5,1.06,.27,1.18,g);pl.rotation.z=.48;
-  const pr=box(.4,.05,.54,0xfffdf5,1.31,.27,1.18,g);pr.rotation.z=-.48;
+  const pl=box(.4,.05,.54,0xf6efdd,1.06,.27,1.18,g);pl.rotation.z=.48;
+  const pr=box(.4,.05,.54,0xf6efdd,1.31,.27,1.18,g);pr.rotation.z=-.48;
   sph(.16,0x58c48d,-1.42,.16,1.3,g);
  }else if(cat==='school'){
   box(2.6,.24,1.7,0xcfc6ae,0,.12,0,g);
-  box(2.25,1.5,1.15,0xfdf3cf,0,1.0,-.05,g);
+  box(2.25,1.5,1.15,0xf9e0a0,0,1.0,-.05,g);
   [.68,1.32].forEach(y=>{
    [-.78,0,.78].forEach(x=>{box(.26,.3,.06,0x9adcf0,x,y,.54,g)});
   });
@@ -1740,22 +1740,22 @@ function makeBuilding(cat,level){
   box(2.31,.1,1.2,0xead9b5,0,1.8,-.05,g);
   [[-1.05,-.5],[1.05,-.5],[-1.05,.45],[1.05,.45]].forEach(([x,z])=>{cyl(.025,.025,.22,0x999999,x,1.96,z,g,6)});
   cyl(.03,.03,1.75,0xdddddd,-1.5,.99,.9,g,6);
-  box(.48,.3,.03,0xffffff,-1.26,1.62,.9,g);
+  box(.48,.3,.03,0xe9edf3,-1.26,1.62,.9,g);
   const hi=sph(.085,0xff5a76,-1.26,1.62,.925,g);hi.scale.set(1,1,.35);
  }else if(cat==='cafe'){
-  box(1.9,1.02,1.45,0xfff6ec,0,.51,0,g);
+  box(1.9,1.02,1.45,0xffdfae,0,.51,0,g);
   box(1.45,.46,.07,0xbfe3ff,0,.62,.73,g);
-  [-.35,.35].forEach(x=>{box(.05,.46,.09,0xffffff,x,.62,.745,g)});
+  [-.35,.35].forEach(x=>{box(.05,.46,.09,0xe9edf3,x,.62,.745,g)});
   box(.36,.58,.07,0x7a4a2f,.58,.29,.74,g);
   const aw=box(1.98,.1,.9,0xff8fae,0,1.08,.98,g);aw.rotation.x=.3;
-  cyl(.27,.21,.42,0xffffff,-.38,1.52,0,g,14);
+  cyl(.27,.21,.42,0xefe6d4,-.38,1.52,0,g,14);
   cyl(.235,.235,.06,0x6b4023,-.38,1.74,0,g,14);
-  const hd=new THREE.Mesh(new THREE.TorusGeometry(.11,.04,8,16),M(0xffffff));
+  const hd=new THREE.Mesh(new THREE.TorusGeometry(.11,.04,8,16),M(0xefe6d4));
   hd.position.set(-.06,1.52,0);hd.castShadow=true;g.add(hd);
   sph(.05,0xffffff,-.46,1.94,0,g);sph(.035,0xffffff,-.34,2.04,0,g);
   cyl(.035,.035,.95,0xdad2c8,-1.05,.48,1.02,g,8);
   cone(.55,.32,0xff9fb2,-1.05,1.1,1.02,g,10);
-  cyl(.26,.26,.05,0xffffff,-1.05,.5,1.02,g,14);
+  cyl(.26,.26,.05,0xe9edf3,-1.05,.5,1.02,g,14);
   cyl(.04,.04,.45,0xdad2c8,-1.05,.23,1.02,g,8);
   cyl(.028,.028,.75,0xdad2c8,1.28,.38,-.88,g,8);
   cone(.42,.26,0xffd166,1.28,.82,-.88,g,10);
@@ -1767,7 +1767,7 @@ function makeBuilding(cat,level){
   box(1.5,.5,.56,0xff8fa3,-.15,.47,-.35,g);
   box(.42,.44,.54,0xffb1c1,.82,.45,-.35,g);
   box(.06,.2,.4,0xbfe3ff,1.04,.55,-.35,g);
-  box(1.95,.13,.58,0xffffff,-.05,.52,-.35,g);
+  box(1.95,.13,.58,0xdfe9f2,-.05,.52,-.35,g);
   box(1.15,.19,.58,0x4a4a55,-.25,.68,-.35,g);
   [[-.5],[.45]].forEach(([x])=>{
    [-.53,-.17].forEach(z=>{const w=cyl(.12,.12,.07,0x3a3a3a,x,.12,z,g,10);w.rotation.x=Math.PI/2});
@@ -1804,17 +1804,17 @@ function makeBuilding(cat,level){
   cyl(.012,.012,.5,0xdddddd,-1.13,.66,-.6,g,6);cyl(.012,.012,.5,0xdddddd,-.97,.66,-.6,g,6);
   flowerDot(-.2,.78,0xff6f91,g);flowerDot(.05,.84,0xffd166,g);flowerDot(.32,.78,0xb79cff,g);
  }else{
-  box(1.6,1.0,1.3,0xffe4ef,0,.5,-.25,g);
+  box(1.6,1.0,1.3,0xffc9dd,0,.5,-.25,g);
   pyr(1.22,.6,0xff9fc0,0,1.3,-.25,g);
   box(.34,.52,.07,0x9a6b4f,0,.26,.42,g);
-  box(.46,.38,.06,0xfff3fa,-.5,.56,.43,g);
+  box(.46,.38,.06,0xf6d9e6,-.5,.56,.43,g);
   box(1.5,.18,.32,0x9a6b4f,0,.14,.6,g);
   flowerDot(-.55,.6,0xff6f91,g);flowerDot(-.2,.6,0xffd166,g);flowerDot(.15,.6,0xb79cff,g);flowerDot(.5,.6,0xff8fa3,g);
   const glass=new THREE.Mesh(new THREE.BoxGeometry(.95,.7,.85),new THREE.MeshLambertMaterial({color:0xbfe6ff,transparent:true,opacity:.4}));
   glass.position.set(1.12,.37,-.2);g.add(glass);
-  [[.675,-.58],[1.565,-.58],[.675,.18],[1.565,.18]].forEach(([x,z])=>{box(.05,.74,.05,0xffffff,x,.37,z,g)});
+  [[.675,-.58],[1.565,-.58],[.675,.18],[1.565,.18]].forEach(([x,z])=>{box(.05,.74,.05,0xe9edf3,x,.37,z,g)});
   gable(1.0,.26,.95,0xd6ecfa,1.12,.72,-.2,g);
-  box(.8,.04,.3,0xffffff,1.12,.32,-.2,g);
+  box(.8,.04,.3,0xe9edf3,1.12,.32,-.2,g);
   sph(.06,0xff6f91,.98,.38,-.28,g);sph(.06,0xffd166,1.12,.38,-.12,g);sph(.06,0xb79cff,1.27,.38,-.25,g);
   cyl(.03,.03,.55,0x8a8a8a,-1.0,.28,.62,g,6);
   sph(.11,0xff6f91,-1.0,.62,.62,g);sph(.1,0xffd166,-.87,.58,.62,g);sph(.09,0xb79cff,-1.13,.57,.62,g);
@@ -1855,7 +1855,7 @@ function makeDeco(kind){
   cone(.16,.12,0x8a8a8a,.42,2.0,0,g,8);
  }else{
   [-.4,.4].forEach(x=>{cyl(.05,.05,1.0,0x9a6b4f,x,.5,0,g,8)});
-  box(1.2,.6,.08,0xfff6ec,0,.95,0,g);
+  box(1.2,.6,.08,0xffdfae,0,.95,0,g);
   box(1.2,.12,.09,0xff8fae,0,1.28,0,g);
   box(.9,.3,.09,0xbfe3ff,0,.9,0,g);
  }
@@ -2047,7 +2047,7 @@ function initThree(){
   R.ray=new THREE.Raycaster();
   R.ptr=new THREE.Vector2();
   updateCam();
-  R.scene.add(new THREE.HemisphereLight(0xffffff,0xcdebd6,.95));
+  R.scene.add(new THREE.HemisphereLight(0xffffff,0xcdebd6,.8));
   const sun=new THREE.DirectionalLight(0xfff2d9,.85);
   sun.position.set(9,14,7);
   sun.castShadow=true;
