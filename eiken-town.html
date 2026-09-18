@@ -178,6 +178,10 @@ button:disabled{cursor:not-allowed}
   repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 8px,transparent 8px 20px),
   linear-gradient(160deg,#9a95a3,#7c7787);
   border-color:#fff}
+.lot.deco{background:
+  repeating-linear-gradient(45deg,rgba(255,255,255,.2) 0 12px,transparent 12px 24px),
+  linear-gradient(160deg,#e3f6ec,#b9e6cf);
+  border-color:#fff}
 .lot .stars{font-size:13px;letter-spacing:1px;height:16px}
 .lot .lv-tag{
   position:absolute;top:8px;left:8px;background:var(--sun);color:#7a5200;
@@ -1126,13 +1130,24 @@ const BUILDINGS=[
 {id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
+const DECOS=[
+ {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
+ {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
+ {id:'fountain',name:'噴水',emoji:'⛲',cost:20,desc:'水がキラキラ光る噴水'},
+ {id:'lamp',name:'街灯',emoji:'💡',cost:10,desc:'夜道を明るく照らす街灯'},
+ {id:'sign',name:'案内板',emoji:'🪧',cost:5,desc:'まちの案内板'}
+];
+const D=Object.fromEntries(DECOS.map(d=>[d.id,d]));
+function validDeco(id){return typeof id==='string'&&Object.hasOwn(D,id)}
+function decoIdOf(sel){return typeof sel==='string'&&sel.startsWith('deco:')?sel.slice(5):null}
+function decoAt(t){return (state.decorations||[]).find(d=>d.tile===t)}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
 
 let state=null;
 let towns={},activeGrade='4',legacyLoaded=false;
-function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
+function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
 function updateUnlocks(s){
  const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)));
  unlocked.add('library');
@@ -1197,6 +1212,11 @@ function migrate(d,grade='4'){
    .map(t=>oldG!==GRID?remap(t):t)
    .filter(t=>validTile(t)&&!occ.has(t))
  )];
+ const docc=new Set();
+ s.decorations=(Array.isArray(s.decorations)?s.decorations:[])
+  .filter(d=>d&&typeof d==='object'&&validDeco(d.kind)&&Number.isInteger(d.tile)&&d.tile>=0&&d.tile<oldG*oldG)
+  .map(d=>({tile:oldG!==GRID?remap(d.tile):d.tile,kind:d.kind}))
+  .filter(d=>{if(!validTile(d.tile)||occ.has(d.tile)||s.roads.includes(d.tile)||docc.has(d.tile))return false;docc.add(d.tile);return true});
  updateUnlocks(s);
  return s;
 }
@@ -1466,7 +1486,15 @@ function onTileTap(t){
  if(!validTile(t)||activeSession())return;
  if(pendingPlace){
   if(pendingPlace==='__road'){tryRoad(t);return}
-  if(catAt(t)||state.roads.includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
+  const did=decoIdOf(pendingPlace);
+  if(did){
+   if(!validDeco(did)){exitPlace();return}
+   if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには置けないよ。別の場所にしてね');return}
+   const d=D[did];
+   askYesNo(`${d.emoji} ${d.name}`,`${d.desc}<br>この場所に置く?`,`💰${d.cost===0?'無料':d.cost}で ここに置く!`,()=>{if(pendingPlace==='deco:'+did)confirmDeco(t,did)});
+   return;
+  }
+  if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
   const cat=pendingPlace;
   if(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat]){exitPlace();return}
   const b=B[cat];
@@ -1476,19 +1504,27 @@ function onTileTap(t){
  const cat=catAt(t);
  if(cat)openBuildingMenu(cat);
  else if(state.roads.includes(t))openRemoval(t,'__road');
+ else if(decoAt(t))openRemoval(t,'deco:'+decoAt(t).kind);
  else openPalette();
 }
 function openRemoval(t,cat){
  if(activeSession()||!validTile(t))return;
+ const did=decoIdOf(cat);
  const road=cat==='__road';
- if(road?!state.roads.includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
- const placed=state.placed[cat],owner=state;
- const name=road?ROAD.name:B[cat].name;
- askYesNo(`${name}を撤去する?`,'コインは戻らないよ。学習の記録と解放した建物は残るよ。建て直すとレベル1になるよ。','撤去する',()=>{
+ if(did){
+  if(decoAt(t)?.kind!==did)return;
+ }else if(road?!state.roads.includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
+ const placed=!did&&!road?state.placed[cat]:null,owner=state;
+ const name=road?ROAD.name:did?D[did].name:B[cat].name;
+ const note=did?'コインは戻らないよ。':'コインは戻らないよ。学習の記録と解放した建物は残るよ。建て直すとレベル1になるよ。';
+ askYesNo(`${name}を撤去する?`,note,'撤去する',()=>{
   if(activeSession()||state!==owner)return;
   if(road){
    if(!state.roads.includes(t))return;
    state.roads=state.roads.filter(tile=>tile!==t);
+  }else if(did){
+   if(decoAt(t)?.kind!==did)return;
+   state.decorations=state.decorations.filter(d=>d.tile!==t);
   }else{
    if(state.placed[cat]!==placed)return;
    delete state.placed[cat];
@@ -1537,8 +1573,23 @@ function confirmBuild(t,cat){
  toast(`${b.emoji}${b.name}ができたよ!`);
  renderMap();
 }
+function confirmDeco(t,id){
+ if(loadBlocked||activeSession()||!validTile(t)||!validDeco(id))return;
+ exitPlace();
+ const d=D[id];
+ if(decoAt(t)||catAt(t)||state.roads.includes(t)||state.coins<d.cost){toast(state.coins<d.cost?'💰 コインが足りない…':'そこには置けないよ…');renderMap();return}
+ state.coins-=d.cost;
+ state.decorations.push({tile:t,kind:id});
+ save();
+ sfx('coin');confetti(12);
+ toast(`${d.emoji}${d.name}を置いたよ!`);
+ renderMap();
+}
 function enterPlace(cat){
- if(loadBlocked||activeSession()||(cat!=='__road'&&(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat])))return;
+ if(loadBlocked||activeSession())return;
+ const did=decoIdOf(cat);
+ if(did){if(!validDeco(did))return}
+ else if(cat!=='__road'&&(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat]))return;
  pendingPlace=cat;
  setPlaceBar(true);
  $('#build-open').classList.add('hidden');
@@ -1552,8 +1603,9 @@ function exitPlace(){
 }
 function setPlaceBar(on){
  let bar=$('#place-bar');
- if(on){
-  const cfg=pendingPlace==='__road'?ROAD:B[pendingPlace];
+  if(on){
+   const did=decoIdOf(pendingPlace);
+   const cfg=pendingPlace==='__road'?ROAD:did?D[did]:B[pendingPlace];
   const tip=pendingPlace==='__road'?'(続けてタップすればどんどんひけるよ!)':'';
   if(!bar){bar=document.createElement('div');bar.id='place-bar';bar.className='place-bar';$('#scene-wrap').appendChild(bar)}
   bar.innerHTML=`📍 <span class="place-emoji">${cfg.emoji}${cfg.name}</span><span class="place-tip"> を置く場所をタップ!${tip}</span><span class="place-tip-short"> をタップして置こう!</span> <button class="cancel" id="place-cancel">やめる</button>`;
@@ -1579,7 +1631,15 @@ function openPalette(){
    <span class="bc-emoji">🛣️</span>
    <span><span class="bc-name">道路</span><br><span class="bc-desc">まちに道をひこう!<br><small style="color:var(--mint-d);font-weight:700">🚗 建物のそばに通すと、クイズのごほうびコインがプラスされるよ!</small></span></span>
    <span class="bc-cost">💰${ROAD.cost}/マス</span></button>`;
+ const decoCards=DECOS.map(d=>{
+  const poor=state.coins<d.cost;
+  return`<button class="bcard" ${poor?'disabled':''} data-cat="deco:${d.id}">
+   <span class="bc-emoji">${d.emoji}</span>
+   <span><span class="bc-name">${d.name}</span><br><span class="bc-desc">${d.desc}<br><small style="color:var(--mint-d);font-weight:700">${poor?'💰 コインが足りない…':'タップして好きな場所へ!'}</small></span></span>
+   <span class="bc-cost">💰${d.cost}</span></button>`;
+ }).join('');
  openModal(`<h3>🏗️ 何を建てる?</h3><p class="sub">建物や道路をえらんで、好きな場所に置こう!</p>${items}${roadCard}
+ <h3 style="margin-top:14px">🌼 かざり（見た目だけ・効果なし）</h3><p class="sub">まちをかわいくデコレーションしよう!</p>${decoCards}
  <div class="close-row"><button class="btn ghosty" onclick="closeModal()">やめる</button></div>`);
  document.querySelectorAll('#modal .bcard:not(:disabled)').forEach(el=>{
   el.onclick=()=>{closeModal();enterPlace(el.dataset.cat)};
@@ -1767,6 +1827,40 @@ function makeBuilding(cat,level){
  }
  return g;
 }
+function makeDeco(kind){
+ const g=new THREE.Group();
+ if(kind==='flowerbed'){
+  box(1.7,.28,1.1,0x8a6a4f,0,.14,0,g);
+  box(1.5,.3,.9,0x5f4a38,0,.16,0,g);
+  flowerDot(-.55,0,0xff6f91,g);flowerDot(-.18,.12,0xffd166,g);flowerDot(.18,-.1,0xb79cff,g);flowerDot(.55,.05,0xff8fa3,g);
+  tree(-1.05,0,.55,g);
+ }else if(kind==='bench'){
+  [-.55,.55].forEach(x=>{box(.12,.45,.5,0x7a5c44,x,.225,0,g)});
+  box(1.4,.1,.55,0xc9986a,0,.5,0,g);
+  [-.55,.55].forEach(x=>{box(.12,.55,.1,0x7a5c44,x,.78,-.24,g)});
+  const back=box(1.4,.4,.08,0xc9986a,0,.95,-.26,g);back.rotation.x=-.12;
+  tree(1.0,-.3,.6,g);
+ }else if(kind==='fountain'){
+  cyl(.95,1.05,.3,0xd8d3cb,0,.15,0,g,20);
+  cyl(.8,.8,.12,0x9adcf0,0,.36,0,g,20);
+  cyl(.14,.18,.9,0xe8e2d6,0,.75,0,g,12);
+  cyl(.42,.42,.1,0xe8e2d6,0,1.2,0,g,16);
+  cyl(.34,.34,.06,0x9adcf0,0,1.26,0,g,16);
+  sph(.09,0x9adcf0,0,1.42,0,g);
+ }else if(kind==='lamp'){
+  cyl(.3,.36,.12,0x8a8a8a,0,.06,0,g,10);
+  cyl(.06,.08,1.9,0x5a5a66,0,1.0,0,g,8);
+  box(.5,.08,.08,0x5a5a66,.2,1.95,0,g);
+  sph(.13,0xffe9a3,.42,1.85,0,g);
+  cone(.16,.12,0x8a8a8a,.42,2.0,0,g,8);
+ }else{
+  [-.4,.4].forEach(x=>{cyl(.05,.05,1.0,0x9a6b4f,x,.5,0,g,8)});
+  box(1.2,.6,.08,0xfff6ec,0,.95,0,g);
+  box(1.2,.12,.09,0xff8fae,0,1.28,0,g);
+  box(.9,.3,.09,0xbfe3ff,0,.9,0,g);
+ }
+ return g;
+}
 function disposeObj(o){
  o.traverse(c=>{
   if(c.geometry)c.geometry.dispose();
@@ -1789,7 +1883,7 @@ function makeLabel(cat,level,noStars){
 function setGhost(cat){
  if(R.ghostLabel){R.scene.remove(R.ghostLabel);disposeObj(R.ghostLabel);R.ghostLabel=null}
  R.ghostCat=cat;
- if(cat&&cat!=='__road'){
+ if(cat&&cat!=='__road'&&!decoIdOf(cat)){
   R.ghostLabel=makeLabel(cat,1,true);
   R.ghostLabel.visible=false;
   R.scene.add(R.ghostLabel);
@@ -1823,6 +1917,14 @@ function rebuildCity(){
   const lb=makeLabel(cat,p.level,false);
   lb.position.y=LABEL_Y[cat]||2.55;
   g.add(lb);
+  R.city.add(g);
+  g.scale.set(.01,.01,.01);
+  R.anims.push({obj:g,t:0});
+ });
+ (state.decorations||[]).forEach(d=>{
+  const g=makeDeco(d.kind);
+  const{x,z}=tileXY(d.tile);
+  g.position.set(x,0,z);
   R.city.add(g);
   g.scale.set(.01,.01,.01);
   R.anims.push({obj:g,t:0});
@@ -2204,6 +2306,9 @@ function renderFallbackGrid(){
     <span class="nameplate">${b.name}${neighborsRoad(t).length?' 🚗':''}</span></div>`;
   }else if((state.roads||[]).includes(t)){
    html+=`<div class="lot road" data-tile="${t}"><span class="house" style="font-size:30px">🛣️</span><span class="nameplate">どうろ</span></div>`;
+  }else if(decoAt(t)){
+   const dd=D[decoAt(t).kind];
+   html+=`<div class="lot deco" data-tile="${t}"><span class="house" style="font-size:30px">${dd.emoji}</span><span class="nameplate">${dd.name}</span></div>`;
   }else{
    html+=`<div class="lot empty" data-tile="${t}"><span>${FB_DECO[t%FB_DECO.length]}</span><span class="plus">＋</span></div>`;
   }

@@ -411,6 +411,43 @@ if (require.main === module) {
     assert.equal(run('state.placed.school.level'), 1);
   });
 
+  test('decorations place on free tiles for coins, reject invalid spots, and remove without refund', () => {
+    const { run, get, json } = loadApp();
+    run("confirmBuild(0,'library'); tryRoad(1)");
+    const before = json('state');
+    run("for(const id of [null,undefined,'missing','__proto__','library','',0])confirmDeco(5,id)");
+    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
+    assert.deepEqual(json('state'), before);
+    run("confirmDeco(0,'bench'); confirmDeco(1,'bench')");
+    assert.deepEqual(json('state'), before);
+    run("confirmDeco(5,'flowerbed')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    assert.equal(run('state.coins'), before.coins - 5);
+    run("confirmDeco(5,'lamp')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    run("state.coins=0; confirmDeco(6,'lamp')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }]);
+    run("state.coins=50; enterPlace('deco:lamp'); onTileTap(6)");
+    get('#yn-yes').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }, { tile: 6, kind: 'lamp' }]);
+    assert.equal(run('state.coins'), 50 - 10);
+    run("exitPlace(); enterPlace('deco:missing'); enterPlace('deco:'); enterPlace('library')");
+    assert.equal(run('pendingPlace'), null);
+    run('openPalette()');
+    assert.equal(get('[data-cat="deco:fountain"]').disabled, false);
+    get('[data-cat="deco:fountain"]').click();
+    assert.equal(run('pendingPlace'), 'deco:fountain');
+    run('exitPlace()');
+    const coinsBefore = json('state').coins;
+    run('onTileTap(5)');
+    get('#yn-no').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 5, kind: 'flowerbed' }, { tile: 6, kind: 'lamp' }]);
+    run('onTileTap(5)');
+    get('#yn-yes').click();
+    assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }]);
+    assert.equal(run('state.coins'), coinsBefore);
+  });
+
   test('core build and category actions validate input, unlocks, funds and stale selection', () => {
     const { run, get, json } = loadApp();
     const before = json('state');
@@ -617,6 +654,14 @@ if (require.main === module) {
     assert.equal(run('migrate([])'), null);
     run('save(); state=loadState()');
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
+  });
+
+  test('migration sanitizes decorations, remaps legacy tiles and drops collisions', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({g:7,placed:{library:{tile:0,level:1}},roads:[1],decorations:[{tile:2,kind:'bench'},{tile:9,kind:'fountain'},{tile:16,kind:'lamp'},{tile:0,kind:'sign'},{tile:1,kind:'flowerbed'},{tile:2,kind:'lamp'},{tile:48,kind:'bench'},{tile:3,kind:'missing'},null,'x',{tile:4},{}]})");
+    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 11, kind: 'fountain' }, { tile: 20, kind: 'lamp' }, { tile: 60, kind: 'bench' }]);
+    assert.deepEqual(json('migrate({}).decorations'), []);
+    assert.deepEqual(json("migrate({decorations:'nope'}).decorations"), []);
   });
 
   test('city rebuild drops animations referencing removed objects', () => {
