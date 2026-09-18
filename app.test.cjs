@@ -731,6 +731,18 @@ if (require.main === module) {
     }
   });
 
+  test('mobile readability uses mobile-only breaks in long explanations', () => {
+    const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
+    const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
+    assert.match(css, /br\.mbr\{display:none\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.mbr\{display:block\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?\.modal \.sub\{[^}]*line-height/);
+    const app = loadApp();
+    for (const page of app.json('TUT')) assert.match(page.d, /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("4")'), /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("5")'), /<br class="mbr">/);
+  });
+
   test('level-up tutorial describes practice without claiming exam equivalence', () => {
     const app = loadApp();
     const description = app.run("TUT.find(page => page.t === 'レベルアップで成長').d");
