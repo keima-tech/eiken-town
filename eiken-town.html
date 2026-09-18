@@ -178,6 +178,10 @@ button:disabled{cursor:not-allowed}
   repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 8px,transparent 8px 20px),
   linear-gradient(160deg,#9a95a3,#7c7787);
   border-color:#fff}
+.lot.deco{background:
+  repeating-linear-gradient(45deg,rgba(255,255,255,.2) 0 12px,transparent 12px 24px),
+  linear-gradient(160deg,#e3f6ec,#b9e6cf);
+  border-color:#fff}
 .lot .stars{font-size:13px;letter-spacing:1px;height:16px}
 .lot .lv-tag{
   position:absolute;top:8px;left:8px;background:var(--sun);color:#7a5200;
@@ -203,7 +207,9 @@ button:disabled{cursor:not-allowed}
 @media(min-height:760px){.modal-root.open{align-items:center}.modal{border-radius:30px;border-bottom:3px solid var(--line);margin:16px}}
 @keyframes slide-up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
 .modal h3{font-size:21px;font-weight:900;color:var(--pink-d);text-align:center;margin-bottom:4px}
-.modal .sub{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:16px}
+.modal .sub{text-align:center;font-size:13px;line-height:1.8;color:var(--ink-soft);margin-bottom:16px}
+br.mbr{display:none}
+br.wbr{display:block}
 .close-row{display:flex;justify-content:center;margin-top:18px;gap:10px;flex-wrap:wrap}
 
 .bcard{
@@ -215,7 +221,7 @@ button:disabled{cursor:not-allowed}
 .bcard:disabled{opacity:.55;filter:grayscale(.5)}
 .bcard .bc-emoji{font-size:40px;width:58px;text-align:center;flex-shrink:0}
 .bcard .bc-name{font-weight:900;font-size:17px}
-.bcard .bc-desc{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+.bcard .bc-desc{font-size:12.5px;line-height:1.7;color:var(--ink-soft);margin-top:1px}
 .bcard .bc-cost{margin-left:auto;font-weight:900;color:#b57d00;background:var(--sun-l);padding:5px 12px;border-radius:999px;border:2px solid #ffe6a8;font-size:13px;white-space:nowrap}
 .bcard.locked .bc-cost{background:#f3eef5;color:var(--ink-soft);border-color:#e5dbe9}
 
@@ -365,7 +371,7 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
 .place-bar .place-tip-short{display:none}
 .place-bar .cancel{pointer-events:auto;background:#ffecec;border:2px solid #ffc9c9;color:#e05252;border-radius:999px;padding:6px 14px;font-weight:900;font-size:13px;flex:0 0 auto}
 #scene-fallback{position:absolute;inset:0;padding:12px;overflow:auto;background:linear-gradient(180deg,#dff0ff,#fef6fb)}
-#scene-fallback .fb-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+#scene-fallback .fb-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
 @media(max-width:520px){#scene-fallback .fb-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .town-head-v2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 2px 10px}
 .nameplate-main{display:flex;align-items:center;gap:8px;background:var(--paper);border:3px solid var(--line);border-radius:999px;padding:6px 8px 6px 20px;box-shadow:var(--shadow)}
@@ -377,11 +383,11 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
 .sugg button{background:var(--lav-l);border:2px solid #ddd0f5;color:var(--lav-d);border-radius:999px;padding:6px 14px;font-weight:700;font-size:13px}
 
 @media(max-width:600px){
- .appbar{padding:8px 10px;gap:6px;top:6px}
- .logo-mini{font-size:0;letter-spacing:0}
+ .appbar{padding:8px 10px;gap:6px;top:6px;flex-wrap:wrap;border-radius:24px}
+ .appbar .logo-mini{font-size:0;letter-spacing:0}
  .logo-mini::before{content:'🌸';font-size:20px}
  .pill{font-size:13px;padding:5px 10px}
- #coin-pill{max-width:34vw;overflow:hidden}
+ .appbar .pill,.appbar .iconbtn{flex-shrink:0}
  .iconbtn{width:38px;height:38px;font-size:17px;border-radius:12px}
  #sound-btn{display:none}
  #app{padding:10px 10px 80px}
@@ -410,6 +416,10 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
  .place-bar .place-tip{display:none}
  .place-bar .place-tip-short{display:inline}
  .place-bar .cancel{padding:5px 11px;font-size:12px}
+ br.mbr{display:block}
+ br.wbr{display:none}
+ .modal .sub{font-size:14.5px;line-height:1.9}
+ .bcard .bc-desc{font-size:13.5px;line-height:1.75}
 }
 .qtext,.fb-exp{white-space:pre-wrap;overflow-wrap:anywhere}
 .reading-passage,.transcript-text{white-space:pre-wrap;overflow-wrap:anywhere;text-align:left;font-size:18px;line-height:2;padding:24px;margin:20px 0;background:#fff;border:2px solid var(--line);border-radius:16px;user-select:text}
@@ -1108,14 +1118,14 @@ const $=s=>document.querySelector(s);
 const SAVE_KEY='eikenTownSave_v1';
 const TH=[0,6,16];
 const UP_COST=[0,40,100];
-const GRID=7,TILE=3.2,PITCH=3.36;
+const GRID=9,TILE=3.0,PITCH=2.9;
 const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','こはる村','スターヒルズ','にじがわ町','あおぞらシティ'];
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
 const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん'};
 function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='4'?'読解（どっかい）':'✏️ さくぶん'):CAT_TAG[cat]}
-function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade==='4'?'読解：掲示・メール・物語を読もう':B[cat].desc}
-function flowerGuide(grade){return grade==='4'?'お花屋さんは読解練習。レベルに応じて一つの文章と2・3・5問に挑戦します。':'お花屋さんは任意の追加作文練習（2問）で、本番の試験ではありません。'}
+function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade==='4'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
+function flowerGuide(grade){return grade==='4'?'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。':'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。'}
 function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
 const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
@@ -1126,13 +1136,24 @@ const BUILDINGS=[
 {id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
+const DECOS=[
+ {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
+ {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
+ {id:'fountain',name:'噴水',emoji:'⛲',cost:20,desc:'水がキラキラ光る噴水'},
+ {id:'lamp',name:'街灯',emoji:'💡',cost:10,desc:'夜道を明るく照らす街灯'},
+ {id:'sign',name:'案内板',emoji:'🪧',cost:5,desc:'まちの案内板'}
+];
+const D=Object.fromEntries(DECOS.map(d=>[d.id,d]));
+function validDeco(id){return typeof id==='string'&&Object.hasOwn(D,id)}
+function decoIdOf(sel){return typeof sel==='string'&&sel.startsWith('deco:')?sel.slice(5):null}
+function decoAt(t){return (state.decorations||[]).find(d=>d.tile===t)}
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
 
 let state=null;
 let towns={},activeGrade='4',legacyLoaded=false;
-function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
+function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
 function updateUnlocks(s){
  const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)));
  unlocked.add('library');
@@ -1197,6 +1218,11 @@ function migrate(d,grade='4'){
    .map(t=>oldG!==GRID?remap(t):t)
    .filter(t=>validTile(t)&&!occ.has(t))
  )];
+ const docc=new Set();
+ s.decorations=(Array.isArray(s.decorations)?s.decorations:[])
+  .filter(d=>d&&typeof d==='object'&&validDeco(d.kind)&&Number.isInteger(d.tile)&&d.tile>=0&&d.tile<oldG*oldG)
+  .map(d=>({tile:oldG!==GRID?remap(d.tile):d.tile,kind:d.kind}))
+  .filter(d=>{if(!validTile(d.tile)||occ.has(d.tile)||s.roads.includes(d.tile)||docc.has(d.tile))return false;docc.add(d.tile);return true});
  updateUnlocks(s);
  return s;
 }
@@ -1406,7 +1432,7 @@ function refreshNameUI(){
 function openNaming(isFirst){
  const sug=NAME_IDEAS.slice().sort(()=>Math.random()-.5).slice(0,3);
  openModal(`<h3>${isFirst?'🏙️ まちに名前をつけよう!':'✏️ まちの名前をかえる'}</h3>
- <p class="sub">${isFirst?'あなただけの街の名前を決めてね!(最大12文字・スキップもOK)':'新しい名前を入れてね!(最大12文字)'}</p>
+ <p class="sub">${isFirst?'あなただけの街の名前を決めてね!<br class="wbr"><br class="mbr">(最大12文字・スキップもOK)':'新しい名前を入れてね!(最大12文字)'}</p>
  <input class="name-input" id="nm-input" maxlength="12" placeholder="例:サクラタウン">
  <div class="sugg" id="nm-sugg">${sug.map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div>
  <div class="close-row">
@@ -1426,12 +1452,12 @@ function openNaming(isFirst){
 }
 
 const TUT=[
-{e:'🏙️✨',t:'ようこそ!',d:'クイズに答えてコイン💰をためて、あなただけの街を大きくしよう!まちには6つの建物と、走る車もあるよ。'},
-{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと建物がえらべるよ。建物をえらんだら、置きたい場所の地面をタップして決定!まずは無料の図書館📚からどうぞ。'},
-{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!1回に5問、正解するたびにコイン💰がもらえるよ。まちがえた問題はじどうでふくしゅうリストに入るので、📖ボタンで復習できる!'},
-{e:'🛣️🚗',t:'道路をひこう',d:'道路は1マス💰10。建物のそばに道を通すと、クイズのごほうびコインがプラスされる!道がつながるとカラフルな車が走りだすよ。'},
-{e:'⭐',t:'レベルアップで成長',d:'同じ建物で正解を重ねるとレベルアップ(Lv2は6問+💰40、Lv3は16問+💰100)。レベル3になると少し難しい練習問題が出るぞ!街が発展すると称号も変わるよ。'},
-{e:'🖱️',t:'操作のかんばん',d:'ドラッグ=街をまわす/🖐️ボタン=移動モード(右ドラッグ・ピンチ2本指でも移動)/ホイール・ピンチ=ズーム/🎯=視点をもどす。右上の⚙️せっていから、効果音や「遊び方」をいつでも見られるよ!'}
+{e:'🏙️✨',t:'ようこそ!',d:'クイズに答えてコイン💰をためて、<br class="mbr">あなただけの街を大きくしよう!<br class="wbr"><br class="mbr">まちには6つの建物と、走る車もあるよ。'},
+{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと<br class="mbr">建物がえらべるよ。<br class="wbr"><br class="mbr">建物をえらんだら、置きたい場所の地面を<br class="mbr">タップして決定!<br class="wbr">まずは無料の図書館📚からどうぞ。'},
+{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!<br class="wbr"><br class="mbr">1回に5問、正解するたびに<br class="mbr">コイン💰がもらえるよ。<br class="wbr"><br class="mbr">まちがえた問題はじどうで<br class="mbr">ふくしゅうリストに入るので、<br class="mbr">📖ボタンで復習できる!'},
+{e:'🛣️🚗',t:'道路をひこう',d:'道路は1マス💰10。<br class="wbr"><br class="mbr">建物のそばに道を通すと、<br class="mbr">クイズのごほうびコインがプラスされる!<br class="wbr"><br class="mbr">道がつながるとカラフルな車が走りだすよ。'},
+{e:'⭐',t:'レベルアップで成長',d:'同じ建物で正解を重ねるとレベルアップ<br class="mbr">(Lv2は6問+💰40、Lv3は16問+💰100)。<br class="wbr"><br class="mbr">レベル3になると少し難しい練習問題が出るぞ!<br class="wbr"><br class="mbr">街が発展すると称号も変わるよ。'},
+{e:'🖱️',t:'操作のかんばん',d:'ドラッグ=街をまわす/<br class="wbr"><br class="mbr">🖐️ボタン=移動モード<br class="wbr"><br class="mbr">(右ドラッグ・ピンチ2本指でも移動)/<br class="wbr"><br class="mbr">ホイール・ピンチ=ズーム/🎯=視点をもどす。<br class="wbr"><br class="mbr">右上の⚙️せっていから、<br class="mbr">効果音や「遊び方」をいつでも見られるよ!'}
 ];
 let tutPage=0;
 function openTutorial(){
@@ -1443,7 +1469,7 @@ function renderTut(){
  const last=tutPage===TUT.length-1;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
- <p style="text-align:center;font-size:15px;line-height:1.9;font-weight:700;margin:12px 4px 4px">${p.d}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
+   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${p.d}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
  <div class="dots" style="justify-content:center;margin-top:14px">
  ${TUT.map((_,k)=>`<span class="dot ${k===tutPage?'now':(k<tutPage?' done-ok':'')}"></span>`).join('')}
  </div>
@@ -1466,7 +1492,15 @@ function onTileTap(t){
  if(!validTile(t)||activeSession())return;
  if(pendingPlace){
   if(pendingPlace==='__road'){tryRoad(t);return}
-  if(catAt(t)||state.roads.includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
+  const did=decoIdOf(pendingPlace);
+  if(did){
+   if(!validDeco(did)){exitPlace();return}
+   if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには置けないよ。別の場所にしてね');return}
+   const d=D[did];
+   askYesNo(`${d.emoji} ${d.name}`,`${d.desc}<br>この場所に置く?`,`💰${d.cost===0?'無料':d.cost}で ここに置く!`,()=>{if(pendingPlace==='deco:'+did)confirmDeco(t,did)});
+   return;
+  }
+  if(decoAt(t)||catAt(t)||state.roads.includes(t)){toast('そこには建てられないよ。別の場所にしてね');return}
   const cat=pendingPlace;
   if(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat]){exitPlace();return}
   const b=B[cat];
@@ -1476,19 +1510,27 @@ function onTileTap(t){
  const cat=catAt(t);
  if(cat)openBuildingMenu(cat);
  else if(state.roads.includes(t))openRemoval(t,'__road');
+ else if(decoAt(t))openRemoval(t,'deco:'+decoAt(t).kind);
  else openPalette();
 }
 function openRemoval(t,cat){
  if(activeSession()||!validTile(t))return;
+ const did=decoIdOf(cat);
  const road=cat==='__road';
- if(road?!state.roads.includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
- const placed=state.placed[cat],owner=state;
- const name=road?ROAD.name:B[cat].name;
- askYesNo(`${name}を撤去する?`,'コインは戻らないよ。学習の記録と解放した建物は残るよ。建て直すとレベル1になるよ。','撤去する',()=>{
+ if(did){
+  if(decoAt(t)?.kind!==did)return;
+ }else if(road?!state.roads.includes(t):!validCat(cat)||state.placed[cat]?.tile!==t)return;
+ const placed=!did&&!road?state.placed[cat]:null,owner=state;
+ const name=road?ROAD.name:did?D[did].name:B[cat].name;
+ const note=did?'コインは戻らないよ。':'コインは戻らないよ。学習の記録と解放した建物は残るよ。建て直すとレベル1になるよ。';
+ askYesNo(`${name}を撤去する?`,note,'撤去する',()=>{
   if(activeSession()||state!==owner)return;
   if(road){
    if(!state.roads.includes(t))return;
    state.roads=state.roads.filter(tile=>tile!==t);
+  }else if(did){
+   if(decoAt(t)?.kind!==did)return;
+   state.decorations=state.decorations.filter(d=>d.tile!==t);
   }else{
    if(state.placed[cat]!==placed)return;
    delete state.placed[cat];
@@ -1537,8 +1579,23 @@ function confirmBuild(t,cat){
  toast(`${b.emoji}${b.name}ができたよ!`);
  renderMap();
 }
+function confirmDeco(t,id){
+ if(loadBlocked||activeSession()||!validTile(t)||!validDeco(id))return;
+ exitPlace();
+ const d=D[id];
+ if(decoAt(t)||catAt(t)||state.roads.includes(t)||state.coins<d.cost){toast(state.coins<d.cost?'💰 コインが足りない…':'そこには置けないよ…');renderMap();return}
+ state.coins-=d.cost;
+ state.decorations.push({tile:t,kind:id});
+ save();
+ sfx('coin');confetti(12);
+ toast(`${d.emoji}${d.name}を置いたよ!`);
+ renderMap();
+}
 function enterPlace(cat){
- if(loadBlocked||activeSession()||(cat!=='__road'&&(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat])))return;
+ if(loadBlocked||activeSession())return;
+ const did=decoIdOf(cat);
+ if(did){if(!validDeco(did))return}
+ else if(cat!=='__road'&&(!validCat(cat)||!state.unlocked.includes(cat)||state.placed[cat]))return;
  pendingPlace=cat;
  setPlaceBar(true);
  $('#build-open').classList.add('hidden');
@@ -1552,8 +1609,9 @@ function exitPlace(){
 }
 function setPlaceBar(on){
  let bar=$('#place-bar');
- if(on){
-  const cfg=pendingPlace==='__road'?ROAD:B[pendingPlace];
+  if(on){
+   const did=decoIdOf(pendingPlace);
+   const cfg=pendingPlace==='__road'?ROAD:did?D[did]:B[pendingPlace];
   const tip=pendingPlace==='__road'?'(続けてタップすればどんどんひけるよ!)':'';
   if(!bar){bar=document.createElement('div');bar.id='place-bar';bar.className='place-bar';$('#scene-wrap').appendChild(bar)}
   bar.innerHTML=`📍 <span class="place-emoji">${cfg.emoji}${cfg.name}</span><span class="place-tip"> を置く場所をタップ!${tip}</span><span class="place-tip-short"> をタップして置こう!</span> <button class="cancel" id="place-cancel">やめる</button>`;
@@ -1577,16 +1635,24 @@ function openPalette(){
  const roadPoor=state.coins<ROAD.cost;
  const roadCard=`<button class="bcard" ${roadPoor?'disabled':''} data-cat="__road">
    <span class="bc-emoji">🛣️</span>
-   <span><span class="bc-name">道路</span><br><span class="bc-desc">まちに道をひこう!<br><small style="color:var(--mint-d);font-weight:700">🚗 建物のそばに通すと、クイズのごほうびコインがプラスされるよ!</small></span></span>
+   <span><span class="bc-name">道路</span><br><span class="bc-desc">まちに道をひこう!<br><small style="color:var(--mint-d);font-weight:700">🚗 建物のそばに通すと、<br class="mbr">クイズのごほうびコインがプラスされるよ!</small></span></span>
    <span class="bc-cost">💰${ROAD.cost}/マス</span></button>`;
+ const decoCards=DECOS.map(d=>{
+  const poor=state.coins<d.cost;
+  return`<button class="bcard" ${poor?'disabled':''} data-cat="deco:${d.id}">
+   <span class="bc-emoji">${d.emoji}</span>
+   <span><span class="bc-name">${d.name}</span><br><span class="bc-desc">${d.desc}<br><small style="color:var(--mint-d);font-weight:700">${poor?'💰 コインが足りない…':'タップして好きな場所へ!'}</small></span></span>
+   <span class="bc-cost">💰${d.cost}</span></button>`;
+ }).join('');
  openModal(`<h3>🏗️ 何を建てる?</h3><p class="sub">建物や道路をえらんで、好きな場所に置こう!</p>${items}${roadCard}
+ <h3 style="margin-top:14px">🌼 かざり（見た目だけ・効果なし）</h3><p class="sub">まちをかわいくデコレーションしよう!</p>${decoCards}
  <div class="close-row"><button class="btn ghosty" onclick="closeModal()">やめる</button></div>`);
  document.querySelectorAll('#modal .bcard:not(:disabled)').forEach(el=>{
   el.onclick=()=>{closeModal();enterPlace(el.dataset.cat)};
  });
 }
 
-const R={inited:false,ok:false,compiled:false,lastPtrUp:0,renderer:null,scene:null,camera:null,sun:null,renderVisible:false,tiles:[],city:null,roadsG:null,carsG:null,agents:[],clouds:[],anims:[],ghostLabel:null,ghostCat:null,hover:null,ray:null,ptr:null,cam:{theta:.78,phi:1.02,radius:23},target:{x:0,z:0},dragMode:'orbit'};
+const R={inited:false,ok:false,compiled:false,lastPtrUp:0,renderer:null,scene:null,camera:null,sun:null,renderVisible:false,tiles:[],city:null,roadsG:null,carsG:null,agents:[],clouds:[],anims:[],ghostLabel:null,ghostCat:null,hover:null,ray:null,ptr:null,cam:{theta:.78,phi:1.02,radius:26},target:{x:0,z:0},dragMode:'orbit'};
 function isWebGLAvailable(){try{const c=document.createElement('canvas');return !!(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')))}catch(e){return false}}
 function tileXY(t){const c=t%GRID,rw=Math.floor(t/GRID);return{x:(c-(GRID-1)/2)*PITCH,z:(rw-(GRID-1)/2)*PITCH}}
 function updateCam(){
@@ -1649,10 +1715,10 @@ function makeBuilding(cat,level){
   box(2.3,.12,.48,0xe9e2d0,0,.18,1.18,g);
   box(2.1,.12,.36,0xefe8d6,0,.30,1.08,g);
   box(2.4,.4,1.7,0xded5bf,0,.20,-.05,g);
-  box(2.2,1.0,1.5,0xf2ead6,0,.90,-.08,g);
+  box(2.2,1.0,1.5,0xe7d5b0,0,.90,-.08,g);
   box(2.32,.14,1.62,0xe0d7c1,0,1.47,-.08,g);
-  [-.78,-.26,.26,.78].forEach(x=>{cyl(.09,.10,.85,0xffffff,x,.82,1.02,g,12)});
-  box(2.0,.18,.52,0xffffff,0,1.33,1.02,g);
+  [-.78,-.26,.26,.78].forEach(x=>{cyl(.09,.10,.85,0xe9edf3,x,.82,1.02,g,12)});
+  box(2.0,.18,.52,0xe9edf3,0,1.33,1.02,g);
   gable(2.0,.4,.54,0xf2a0bd,0,1.60,1.02,g);
   box(.46,.8,.08,0x8a6a4f,0,.80,1.04,g);
   [-1.13,1.13].forEach(x=>{
@@ -1663,12 +1729,12 @@ function makeBuilding(cat,level){
   cyl(.02,.02,.16,0xE8B84B,0,2.14,-.08,g,6);
   sph(.055,0xE8B84B,0,2.26,-.08,g);
   box(.92,.05,.64,0xd9577f,1.18,.20,1.18,g);
-  const pl=box(.4,.05,.54,0xfffdf5,1.06,.27,1.18,g);pl.rotation.z=.48;
-  const pr=box(.4,.05,.54,0xfffdf5,1.31,.27,1.18,g);pr.rotation.z=-.48;
+  const pl=box(.4,.05,.54,0xf6efdd,1.06,.27,1.18,g);pl.rotation.z=.48;
+  const pr=box(.4,.05,.54,0xf6efdd,1.31,.27,1.18,g);pr.rotation.z=-.48;
   sph(.16,0x58c48d,-1.42,.16,1.3,g);
  }else if(cat==='school'){
   box(2.6,.24,1.7,0xcfc6ae,0,.12,0,g);
-  box(2.25,1.5,1.15,0xfdf3cf,0,1.0,-.05,g);
+  box(2.25,1.5,1.15,0xf9e0a0,0,1.0,-.05,g);
   [.68,1.32].forEach(y=>{
    [-.78,0,.78].forEach(x=>{box(.26,.3,.06,0x9adcf0,x,y,.54,g)});
   });
@@ -1680,22 +1746,22 @@ function makeBuilding(cat,level){
   box(2.31,.1,1.2,0xead9b5,0,1.8,-.05,g);
   [[-1.05,-.5],[1.05,-.5],[-1.05,.45],[1.05,.45]].forEach(([x,z])=>{cyl(.025,.025,.22,0x999999,x,1.96,z,g,6)});
   cyl(.03,.03,1.75,0xdddddd,-1.5,.99,.9,g,6);
-  box(.48,.3,.03,0xffffff,-1.26,1.62,.9,g);
+  box(.48,.3,.03,0xe9edf3,-1.26,1.62,.9,g);
   const hi=sph(.085,0xff5a76,-1.26,1.62,.925,g);hi.scale.set(1,1,.35);
  }else if(cat==='cafe'){
-  box(1.9,1.02,1.45,0xfff6ec,0,.51,0,g);
+  box(1.9,1.02,1.45,0xffdfae,0,.51,0,g);
   box(1.45,.46,.07,0xbfe3ff,0,.62,.73,g);
-  [-.35,.35].forEach(x=>{box(.05,.46,.09,0xffffff,x,.62,.745,g)});
+  [-.35,.35].forEach(x=>{box(.05,.46,.09,0xe9edf3,x,.62,.745,g)});
   box(.36,.58,.07,0x7a4a2f,.58,.29,.74,g);
   const aw=box(1.98,.1,.9,0xff8fae,0,1.08,.98,g);aw.rotation.x=.3;
-  cyl(.27,.21,.42,0xffffff,-.38,1.52,0,g,14);
+  cyl(.27,.21,.42,0xefe6d4,-.38,1.52,0,g,14);
   cyl(.235,.235,.06,0x6b4023,-.38,1.74,0,g,14);
-  const hd=new THREE.Mesh(new THREE.TorusGeometry(.11,.04,8,16),M(0xffffff));
+  const hd=new THREE.Mesh(new THREE.TorusGeometry(.11,.04,8,16),M(0xefe6d4));
   hd.position.set(-.06,1.52,0);hd.castShadow=true;g.add(hd);
   sph(.05,0xffffff,-.46,1.94,0,g);sph(.035,0xffffff,-.34,2.04,0,g);
   cyl(.035,.035,.95,0xdad2c8,-1.05,.48,1.02,g,8);
   cone(.55,.32,0xff9fb2,-1.05,1.1,1.02,g,10);
-  cyl(.26,.26,.05,0xffffff,-1.05,.5,1.02,g,14);
+  cyl(.26,.26,.05,0xe9edf3,-1.05,.5,1.02,g,14);
   cyl(.04,.04,.45,0xdad2c8,-1.05,.23,1.02,g,8);
   cyl(.028,.028,.75,0xdad2c8,1.28,.38,-.88,g,8);
   cone(.42,.26,0xffd166,1.28,.82,-.88,g,10);
@@ -1707,7 +1773,7 @@ function makeBuilding(cat,level){
   box(1.5,.5,.56,0xff8fa3,-.15,.47,-.35,g);
   box(.42,.44,.54,0xffb1c1,.82,.45,-.35,g);
   box(.06,.2,.4,0xbfe3ff,1.04,.55,-.35,g);
-  box(1.95,.13,.58,0xffffff,-.05,.52,-.35,g);
+  box(1.95,.13,.58,0xdfe9f2,-.05,.52,-.35,g);
   box(1.15,.19,.58,0x4a4a55,-.25,.68,-.35,g);
   [[-.5],[.45]].forEach(([x])=>{
    [-.53,-.17].forEach(z=>{const w=cyl(.12,.12,.07,0x3a3a3a,x,.12,z,g,10);w.rotation.x=Math.PI/2});
@@ -1744,17 +1810,17 @@ function makeBuilding(cat,level){
   cyl(.012,.012,.5,0xdddddd,-1.13,.66,-.6,g,6);cyl(.012,.012,.5,0xdddddd,-.97,.66,-.6,g,6);
   flowerDot(-.2,.78,0xff6f91,g);flowerDot(.05,.84,0xffd166,g);flowerDot(.32,.78,0xb79cff,g);
  }else{
-  box(1.6,1.0,1.3,0xffe4ef,0,.5,-.25,g);
+  box(1.6,1.0,1.3,0xffc9dd,0,.5,-.25,g);
   pyr(1.22,.6,0xff9fc0,0,1.3,-.25,g);
   box(.34,.52,.07,0x9a6b4f,0,.26,.42,g);
-  box(.46,.38,.06,0xfff3fa,-.5,.56,.43,g);
+  box(.46,.38,.06,0xf6d9e6,-.5,.56,.43,g);
   box(1.5,.18,.32,0x9a6b4f,0,.14,.6,g);
   flowerDot(-.55,.6,0xff6f91,g);flowerDot(-.2,.6,0xffd166,g);flowerDot(.15,.6,0xb79cff,g);flowerDot(.5,.6,0xff8fa3,g);
   const glass=new THREE.Mesh(new THREE.BoxGeometry(.95,.7,.85),new THREE.MeshLambertMaterial({color:0xbfe6ff,transparent:true,opacity:.4}));
   glass.position.set(1.12,.37,-.2);g.add(glass);
-  [[.675,-.58],[1.565,-.58],[.675,.18],[1.565,.18]].forEach(([x,z])=>{box(.05,.74,.05,0xffffff,x,.37,z,g)});
+  [[.675,-.58],[1.565,-.58],[.675,.18],[1.565,.18]].forEach(([x,z])=>{box(.05,.74,.05,0xe9edf3,x,.37,z,g)});
   gable(1.0,.26,.95,0xd6ecfa,1.12,.72,-.2,g);
-  box(.8,.04,.3,0xffffff,1.12,.32,-.2,g);
+  box(.8,.04,.3,0xe9edf3,1.12,.32,-.2,g);
   sph(.06,0xff6f91,.98,.38,-.28,g);sph(.06,0xffd166,1.12,.38,-.12,g);sph(.06,0xb79cff,1.27,.38,-.25,g);
   cyl(.03,.03,.55,0x8a8a8a,-1.0,.28,.62,g,6);
   sph(.11,0xff6f91,-1.0,.62,.62,g);sph(.1,0xffd166,-.87,.58,.62,g);sph(.09,0xb79cff,-1.13,.57,.62,g);
@@ -1764,6 +1830,40 @@ function makeBuilding(cat,level){
   cyl(.035,.035,1.1,0x8a8a8a,1.0,1.85,-.6,g,6);
   box(.55,.3,.05,0xe8590c,1.28,2.25,-.6,g);
   sph(.09,0xffd166,1.0,2.45,-.6,g);
+ }
+ return g;
+}
+function makeDeco(kind){
+ const g=new THREE.Group();
+ if(kind==='flowerbed'){
+  box(1.7,.28,1.1,0x8a6a4f,0,.14,0,g);
+  box(1.5,.3,.9,0x5f4a38,0,.16,0,g);
+  flowerDot(-.55,0,0xff6f91,g);flowerDot(-.18,.12,0xffd166,g);flowerDot(.18,-.1,0xb79cff,g);flowerDot(.55,.05,0xff8fa3,g);
+  tree(-1.05,0,.55,g);
+ }else if(kind==='bench'){
+  [-.55,.55].forEach(x=>{box(.12,.45,.5,0x7a5c44,x,.225,0,g)});
+  box(1.4,.1,.55,0xc9986a,0,.5,0,g);
+  [-.55,.55].forEach(x=>{box(.12,.55,.1,0x7a5c44,x,.78,-.24,g)});
+  const back=box(1.4,.4,.08,0xc9986a,0,.95,-.26,g);back.rotation.x=-.12;
+  tree(1.0,-.3,.6,g);
+ }else if(kind==='fountain'){
+  cyl(.95,1.05,.3,0xd8d3cb,0,.15,0,g,20);
+  cyl(.8,.8,.12,0x9adcf0,0,.36,0,g,20);
+  cyl(.14,.18,.9,0xe8e2d6,0,.75,0,g,12);
+  cyl(.42,.42,.1,0xe8e2d6,0,1.2,0,g,16);
+  cyl(.34,.34,.06,0x9adcf0,0,1.26,0,g,16);
+  sph(.09,0x9adcf0,0,1.42,0,g);
+ }else if(kind==='lamp'){
+  cyl(.3,.36,.12,0x8a8a8a,0,.06,0,g,10);
+  cyl(.06,.08,1.9,0x5a5a66,0,1.0,0,g,8);
+  box(.5,.08,.08,0x5a5a66,.2,1.95,0,g);
+  sph(.13,0xffe9a3,.42,1.85,0,g);
+  cone(.16,.12,0x8a8a8a,.42,2.0,0,g,8);
+ }else{
+  [-.4,.4].forEach(x=>{cyl(.05,.05,1.0,0x9a6b4f,x,.5,0,g,8)});
+  box(1.2,.6,.08,0xffdfae,0,.95,0,g);
+  box(1.2,.12,.09,0xff8fae,0,1.28,0,g);
+  box(.9,.3,.09,0xbfe3ff,0,.9,0,g);
  }
  return g;
 }
@@ -1789,7 +1889,7 @@ function makeLabel(cat,level,noStars){
 function setGhost(cat){
  if(R.ghostLabel){R.scene.remove(R.ghostLabel);disposeObj(R.ghostLabel);R.ghostLabel=null}
  R.ghostCat=cat;
- if(cat&&cat!=='__road'){
+ if(cat&&cat!=='__road'&&!decoIdOf(cat)){
   R.ghostLabel=makeLabel(cat,1,true);
   R.ghostLabel.visible=false;
   R.scene.add(R.ghostLabel);
@@ -1823,6 +1923,14 @@ function rebuildCity(){
   const lb=makeLabel(cat,p.level,false);
   lb.position.y=LABEL_Y[cat]||2.55;
   g.add(lb);
+  R.city.add(g);
+  g.scale.set(.01,.01,.01);
+  R.anims.push({obj:g,t:0});
+ });
+ (state.decorations||[]).forEach(d=>{
+  const g=makeDeco(d.kind);
+  const{x,z}=tileXY(d.tile);
+  g.position.set(x,0,z);
   R.city.add(g);
   g.scale.set(.01,.01,.01);
   R.anims.push({obj:g,t:0});
@@ -1945,7 +2053,7 @@ function initThree(){
   R.ray=new THREE.Raycaster();
   R.ptr=new THREE.Vector2();
   updateCam();
-  R.scene.add(new THREE.HemisphereLight(0xffffff,0xcdebd6,.95));
+  R.scene.add(new THREE.HemisphereLight(0xffffff,0xcdebd6,.8));
   const sun=new THREE.DirectionalLight(0xfff2d9,.85);
   sun.position.set(9,14,7);
   sun.castShadow=true;
@@ -2204,6 +2312,9 @@ function renderFallbackGrid(){
     <span class="nameplate">${b.name}${neighborsRoad(t).length?' 🚗':''}</span></div>`;
   }else if((state.roads||[]).includes(t)){
    html+=`<div class="lot road" data-tile="${t}"><span class="house" style="font-size:30px">🛣️</span><span class="nameplate">どうろ</span></div>`;
+  }else if(decoAt(t)){
+   const dd=D[decoAt(t).kind];
+   html+=`<div class="lot deco" data-tile="${t}"><span class="house" style="font-size:30px">${dd.emoji}</span><span class="nameplate">${dd.name}</span></div>`;
   }else{
    html+=`<div class="lot empty" data-tile="${t}"><span>${FB_DECO[t%FB_DECO.length]}</span><span class="plus">＋</span></div>`;
   }
@@ -2257,7 +2368,7 @@ function openBuildingMenu(cat){
  const b=B[cat],p=state.placed[cat],prog=state.progress[cat]||0;
  const upDis=!canUpgrade(cat);
  const nextTh=p.level<3?TH[p.level]:null;
-const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
+const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="wbr"><br class="mbr">(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
  openModal(`<h3>${b.emoji} ${b.name} <small>Lv.${p.level}</small></h3>
  <p class="sub">${catTag(cat)}・これまでの正解 ${prog} 問</p>
  <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${progTxt}</p>
@@ -2780,7 +2891,7 @@ function refreshGradeUI(){
 }
 function clearGradeActivity(){
  stopSpeech();session=null;exitPlace();closeModal();
- R.cam={theta:.78,phi:1.02,radius:23};
+ R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};R.dragMode='orbit';R.lastPtrUp=Date.now();
  R.clearPointers?.();
  if(R.hover)R.hover.visible=false;
@@ -2870,7 +2981,7 @@ function openSettings(){
   openSettings();
  };
  $('#st-sound').onclick=()=>{state.sound=!state.sound;save();refreshHUD();openSettings()};
- $('#st-reset').onclick=()=>askYesNo(activeGrade+'級のデータを消す?','この級の街・おかね・きろくが消えて、この級は最初からになります。他の級の記録は残るよ。いい?','消して最初から',wipeAndRestart);
+ $('#st-reset').onclick=()=>askYesNo(activeGrade+'級のデータを消す?','この級の街・おかね・きろくが消えて、<br class="mbr">この級は最初からになります。<br class="wbr"><br class="mbr">他の級の記録は残るよ。いい?','消して最初から',wipeAndRestart);
 }
 $('#save-retry').onclick=retryLoad;
 $('#start-btn').onclick=()=>{
@@ -2883,7 +2994,7 @@ $('#build-open').onclick=()=>openPalette();
 $('#settings-btn').onclick=openSettings;
 $('#how-btn-title').onclick=openTutorial;
 $('#cam-reset').onclick=()=>{
- R.cam={theta:.78,phi:1.02,radius:23};
+ R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};
  if(R.ok)updateCam();
  toast('視点をもどしたよ!');
