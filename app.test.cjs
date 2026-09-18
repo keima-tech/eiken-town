@@ -735,12 +735,19 @@ if (require.main === module) {
     const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
     const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
     assert.match(css, /br\.mbr\{display:none\}/);
+    assert.match(css, /br\.wbr\{display:block\}/);
     assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.mbr\{display:block\}/);
+    assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?br\.wbr\{display:none\}/);
     assert.match(css, /@media\(max-width:480px\)\{[\s\S]*?\.modal \.sub\{[^}]*line-height/);
     const app = loadApp();
-    for (const page of app.json('TUT')) assert.match(page.d, /<br class="mbr">/);
+    for (const page of app.json('TUT')) {
+      assert.match(page.d, /<br class="mbr">/);
+      assert.match(page.d, /<br class="wbr">/);
+    }
     assert.match(app.run('flowerGuide("4")'), /<br class="mbr">/);
     assert.match(app.run('flowerGuide("5")'), /<br class="mbr">/);
+    assert.match(app.run('flowerGuide("4")'), /<br class="wbr">/);
+    assert.match(app.run('flowerGuide("5")'), /<br class="wbr">/);
   });
 
   test('level-up tutorial describes practice without claiming exam equivalence', () => {

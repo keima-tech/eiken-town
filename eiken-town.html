@@ -207,8 +207,9 @@ button:disabled{cursor:not-allowed}
 @media(min-height:760px){.modal-root.open{align-items:center}.modal{border-radius:30px;border-bottom:3px solid var(--line);margin:16px}}
 @keyframes slide-up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
 .modal h3{font-size:21px;font-weight:900;color:var(--pink-d);text-align:center;margin-bottom:4px}
-.modal .sub{text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:16px}
+.modal .sub{text-align:center;font-size:13px;line-height:1.8;color:var(--ink-soft);margin-bottom:16px}
 br.mbr{display:none}
+br.wbr{display:block}
 .close-row{display:flex;justify-content:center;margin-top:18px;gap:10px;flex-wrap:wrap}
 
 .bcard{
@@ -220,7 +221,7 @@ br.mbr{display:none}
 .bcard:disabled{opacity:.55;filter:grayscale(.5)}
 .bcard .bc-emoji{font-size:40px;width:58px;text-align:center;flex-shrink:0}
 .bcard .bc-name{font-weight:900;font-size:17px}
-.bcard .bc-desc{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+.bcard .bc-desc{font-size:12.5px;line-height:1.7;color:var(--ink-soft);margin-top:1px}
 .bcard .bc-cost{margin-left:auto;font-weight:900;color:#b57d00;background:var(--sun-l);padding:5px 12px;border-radius:999px;border:2px solid #ffe6a8;font-size:13px;white-space:nowrap}
 .bcard.locked .bc-cost{background:#f3eef5;color:var(--ink-soft);border-color:#e5dbe9}
 
@@ -416,6 +417,7 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
  .place-bar .place-tip-short{display:inline}
  .place-bar .cancel{padding:5px 11px;font-size:12px}
  br.mbr{display:block}
+ br.wbr{display:none}
  .modal .sub{font-size:14.5px;line-height:1.9}
  .bcard .bc-desc{font-size:13.5px;line-height:1.75}
 }
@@ -1123,7 +1125,7 @@ const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','�
 const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん'};
 function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='4'?'読解（どっかい）':'✏️ さくぶん'):CAT_TAG[cat]}
 function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade==='4'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
-function flowerGuide(grade){return grade==='4'?'お花屋さんは読解練習。<br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。':'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="mbr">本番の試験ではありません。'}
+function flowerGuide(grade){return grade==='4'?'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。':'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。'}
 function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
 const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
@@ -1430,7 +1432,7 @@ function refreshNameUI(){
 function openNaming(isFirst){
  const sug=NAME_IDEAS.slice().sort(()=>Math.random()-.5).slice(0,3);
  openModal(`<h3>${isFirst?'🏙️ まちに名前をつけよう!':'✏️ まちの名前をかえる'}</h3>
- <p class="sub">${isFirst?'あなただけの街の名前を決めてね!<br class="mbr">(最大12文字・スキップもOK)':'新しい名前を入れてね!(最大12文字)'}</p>
+ <p class="sub">${isFirst?'あなただけの街の名前を決めてね!<br class="wbr"><br class="mbr">(最大12文字・スキップもOK)':'新しい名前を入れてね!(最大12文字)'}</p>
  <input class="name-input" id="nm-input" maxlength="12" placeholder="例:サクラタウン">
  <div class="sugg" id="nm-sugg">${sug.map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div>
  <div class="close-row">
@@ -1450,12 +1452,12 @@ function openNaming(isFirst){
 }
 
 const TUT=[
-{e:'🏙️✨',t:'ようこそ!',d:'クイズに答えてコイン💰をためて、<br class="mbr">あなただけの街を大きくしよう!<br class="mbr">まちには6つの建物と、走る車もあるよ。'},
-{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと<br class="mbr">建物がえらべるよ。<br class="mbr">建物をえらんだら、置きたい場所の地面を<br class="mbr">タップして決定!まずは無料の図書館📚からどうぞ。'},
-{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!<br class="mbr">1回に5問、正解するたびに<br class="mbr">コイン💰がもらえるよ。<br class="mbr">まちがえた問題はじどうで<br class="mbr">ふくしゅうリストに入るので、<br class="mbr">📖ボタンで復習できる!'},
-{e:'🛣️🚗',t:'道路をひこう',d:'道路は1マス💰10。<br class="mbr">建物のそばに道を通すと、<br class="mbr">クイズのごほうびコインがプラスされる!<br class="mbr">道がつながるとカラフルな車が走りだすよ。'},
-{e:'⭐',t:'レベルアップで成長',d:'同じ建物で正解を重ねるとレベルアップ<br class="mbr">(Lv2は6問+💰40、Lv3は16問+💰100)。<br class="mbr">レベル3になると少し難しい練習問題が出るぞ!<br class="mbr">街が発展すると称号も変わるよ。'},
-{e:'🖱️',t:'操作のかんばん',d:'ドラッグ=街をまわす/<br class="mbr">🖐️ボタン=移動モード<br class="mbr">(右ドラッグ・ピンチ2本指でも移動)/<br class="mbr">ホイール・ピンチ=ズーム/🎯=視点をもどす。<br class="mbr">右上の⚙️せっていから、<br class="mbr">効果音や「遊び方」をいつでも見られるよ!'}
+{e:'🏙️✨',t:'ようこそ!',d:'クイズに答えてコイン💰をためて、<br class="mbr">あなただけの街を大きくしよう!<br class="wbr"><br class="mbr">まちには6つの建物と、走る車もあるよ。'},
+{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと<br class="mbr">建物がえらべるよ。<br class="wbr"><br class="mbr">建物をえらんだら、置きたい場所の地面を<br class="mbr">タップして決定!<br class="wbr">まずは無料の図書館📚からどうぞ。'},
+{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!<br class="wbr"><br class="mbr">1回に5問、正解するたびに<br class="mbr">コイン💰がもらえるよ。<br class="wbr"><br class="mbr">まちがえた問題はじどうで<br class="mbr">ふくしゅうリストに入るので、<br class="mbr">📖ボタンで復習できる!'},
+{e:'🛣️🚗',t:'道路をひこう',d:'道路は1マス💰10。<br class="wbr"><br class="mbr">建物のそばに道を通すと、<br class="mbr">クイズのごほうびコインがプラスされる!<br class="wbr"><br class="mbr">道がつながるとカラフルな車が走りだすよ。'},
+{e:'⭐',t:'レベルアップで成長',d:'同じ建物で正解を重ねるとレベルアップ<br class="mbr">(Lv2は6問+💰40、Lv3は16問+💰100)。<br class="wbr"><br class="mbr">レベル3になると少し難しい練習問題が出るぞ!<br class="wbr"><br class="mbr">街が発展すると称号も変わるよ。'},
+{e:'🖱️',t:'操作のかんばん',d:'ドラッグ=街をまわす/<br class="wbr"><br class="mbr">🖐️ボタン=移動モード<br class="wbr"><br class="mbr">(右ドラッグ・ピンチ2本指でも移動)/<br class="wbr"><br class="mbr">ホイール・ピンチ=ズーム/🎯=視点をもどす。<br class="wbr"><br class="mbr">右上の⚙️せっていから、<br class="mbr">効果音や「遊び方」をいつでも見られるよ!'}
 ];
 let tutPage=0;
 function openTutorial(){
@@ -1467,7 +1469,7 @@ function renderTut(){
  const last=tutPage===TUT.length-1;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
- <p style="text-align:center;font-size:15px;line-height:1.9;font-weight:700;margin:12px 4px 4px">${p.d}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
+   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${p.d}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
  <div class="dots" style="justify-content:center;margin-top:14px">
  ${TUT.map((_,k)=>`<span class="dot ${k===tutPage?'now':(k<tutPage?' done-ok':'')}"></span>`).join('')}
  </div>
@@ -2366,7 +2368,7 @@ function openBuildingMenu(cat){
  const b=B[cat],p=state.placed[cat],prog=state.progress[cat]||0;
  const upDis=!canUpgrade(cat);
  const nextTh=p.level<3?TH[p.level]:null;
-const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="mbr">(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
+const progTxt=nextTh!==null?`あと ${Math.max(0,nextTh-prog)} 問 正解でアップグレードOK!<br class="wbr"><br class="mbr">(アップグレードにはコイン 💰${UP_COST[p.level]}が必要だよ)`:`レベルMAXだよ!えらい!!`;
  openModal(`<h3>${b.emoji} ${b.name} <small>Lv.${p.level}</small></h3>
  <p class="sub">${catTag(cat)}・これまでの正解 ${prog} 問</p>
  <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${progTxt}</p>
@@ -2979,7 +2981,7 @@ function openSettings(){
   openSettings();
  };
  $('#st-sound').onclick=()=>{state.sound=!state.sound;save();refreshHUD();openSettings()};
- $('#st-reset').onclick=()=>askYesNo(activeGrade+'級のデータを消す?','この級の街・おかね・きろくが消えて、<br class="mbr">この級は最初からになります。<br class="mbr">他の級の記録は残るよ。いい?','消して最初から',wipeAndRestart);
+ $('#st-reset').onclick=()=>askYesNo(activeGrade+'級のデータを消す?','この級の街・おかね・きろくが消えて、<br class="mbr">この級は最初からになります。<br class="wbr"><br class="mbr">他の級の記録は残るよ。いい?','消して最初から',wipeAndRestart);
 }
 $('#save-retry').onclick=retryLoad;
 $('#start-btn').onclick=()=>{
