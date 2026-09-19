@@ -662,6 +662,16 @@ if (require.main === module) {
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
   });
 
+  test('migration remaps legacy summary ids and drops off-grade buildings', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({v:5,grade:'pre2',g:9,coins:50,placed:{library:{tile:0,level:1}},roads:[],decorations:[],progress:{},review:['gpre2-essay-107','gpre2-essay-112','gpre2-summary-101','g2-essay-101'],unlocked:['library']},'pre2')");
+    assert.deepEqual(json('state.review'), ['gpre2-summary-101', 'gpre2-summary-106']);
+    run("state=migrate({v:5,grade:'3',g:9,coins:50,placed:{library:{tile:0,level:1},summary:{tile:1,level:1},essay:{tile:2,level:1}},roads:[],decorations:[],progress:{},review:[],unlocked:['library']},'3')");
+    assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 }, essay: { tile: 2, level: 1 } });
+    assert.equal(run('state.unlocked.includes("summary")'), false);
+    assert.equal(run('state.unlocked.includes("essay")'), true);
+  });
+
   test('migration drops off-grade buildings and sessions handle empty pools gracefully', () => {
     const { run, get, json } = loadApp();
     run("state=migrate({v:5,grade:'4',g:9,coins:50,placed:{library:{tile:0,level:1},essay:{tile:1,level:1}},roads:[],decorations:[],progress:{},review:[],unlocked:['library']},'4')");
@@ -674,6 +684,8 @@ if (require.main === module) {
     assert.equal(get('#scr-quiz').classList.contains('active'), false);
     run('renderMap()');
     assert.equal(get('#town-stats').textContent, '建物 1/6');
+    run("activeGrade='pre2'; state=freshState('pre2'); renderMap()");
+    assert.equal(get('#town-stats').textContent, '建物 0/8');
   });
 
   test('empty reading groups end the session attempt without errors', () => {
@@ -1206,7 +1218,7 @@ if (require.main === module) {
 
   test('order questions assemble into the sentences quoted in explanations', () => {
     const app = loadApp();
-    for (const grade of ['4', '5', '3', 'pre2']) {
+    for (const grade of ['4', '5', '3', 'pre2', '2']) {
       for (const q of app.json(`QUESTION_BANKS['${grade}'].station`)) {
         const full = (q.prefix + ' ' + q.order.map(n => q.units[n - 1]).join(' ') + ' ' + q.suffix).replace(/\s+/g, ' ').replace(/\s+([.,?!])/g, '$1').trim();
         const quoted = q.e.split(' の順')[0].trim();
@@ -1226,6 +1238,9 @@ if (require.main === module) {
     assert.ok(get('.reading-passage'));
     assert.match(get('#q-card').textContent, /45〜55語/);
     assert.match(run('writingChecks("2",true)[0]'), /自分の言葉/);
+    run("exitPlace(); closeModal(); goHome(); activeGrade='pre2'; state=freshState('pre2'); state.coins=2000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); startSession('summary',false)");
+    assert.equal(run('session.qs.length'), 1);
+    assert.match(get('#q-card').textContent, /25〜35語/);
     const box = get('#wr-box');
     box.value = 'Many Japanese drink coffee every morning. Coffee was first found in Africa long ago and carried to many countries. Today, Brazil grows the most coffee. There are many coffee shops in towns. Some like hot coffee, others iced. Drinking it with friends is popular on weekends. I like iced coffee very much in summer.';
     box.dispatchEvent({ type: 'input' });
@@ -1303,6 +1318,11 @@ if (require.main === module) {
       get('[data-cat="summary"]').click();
       assert.equal(run('pendingPlace'), 'summary');
       run("exitPlace(); closeModal(); activeGrade='4'; state=freshState('4'); openPalette()");
+      assert.equal(get('[data-cat="summary"]'), null);
+      run("exitPlace(); closeModal(); activeGrade='3'; state=freshState('3'); openPalette()");
+      assert.equal(get('[data-cat="summary"]'), null);
+      assert.equal(get('[data-cat="essay"]') === null, false);
+      run("exitPlace(); closeModal(); activeGrade='5'; state=freshState('5'); openPalette()");
       assert.equal(get('[data-cat="summary"]'), null);
     }
   });
@@ -1389,6 +1409,11 @@ if (require.main === module) {
     run("closeModal(); activeGrade='4'; state=freshState('4'); refreshGradeUI(); openTutorial()");
     assert.match(get('#modal').textContent, /6つの建物/);
     assert.equal(get('#active-grade').textContent, '4級');
+    run("closeModal(); activeGrade='5'; state=freshState('5'); refreshGradeUI(); openTutorial()");
+    assert.match(get('#modal').textContent, /6つの建物/);
+    run("closeModal(); activeGrade='2'; state=freshState('2'); refreshGradeUI(); openTutorial()");
+    assert.match(get('#modal').textContent, /8つの建物/);
+    assert.equal(get('#active-grade').textContent, '2級');
   });
   test('grade-pre2 essay uses real-exam format with 50-80 word target', () => {
     const app = loadApp();
