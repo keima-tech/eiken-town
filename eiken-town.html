@@ -135,7 +135,7 @@ button:disabled{cursor:not-allowed}
 .title-menu{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:30px}
 .grade-selector{width:100%;max-width:560px;min-width:0;padding:0;border:0;text-align:left}
 .grade-selector legend{font-size:21px;font-weight:900;margin-bottom:12px}
-.grade-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grade-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .grade-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%;min-width:0;min-height:128px;padding:16px;border:3px solid var(--ink-soft);border-radius:20px;background:var(--paper);text-align:left;overflow-wrap:anywhere}
 .grade-card:hover{background:var(--lav-l)}
 .grade-card[aria-pressed="true"]{border-color:var(--ink);background:var(--mint-l);box-shadow:inset 0 0 0 2px var(--ink)}
@@ -467,12 +467,15 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
             <button type="button" class="grade-card" data-grade="3" aria-pressed="false" aria-label="英検3級" aria-describedby="title-grade-3-description">
               <span class="grade-name">英検3級</span><span class="grade-description" id="title-grade-3-description">4級の次のステップへ</span><span class="grade-status">選ぶ</span>
             </button>
+            <button type="button" class="grade-card" data-grade="pre2" aria-pressed="false" aria-label="英検準2級" aria-describedby="title-grade-pre2-description">
+              <span class="grade-name">英検準2級</span><span class="grade-description" id="title-grade-pre2-description">3級の次のステップへ</span><span class="grade-status">選ぶ</span>
+            </button>
           </div>
         </fieldset>
         <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
         <button class="btn ghosty small hidden" id="reset-btn-top">今の級の街だけを消して最初から</button>
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
-        <p class="save-note">英検5級・4級・3級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
+        <p class="save-note">英検5級・4級・3級・準2級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
       </div>
     </div>
   </section>
@@ -934,6 +937,80 @@ essay:[
 {id:'g3-essay-106',d:3,kind:'writing',en:"Which do you like better, reading books or watching TV?",points:["learning","fun","time"],jp:"あなたの考えとその理由を2つ、25〜50語の英語で書こう。",hints:["I like ... better ...","First, ...","Second, ..."],sample:"I like reading books better than watching TV. First, I can learn many new things from books. Second, reading is quiet and fun. Also, I can enjoy books any time I want.",e:"動名詞を主語にした I like reading ... better ... の形に注意。any time でいつでも。"}
 ]
 }
+,
+'pre2': {
+library:[
+{id:'gpre2-library-101',d:1,q:"This book is ___ at any bookstore.",c:["available","suitable","comfortable","valuable"],a:0,e:"「この本はどの書店でも手に入ります」。available は入手できる。"},
+{id:'gpre2-library-102',d:1,q:"My trip to Canada was a wonderful ___.",c:["experiment","explanation","experience","expression"],a:2,e:"「カナダ旅行は素晴らしい経験だった」。experience は経験。experiment は実験。"},
+{id:'gpre2-library-103',d:1,q:"If you want to ___ your English, read English books every day.",c:["increase","include","invite","improve"],a:3,e:"「英語を上達させたいなら毎日英語の本を読みなさい」。improve は上達させる・改善する。"},
+{id:'gpre2-library-104',d:1,q:"He has a lot of ___ about wild animals.",c:["luggage","garbage","weather","knowledge"],a:3,e:"「彼は野生動物について豊富な知識を持っている」。knowledge は知識。"},
+{id:'gpre2-library-105',d:1,q:"Smartphones are ___ among high school students.",c:["similar","equal","general","common"],a:3,e:"「高校生の間でスマホは一般的だ」。common は一般的な。"},
+{id:'gpre2-library-106',d:1,q:"Air pollution is a ___ problem in this city.",c:["curious","serious","various","nervous"],a:1,e:"「大気汚染はこの市の深刻な問題だ」。serious は深刻な。"},
+{id:'gpre2-library-107',d:2,q:"Brushing your teeth helps ___ cavities.",c:["present","prefer","predict","prevent"],a:3,e:"「歯を磨くと虫歯を防げる」。prevent は防ぐ。"},
+{id:'gpre2-library-108',d:2,q:"The price of vegetables ___ on the weather.",c:["decides","relies","turns","depends"],a:3,e:"「野菜の値段は天候によって変わる」。depend on は〜によって決まる。"},
+{id:'gpre2-library-109',d:2,q:"He ___ his trip to Hokkaido in his letter.",c:["noticed","wondered","expected","mentioned"],a:3,e:"「彼は手紙の中で北海道旅行のことに触れた」。mention は〜について述べる。"},
+{id:'gpre2-library-110',d:2,q:"The map helped us ___ getting lost.",c:["enjoy","miss","finish","avoid"],a:3,e:"「地図のおかげで道に迷わずにすんだ」。avoid ~ing で〜するのを避ける。"},
+{id:'gpre2-library-111',d:2,q:"The game is ___ to start at three.",c:["hoped","waited","wished","expected"],a:3,e:"「試合は3時開始の予定だ」。be expected to で〜する予定である。"},
+{id:'gpre2-library-112',d:2,q:"What were his ___ words? Tell me exactly.",c:["active","alike","alive","actual"],a:3,e:"「彼の正確な言葉は何でしたか」。actual は実際の。"},
+{id:'gpre2-library-113',d:3,q:"If I ___ a bird, I would fly to you.",c:["am","are","be","were"],a:3,e:"「もし鳥だったらあなたのところへ飛んでいくのに」。仮定法では If I were ... 。"},
+{id:'gpre2-library-114',d:3,q:"When I got to the station, the train had already ___.",c:["leave","leaves","leaving","left"],a:3,e:"「駅に着いたとき、列車はすでに出た後だった」。had already + 過去分詞で〜し終えていた。"},
+{id:'gpre2-library-115',d:3,q:"Can you tell me ___ boys are better at swimming?",c:["what","who","whose","which"],a:3,e:"「どちらの男の子が泳ぎが得意か教えてくれますか」。which + 名詞でどちらの…。"},
+{id:'gpre2-library-116',d:3,q:"I was ___ to hear the sad news.",c:["surprising","surprise","surprisingly","surprised"],a:3,e:"「悲しい知らせに驚いた」。be surprised to で〜して驚く。-ed は人の感情。"},
+{id:'gpre2-library-117',d:3,q:"He is not ___ getting up early.",c:["use to","using to","use","used to"],a:3,e:"「彼は早起きに慣れていない」。be used to ~ing で〜に慣れている。"},
+{id:'gpre2-library-118',d:3,q:"She can ___ speak English but also French.",c:["no sooner","hardly","seldom","not only"],a:3,e:"「彼女は英語だけでなくフランス語も話せる」。not only ... but also ... で〜だけでなく…も。"}
+],
+school:[
+{id:'gpre2-school-101',d:1,q:"It has been ___ since this morning.",c:["rain","raining","rained","rains"],a:1,e:"「今朝からずっと雨が降っている」。has been + ~ing でずっと〜している。"},
+{id:'gpre2-school-102',d:1,q:"This box is too heavy for me to ___.",c:["carry","carrying","carried","carries"],a:0,e:"「この箱は重すぎて運べない」。too ~ to で〜するには…すぎる。"},
+{id:'gpre2-school-103',d:1,q:"These cars are ___ in this factory.",c:["make","makes","made","making"],a:2,e:"「これらの車はこの工場で作られている」。are made で受動態。"},
+{id:'gpre2-school-104',d:1,q:"This test was much ___ than the last one.",c:["easy","easier","easiest","easily"],a:1,e:"「今回のテストは前回よりずっと易しかった」。much + 比較級でずっと〜。"},
+{id:'gpre2-school-105',d:1,q:"You must not ___ here. It is dangerous.",c:["swims","swim","swam","swimming"],a:1,e:"「ここで泳いではいけません。危険です」。must not + 原形で禁止。"},
+{id:'gpre2-school-106',d:1,q:"Call me when you ___ home.",c:["gets","will get","got","get"],a:3,e:"「家に着いたら電話して」。when の中は現在形で未来を表す。"},
+{id:'gpre2-school-107',d:2,q:"Do you know the park ___ we played tennis yesterday?",c:["which","who","whose","where"],a:3,e:"「昨日テニスをした公園を知っていますか」。場所を説明する関係副詞は where。"},
+{id:'gpre2-school-108',d:2,q:"Are you interested ___ traditional music?",c:["on","at","of","in"],a:3,e:"「伝統音楽に興味がありますか」。be interested in で〜に興味がある。"},
+{id:'gpre2-school-109',d:2,q:"Tell me ___ to open this box.",c:["what","which","where","how"],a:3,e:"「この箱の開け方を教えて」。how to で〜の方法。"},
+{id:'gpre2-school-110',d:2,q:"I have known her ___ we were children.",c:["for","from","during","since"],a:3,e:"「子どもの頃から彼女を知っている」。since + 文で〜以来。"},
+{id:'gpre2-school-111',d:2,q:"I must get my hair ___ before the trip.",c:["cuts","cutting","to cut","cut"],a:3,e:"「旅行の前に髪を切ってもらわなければ」。get + 物 + 過去分詞で〜してもらう。"},
+{id:'gpre2-school-112',d:2,q:"The movie was ___ interesting that I saw it twice.",c:["very","too","such","so"],a:3,e:"「映画がとても面白かったので2回見た」。so + 形容詞 + that でとても〜なので…。"},
+{id:'gpre2-school-113',d:3,q:"If I ___ more time, I would study abroad.",c:["have","have had","will have","had"],a:3,e:"「もっと時間があれば留学するのに」。仮定法過去では If + 過去形。"},
+{id:'gpre2-school-114',d:3,q:"By the time we arrived, the movie had already ___.",c:["start","starts","starting","started"],a:3,e:"「着いたときには映画はすでに始まっていた」。had already + 過去分詞。"},
+{id:'gpre2-school-115',d:3,q:"It took us three hours ___ to the top of the mountain.",c:["getting","get","got","to get"],a:3,e:"「山頂まで3時間かかった」。It takes + 人 + 時間 + to で〜するのに…かかる。"},
+{id:'gpre2-school-116',d:3,q:"This temple was ___ 300 years ago.",c:["build","building","builds","built"],a:3,e:"「この寺は300年前に建てられた」。was built で過去の受動態。"},
+{id:'gpre2-school-117',d:3,q:"He ran fast ___ to catch the bus.",c:["so","too","very","enough"],a:3,e:"「バスに間に合うよう速く走った」。enough to で〜するのに十分…。"},
+{id:'gpre2-school-118',d:3,q:"Reading books is more interesting ___ watching TV.",c:["then","that","as","than"],a:3,e:"「本を読む方がテレビより面白い」。more ... than で〜より…。then と混同注意。"}
+],
+cafe:[
+{id:'gpre2-cafe-101',d:1,q:"A: Would you like to join us for lunch?\nB: ___",c:["I ate lunch.","Lunch is good.","At noon.","Sure, I'd love to."],a:3,e:"「昼食に加わりませんか」「ぜひ」。誘いへの返事は Sure, I'd love to.。"},
+{id:'gpre2-cafe-102',d:1,q:"A: It's a beautiful day, isn't it?\nB: ___",c:["It is day.","Beautiful is good.","Yes, it rains.","Yes, let's go for a walk."],a:3,e:"「いい天気ですね」「ええ、散歩に行こう」。相手の言葉に合わせた返事を選ぶ。"},
+{id:'gpre2-cafe-103',d:1,q:"A: Can I try on this jacket?\nB: ___",c:["Jackets are warm.","I like jackets.","Try is good.","Of course. The fitting room is over there."],a:3,e:"「この上着を試着できますか」「もちろん。試着室はあちらです」。"},
+{id:'gpre2-cafe-104',d:1,q:"A: Excuse me. Do you have the time?\nB: ___",c:["Time flies.","I have time.","Yes, I do.","It's half past two."],a:3,e:"「すみません。今何時ですか」「2時半です」。Do you have the time? は時刻を聞く表現。"},
+{id:'gpre2-cafe-105',d:1,q:"A: I'm sorry I broke your pen.\nB: ___",c:["You broke it.","Pens are useful.","Buy a new one.","Don't worry about it."],a:3,e:"「ペンを壊してごめんなさい」「気にするな」。謝罪には Don't worry about it.。"},
+{id:'gpre2-cafe-106',d:1,q:"A: I passed the Eiken test!\nB: ___",c:["You took it.","Tests are hard.","Good luck.","Congratulations!"],a:3,e:"「英検に合格したよ」「おめでとう!」。吉報には Congratulations!。"},
+{id:'gpre2-cafe-107',d:2,q:"A: This bag is too heavy. What should I do?\nB: ___",c:["Bags are heavy.","You are strong.","Carry it yourself.","Why don't I carry it for you?"],a:3,e:"「かばんが重すぎる。どうしよう」「代わりに持ちましょうか」。申し出は Why don't I ...?。"},
+{id:'gpre2-cafe-108',d:2,q:"A: Excuse me. This soup is cold.\nB: ___",c:["Soup is cold.","Cold is bad.","Eat it quickly.","I'm sorry. I'll bring a hot one."],a:3,e:"「すみません。このスープは冷たいです」「申し訳ありません。温かいのを持ってきます」。店員の謝罪と対応。"},
+{id:'gpre2-cafe-109',d:2,q:"A: Hello. Can I leave a message for Ms. Brown?\nB: ___",c:["Messages are short.","She is Brown.","Leave it here.","Sure. I'll give it to her."],a:3,e:"「ブラウンさんに伝言をお願いできますか」「はい。伝えておきます」。"},
+{id:'gpre2-cafe-110',d:2,q:"A: How do I get to City Hospital from here?\nB: ___",c:["Hospitals are big.","I went there.","Very near.","Take bus number five and get off at Green Park."],a:3,e:"「ここから市立病院へはどう行きますか」「5番のバスに乗ってグリーン公園で降りてください」。具体的な道順を答える。"},
+{id:'gpre2-cafe-111',d:2,q:"A: Do you want to come shopping with me?\nB: ___",c:["Shopping is fun.","I like shops.","With you.","I'd love to, but I have to study."],a:3,e:"「買い物に来ない」「行きたいけど勉強しないと」。丁寧な断りは I'd love to, but ...。"},
+{id:'gpre2-cafe-112',d:2,q:"A: Have you ever tried sushi?\nB: ___",c:["Sushi is fish.","I like Japan.","Try it.","Yes. I ate it in Japan last year."],a:3,e:"「寿司を食べたことがある」「うん。去年日本で食べた」。経験の有無に具体的に答える。"},
+{id:'gpre2-cafe-113',d:3,q:"A: What do you think of online classes?\nB: ___",c:["Classes are long.","Online is good.","I think so.","They're convenient, but I miss my friends."],a:3,e:"「オンライン授業をどう思う」「便利だけど友達に会えなくて寂しい」。感想と理由を答える。"},
+{id:'gpre2-cafe-114',d:3,q:"A: Could I take tomorrow off?\nB: ___",c:["Tomorrow is Friday.","Days off are nice.","Take it.","Why? Are you sick?"],a:3,e:"「明日休んでもいいですか」「どうして。具合が悪いの」。上司は理由を聞くのが自然。"},
+{id:'gpre2-cafe-115',d:3,q:"A: The air conditioner is too noisy. I can't sleep.\nB: ___",c:["Air conditioners are useful.","Sleep well.","It's new.","I'm sorry. I'll send someone to check it."],a:3,e:"「エアコンがうるさくて眠れない」「申し訳ありません。係を向かわせます」。ホテルの対応は謝罪と手配。"},
+{id:'gpre2-cafe-116',d:3,q:"A: I'm thinking of studying abroad. Any advice?\nB: ___",c:["Abroad is far.","Study is good.","Good idea.","Why don't you talk to someone who has been abroad?"],a:3,e:"「留学を考えている。何か助言は」「留学経験者に話を聞くのはどう」。助言は Why don't you ...?。"},
+{id:'gpre2-cafe-117',d:3,q:"A: Do you prefer tea or coffee in the morning?\nB: ___",c:["Tea and coffee.","Morning is busy.","I drink.","Coffee. It wakes me up."],a:3,e:"「朝は紅茶とコーヒーどちらが好き」「コーヒー。目が覚めるから」。好みと理由を答える。"},
+{id:'gpre2-cafe-118',d:3,q:"A: What are your plans for the summer vacation?\nB: ___",c:["Summer is hot.","Vacations are short.","I have plans.","I'm going to visit my grandparents in Kyushu."],a:3,e:"「夏休みの予定は」「九州の祖父母を訪ねる予定です」。具体的な予定を答える。"}
+],
+station:[],
+park:[],
+flower:[],
+essay:[
+{id:'gpre2-essay-101',d:1,kind:'writing',en:"Do you think junior high school students should use smartphones?",points:["study","communication","rules"],jp:"あなたの考えとその理由を2つ、50〜80語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think junior high school students should use smartphones. First, they can study with useful apps anywhere. Second, they can easily communicate with their family and friends. However, schools should make clear rules because using them too much is bad for their eyes and studies.",e:"However を使うと反対側の視点にも触れられて説得力が増す。50〜80語を意識しよう。"},
+{id:'gpre2-essay-102',d:1,kind:'writing',en:"Which season do you like the best?",points:["weather","events","food"],jp:"あなたの考えとその理由を2つ、50〜80語の英語で書こう。",hints:["I like ... the best ...","First, ...","Second, ..."],sample:"I like autumn the best. First, the weather is cool and comfortable. Second, there are many interesting events like school festivals. Also, autumn food such as chestnuts and grapes is very delicious. I always look forward to autumn.",e:"Which ... do you like the best? には I like ... the best. で答え、理由を続ける。"},
+{id:'gpre2-essay-103',d:2,kind:'writing',en:"Do you think children should do volunteer work?",points:["society","experience","feelings"],jp:"あなたの考えとその理由を2つ、50〜80語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think children should do volunteer work. First, it is good for society, for example, cleaning parks. Second, they can get valuable experience that they cannot get at school. Also, helping others makes them feel happy.",e:"for example を使うと具体例が示せる。that they cannot get at school は関係詞節。"},
+{id:'gpre2-essay-104',d:2,kind:'writing',en:"Where would you like to visit in Japan?",points:["nature","culture","food"],jp:"あなたの考えとその理由を2つ、50〜80語の英語で書こう。",hints:["I would like to ...","First, ...","Second, ..."],sample:"I would like to visit Hokkaido. First, its nature is beautiful and I want to see lavender fields. Second, I am interested in the culture of the Ainu people. Also, I want to eat fresh seafood there.",e:"Where would you like to ...? には I would like to ... で答える。be interested in は〜に興味がある。"},
+{id:'gpre2-essay-105',d:3,kind:'writing',en:"Do you think English will become more important in the future?",points:["business","travel","internet"],jp:"あなたの考えとその理由を2つ、50〜80語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think English will become more important in the future. First, more companies use English for international business. Second, English helps travelers in foreign countries. Also, most information on the internet is written in English, so it is a useful skill.",e:"will become で〜になるだろう。most information は most + 数えられない名詞に注意。"},
+{id:'gpre2-essay-106',d:3,kind:'writing',en:"Do you agree that school uniforms are necessary?",points:["equality","morning","fashion"],jp:"あなたの考えとその理由を2つ、50〜80語の英語で書こう。",hints:["I agree ...","First, ...","Second, ..."],sample:"I agree that school uniforms are necessary. First, all students look equal and nobody worries about fashion. Second, students can get ready quickly in the morning. However, some students want to wear their favorite clothes, so schools should sometimes allow free dress days.",e:"I agree that ... で〜に賛成という意見を表す。反対意見への配慮(However ...)も高評価につながる。"}
+]
+}
 };
 const PRACTICE_PICTURES = {
 shop:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="会話の場面"><g stroke="#26364a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M35 65V30H285V65Z" fill="#e8effa"/><path d="M35 65H285M55 65V155H265V65M55 110H265"/><circle cx="125" cy="83" r="13"/><path d="M125 96V110M112 104H145M220 125V155M205 140H235"/><circle cx="220" cy="112" r="13"/><path d="M75 125H100V150H75ZM160 125H185V150H160Z" fill="#ffe2ac"/></g></svg>',
@@ -961,7 +1038,13 @@ const PRACTICE_PASSAGES = {
 'g3-reading-email-1':"Hi Ken,\nThank you for your letter. I was happy to hear that you won the speech contest. You practiced hard for a month, so I am not surprised.\nOur family moved to a new house last week. It is bigger than our old house, and I have my own room now. There is a park near our house. I often play soccer there with my new friends.\nPlease come and visit us soon.\nYuki",
 'g3-reading-email-2':"Dear Ms. Green,\nI am sorry I was absent from your class yesterday. I had a bad cold and stayed home all day. My mother took me to the hospital in the morning. The doctor gave me some medicine and told me to rest for two days.\nI missed the English test. Can I take it next week? Please tell me what I should study.\nThank you,\nTaro",
 'g3-reading-story-1':"Last summer, Riku visited his grandmother in the countryside. She lives alone in a small house near the sea. Every morning, Riku helped her carry water from the well. In the afternoon, they walked on the beach and looked for shells.\nOne day, Riku found a small black dog near the house. It was hungry, so he gave it some bread. The dog came back the next day, too. Soon it came every day.\nWhen summer ended, Riku had to go home. He was sad to leave the dog. His grandmother smiled and said, \"Don't worry. I will take care of it.\" Now the dog lives with his grandmother.",
-'g3-reading-story-2':"Mia has kept a diary since she was ten. She writes about interesting things every night. Last month, something surprising happened.\nMia was walking home from school when she saw an old wallet on the road. There were some bills and a card in it. She took it to the police station near her house. The officer thanked her and asked for her name and address.\nA week later, Mia got a letter. It was from the man who lost the wallet. He wrote, \"Thank you very much. You are an honest girl.\" Mia was very happy. She wrote about the letter in her diary that night."
+'g3-reading-story-2':"Mia has kept a diary since she was ten. She writes about interesting things every night. Last month, something surprising happened.\nMia was walking home from school when she saw an old wallet on the road. There were some bills and a card in it. She took it to the police station near her house. The officer thanked her and asked for her name and address.\nA week later, Mia got a letter. It was from the man who lost the wallet. He wrote, \"Thank you very much. You are an honest girl.\" Mia was very happy. She wrote about the letter in her diary that night.",
+'gpre2-reading-notice-1':"School Trip to Nara\nOur school trip will be on May 15th and 16th. We will visit old temples in Nara. On the first day, we will walk around Nara Park and see many deer. Lunch is curry and rice at a restaurant near the park. On the second day, we will visit a museum. The bus leaves school at eight in the morning. Do not be late. Bring your health insurance card and some money for souvenirs.",
+'gpre2-reading-notice-2':"Recycling Day\nOur town will have a recycling day on the first Sunday of every month. You can bring old newspapers, cans, and bottles to Green Park from nine to twelve. Workers will teach children how to separate garbage. Last month, more than 200 people came. If it rains, the event will be held the next Sunday. For more information, call the town office.",
+'gpre2-reading-email-1':"Hi Sara,\nHow are you? I joined the basketball team last month. We practice three times a week after school. At first, I could not catch the ball well. But our captain is kind and teaches me a lot. Last Saturday, we played our first game. We lost the game, but I scored two points. I was very happy.\nWe will have another game next month. Please come and watch us.\nTakeshi",
+'gpre2-reading-email-2':"Dear Mr. Tanaka,\nThank you for showing us your farm yesterday. We enjoyed picking strawberries very much. They were sweet and fresh. I had never eaten such delicious strawberries before.\nOur teacher took many pictures during the trip. She will show them in class next week. I am looking forward to seeing them.\nAlso, my mother wants to buy some of your vegetables. Can she visit your farm this weekend?\nBest wishes,\nAki",
+'gpre2-reading-story-1':"One rainy evening, Kenta found a wet kitten in front of his house. It was shaking, so he brought it inside and dried it with an old towel. He gave it some warm milk. His mother was surprised but said, \"You did the right thing.\"\nKenta named the kitten Mugi and made a small bed for it. Every day after school, he played with Mugi in the garden. Soon Mugi became healthy and active.\nA month later, a neighbor visited Kenta's house. She looked at Mugi and said in surprise, \"This is my cat, Tora! He ran away in the rain a month ago.\" Kenta was sad, but he returned Tora to her. The neighbor thanked him and said, \"Please come and play with Tora any time.\" Kenta smiled. He had lost Mugi, but he had found a new friend.",
+'gpre2-reading-story-2':"Yumi's grandmother lived alone in the mountains. Every summer, Yumi visited her and stayed for a week. They picked vegetables in the garden and cooked dinner together. At night, her grandmother told her old stories.\nLast summer, Yumi noticed something different. Her grandmother often forgot small things. One day, she forgot where she put her glasses. Yumi helped her look for them everywhere. At last, they found the glasses in the refrigerator.\nYumi was worried, so after going home, she called her grandmother every Sunday. Her grandmother was always happy to hear her voice. Yumi learned that a short call can make someone's day."
 };
 const QUESTION_BANKS = {
 '4': {
@@ -1045,6 +1128,15 @@ station:[],
 park:[],
 flower:[],
 essay:REVIEW_ARCHIVE['3'].essay
+},
+'pre2': {
+library:REVIEW_ARCHIVE['pre2'].library,
+school:REVIEW_ARCHIVE['pre2'].school,
+cafe:REVIEW_ARCHIVE['pre2'].cafe,
+station:[],
+park:[],
+flower:[],
+essay:REVIEW_ARCHIVE['pre2'].essay
 }
 };
 const PRACTICE_ORDER_DATA = {
@@ -1087,6 +1179,26 @@ const PRACTICE_ORDER_DATA = {
  ["富士山は日本で最も高い山です。",["Mt. Fuji","is","highest","mountain","the"],[1,2,5,3,4],""," in Japan.","Mt. Fuji is the highest mountain in Japan. の順。the highest は最も高い。"],
  ["ケンは私より速く走れます。",["can","Ken","faster","run","than me"],[2,1,4,3,5],"",".","Ken can run faster than me. の順。faster than で〜より速く。"],
  ["私たちは昨夜宿題をしなければなりませんでした。",["had","We","homework","to do","our"],[2,1,4,5,3],""," last night.","We had to do our homework last night. の順。had to で過去の〜しなければならなかった。"]
+],
+'pre2':[
+ ["私は毎朝7時に新聞を読みます。",["read","I","morning","the newspaper","every"],[2,1,4,5,3],"",".","I read the newspaper every morning. の順。every morning は毎朝。"],
+ ["彼女は去年東京へ引っ越しました。",["moved","She","to","Tokyo","last year"],[2,1,3,4,5],"",".","She moved to Tokyo last year. の順。moved は move の過去形。last year は去年。"],
+ ["私たちは放課後テニスをします。",["play","We","school","tennis","after"],[2,1,4,5,3],"",".","We play tennis after school. の順。after school は放課後。"],
+ ["あなたは犬がとても好きですか。",["like","Do","dogs","you","very much"],[2,4,1,3,5],"","?","Do you like dogs very much? の順。Do + 主語 + 動詞の原形。"],
+ ["彼はサッカーが上手です。",["is","He","soccer","good","at"],[2,1,4,5,3],"",".","He is good at soccer. の順。be good at で〜が上手。"],
+ ["母は私たちにおいしい夕食を作ってくれました。",["cooked","My mother","dinner","delicious","a"],[2,1,5,4,3],""," for us.","My mother cooked a delicious dinner for us. の順。cooked は cook の過去形。"],
+ ["私は子どもの頃から彼を知っています。",["have","I","him","known","since"],[2,1,4,3,5],""," I was a child.","I have known him since I was a child. の順。have known、since + 文で〜以来。"],
+ ["このカメラは日本で作られました。",["made","was","This camera","Japan","in"],[3,2,1,5,4],"",".","This camera was made in Japan. の順。was made で作られた。"],
+ ["あなたはこの本を読み終えましたか。",["you","Have","yet","finished","this book"],[2,1,4,5,3],"","?","Have you finished this book yet? の順。Have you + 過去分詞で完了を聞く。yet はもう。"],
+ ["彼らは3時に会議を始めます。",["start","They","meeting","will","the"],[2,4,1,5,3],""," at three.","They will start the meeting at three. の順。will + 原形で未来。"],
+ ["私は昨日新しい自転車を買いました。",["bought","I","bike","new","a"],[2,1,5,4,3],""," yesterday.","I bought a new bike yesterday. の順。a new bike は新しい自転車。"],
+ ["あなたはもっと野菜を食べるべきです。",["should","You","vegetables","eat","more"],[2,1,4,5,3],"",".","You should eat more vegetables. の順。should は〜すべき。"],
+ ["もし時間があれば彼を訪ねるのですが。",["had","I","him","If","time"],[4,1,2,5,3],"",", I would visit him.","If I had time, I would visit him. の順。仮定法過去では If + 過去形。"],
+ ["私が着いたとき彼らはすでに出発していました。",["had","They","arrived","already","left"],[2,1,4,5,3],""," when I arrived.","They had already left when I arrived. の順。had already + 過去分詞。"],
+ ["私は昨日買った本を読んでいます。",["book","the","bought","I","yesterday"],[2,1,4,3,5],"I am reading ",".","I am reading the book I bought yesterday. の順。the book (I) bought yesterday は昨日買った本。関係代名詞の省略。"],
+ ["彼女はその知らせを聞いて驚きました。",["was","She","surprised","to hear","the news"],[2,1,3,4,5],"",".","She was surprised to hear the news. の順。be surprised to で〜して驚く。"],
+ ["この本はあの本よりずっと面白いです。",["is","This book","interesting","more","much"],[2,1,5,4,3],""," than that one.","This book is much more interesting than that one. の順。much + 比較級でずっと〜。"],
+ ["私は夕食の前に宿題を終えました。",["done","I","homework","had","my"],[2,4,1,5,3],""," before dinner.","I had done my homework before dinner. の順。had done で〜し終えていた。"]
 ],
 '4':[
 ["あなたは昨日何色を選びましたか。",["choose","you","What","did","color"],[3,5,4,2,1],""," yesterday?","What color did you choose yesterday? の順。What color は何色。did の後は原形 choose。"],
@@ -1150,6 +1262,26 @@ const PRACTICE_LISTENING_DATA = {
  ['passage',3,[{speaker:'narrator',text:"Tom wanted to buy a birthday present for his mother. He saved his money for three months. Last Sunday, he bought a beautiful scarf. His mother was very happy."}],"How long did Tom save money?",["For a week.","For a month.","For three months.","For a year."],2,"「トムは母への誕生日プレゼントを買いたく、3か月お金を貯めた。先週日曜に美しいスカーフを買うと母はとても喜んだ」。for three months は3か月間。"],
  ['passage',3,[{speaker:'narrator',text:"Our town has a new library. It opens at nine in the morning and closes at seven in the evening. It is closed on Mondays. Many children read books there on weekends."}],"When is the library closed?",["On Sundays.","On Mondays.","In the morning.","In the evening."],1,"「町に新しい図書館ができた。午前9時開館、午後7時閉館。月曜休館」。closed on Mondays は月曜休み。"]
 ],
+'pre2':[
+ ['response',1,[{speaker:'A',text:"What day is it today?"}],"",["It's Friday.","It's sunny.","It's May."],0,"「今日は何曜日ですか」「金曜日です」。What day は曜日を聞く。",'school'],
+ ['response',1,[{speaker:'A',text:"How much are these apples?"}],"",["They're 300 yen.","They're red.","They're sweet."],0,"「このりんごはいくらですか」「300円です」。How much は値段。",'shop'],
+ ['response',2,[{speaker:'A',text:"How long does it take to get to the station?"}],"",["About ten minutes on foot.","Two kilometers.","At eight."],0,"「駅までどのくらいかかりますか」「歩いて約10分」。How long は所要時間。",'library'],
+ ['response',2,[{speaker:'A',text:"What does your father do?"}],"",["He's a teacher.","He's tall.","He's fine."],0,"「お父さんは何をしていますか(職業)」「先生です」。What does ... do? は職業を聞く。",'school'],
+ ['response',3,[{speaker:'A',text:"Why were you absent yesterday?"}],"",["I had a fever.","For three hours.","With my sister."],0,"「なぜ昨日休んだのですか」「熱がありました」。Why には理由を答える。",'sports'],
+ ['response',3,[{speaker:'A',text:"Could you tell me the way to the library?"}],"",["Go straight and turn left.","It's big.","I like books."],0,"「図書館への道を教えてくれますか」「まっすぐ行って左に曲がって」。道順を答える。",'library'],
+ ['dialogue',1,[{speaker:'A',text:"What did you do last Sunday, Ken?"},{speaker:'B',text:"I played soccer with my friends."}],"What did Ken do last Sunday?",["Played soccer.","Watched TV.","Went shopping.","Studied English."],0,"「先週の日曜何をしたの」「友達とサッカーをした」。played soccer に注意。"],
+ ['dialogue',1,[{speaker:'A',text:"Is there a bank near here?"},{speaker:'B',text:"Yes. There is one next to the post office."}],"Where is the bank?",["Next to the post office.","In front of the school.","Behind the park.","Far from here."],0,"「近くに銀行はありますか」「はい。郵便局の隣にあります」。next to は〜の隣。"],
+ ['dialogue',2,[{speaker:'A',text:"How was your trip to Kyoto, Lisa?"},{speaker:'B',text:"It was great. The temples were beautiful."}],"How was Lisa's trip?",["It was boring.","It was great.","It was tiring.","It was short."],1,"「京都旅行はどうだった」「素晴らしかった」。It was great が感想。"],
+ ['dialogue',2,[{speaker:'A',text:"What time does the movie start?"},{speaker:'B',text:"At seven, but let's meet at six thirty."}],"What time will they meet?",["At seven.","At six thirty.","At six.","At seven thirty."],1,"「映画は何時から」「7時。でも6時半に会おう」。待ち合わせは6時半。"],
+ ['dialogue',3,[{speaker:'A',text:"Have you ever been abroad, Mr. White?"},{speaker:'B',text:"Yes. I lived in Canada for two years."}],"How long did Mr. White live in Canada?",["For a year.","For two years.","For three years.","He has never been abroad."],1,"「海外に行ったことがありますか」「はい。カナダに2年住んだ」。for two years が期間。"],
+ ['dialogue',3,[{speaker:'A',text:"Why is the train late today?"},{speaker:'B',text:"Because of the heavy snow in the mountains."}],"Why is the train late?",["Because of an accident.","Because of the heavy snow.","Because of the rain.","Because of the wind."],1,"「なぜ電車が遅れているの」「山の大雪のため」。Because of + 名詞で理由。"],
+ ['passage',1,[{speaker:'narrator',text:"My sister is twelve years old. She gets up at six thirty every day. She eats breakfast quickly and runs to school. She is never late for school."}],"What time does his sister get up?",["At six.","At six thirty.","At seven.","At seven thirty."],1,"「妹は12歳。毎日6時半に起き、急いで朝食を食べて走って登校する。遅刻しない」。起床は6時半。"],
+ ['passage',1,[{speaker:'narrator',text:"Our school has a big sports day in October. All students run, jump, and play games. My class won the relay race last year. We want to win again this year."}],"When is the sports day?",["In September.","In October.","In November.","In December."],1,"「学校では10月に大きな運動会がある」。in October が時期。"],
+ ['passage',2,[{speaker:'narrator',text:"Last month, I lost my bag on the train. There were my textbook and my favorite pen in it. I went to the station office the next day. Luckily, someone had taken it there. I was very happy."}],"Where did the speaker go the next day?",["To the school.","To the police station.","To the station office.","To the store."],2,"「先月電車にかばんを忘れた。教科書とお気に入りのペンが入っていた。翌日駅の事務所へ行くと誰かが届けてくれていた」。station office が場所。"],
+ ['passage',2,[{speaker:'narrator',text:"Emma wanted to buy a birthday cake for her mother. She saved her money for two months. Yesterday, she went to a cake shop with her father. They chose a strawberry cake together. Her mother will be surprised."}],"How long did Emma save money?",["For a week.","For a month.","For two months.","For a year."],2,"「エマは母の誕生日ケーキを買いたく2か月貯金した」。for two months が期間。"],
+ ['passage',3,[{speaker:'narrator',text:"Many people in our town ride bicycles to work or school. Bicycles do not use gasoline, so the air stays clean. Also, riding a bicycle is good exercise. Our town made new bicycle roads last year. Now more people enjoy riding."}],"Why is riding bicycles good for the town?",["Because bicycles are fast.","Because the air stays clean.","Because bicycles are cheap.","Because roads are wide."],1,"「町の多くの人が自転車通勤・通学する。ガソリンを使わないので空気がきれいに保たれる」。the air stays clean が理由。"],
+ ['passage',3,[{speaker:'narrator',text:"Kenji entered a speech contest last month. He practiced his speech every day for three weeks. On the day, he was very nervous at first. But he spoke slowly and clearly. In the end, he won second prize. He wants to try again next year."}],"What prize did Kenji win?",["First prize.","Second prize.","Third prize.","He won nothing."],1,"「ケンジは先月スピーチコンテストに出た。3週間毎日練習し、本番は最初緊張したがゆっくりはっきり話し、2位になった」。second prize が結果。"]
+],
 '4':[
 ['response',1,[{speaker:'A',text:"Where did you buy your new shoes?"}],"",["Last Saturday.","At the sports shop.","They were twenty dollars."],1,"「新しい靴はどこで買ったの」「スポーツ用品店で」。Where did you buy は買った場所を聞く。",'shop'],
 ['response',1,[{speaker:'A',text:"What are you going to study tonight?"}],"",["At seven o'clock.","In my room.","Math and English."],2,"「今夜は何を勉強する予定？」「数学と英語」。What は教科を聞いている。be going to は予定。",'school'],
@@ -1171,7 +1303,7 @@ const PRACTICE_LISTENING_DATA = {
 ['passage',3,[{speaker:'narrator',text:"Last month, Emma joined a running club. She wanted to run faster, but she did not enjoy practicing alone. Now she runs with five other students twice a week. They encourage each other. Emma likes running much more now and wants to enter a race in October."}],"Why did Emma join the running club?",["To teach young children.","To spend less time running.","To practice alone every day.","To learn to run faster with other people."],3,"「先月エマは走るクラブに入りました。もっと速くなりたかったが一人での練習は楽しくありませんでした。今は他の生徒5人と週2回走り、互いに励まし合っています。10月の大会に出たいと思っています」。他の人と練習して速く走れるようになるために入部。"]
 ]
 };
-for(const grade of ['4','5','3']){
+for(const grade of ['4','5','3','pre2']){
  QUESTION_BANKS[grade].park=PRACTICE_LISTENING_DATA[grade].map(([part,d,segments,q,c,a,e,scene],i)=>({
   id:`g${grade}-park-${101+i}`,d,kind:'listening',part,segments,q,c,a,e,
   ...(scene?{scene,picture:PRACTICE_PICTURES[scene]}:{})
@@ -1241,6 +1373,38 @@ const PRACTICE_READING_DATA = [
  ["Where did Mia take the wallet?",["To her school.","To the police station.","To her house.","To the store."],1,"家の近くの交番へ届けた。took it to the police station near her house とある。"],
  ["What was in the wallet?",["Some bills and a card.","Some photos and keys.","A phone and money.","Books and pencils."],0,"お札とカードが入っていた。There were some bills and a card in it. とある。"],
  ["Who wrote a letter to Mia?",["The police officer.","The man who lost the wallet.","Her teacher.","Her friend."],1,"財布をなくした男性からの手紙だった。from the man who lost the wallet とある。"]
+]],
+['pre2','notice',1,[
+ ["How long is the school trip?",["One day.","Two days.","Three days.","A week."],1,"5月15日と16日の1泊2日。on May 15th and 16th とある。"],
+ ["What should students bring?",["Lunch and drinks.","A health insurance card and some money.","A camera and maps.","Books and pencils."],1,"持ち物は健康保険証とお土産用のお金。Bring your health insurance card and some money for souvenirs. とある。昼食はレストランで出る。"]
+]],
+['pre2','notice',2,[
+ ["When is the recycling day?",["Every Saturday.","On the first Sunday of every month.","On the last Sunday of every month.","Every day."],1,"毎月第1日曜日。on the first Sunday of every month とある。"],
+ ["What happens if it rains?",["The event is canceled.","It is held the next Sunday.","It moves to the town office.","It starts later."],1,"雨天時は翌週日曜に順延。will be held the next Sunday とある。"]
+]],
+['pre2','email',1,[
+ ["How often does Takeshi practice basketball?",["Every day.","Three times a week.","Once a month.","Twice a year."],1,"週3回放課後に練習。three times a week after school とある。"],
+ ["How did Takeshi feel after the first game?",["Sad because they lost.","Angry at the captain.","Happy because he scored.","Tired and sleepy."],2,"負けたが2点決めて嬉しかった。I scored two points. I was very happy. とある。"],
+ ["What does Takeshi want Sara to do?",["Join the team.","Come and watch the next game.","Teach him basketball.","Buy a new ball."],1,"来月の試合を見に来てほしい。Please come and watch us. とある。"]
+]],
+['pre2','email',2,[
+ ["What did Aki enjoy on the farm?",["Riding horses.","Picking strawberries.","Swimming in the river.","Catching fish."],1,"いちご狩りを楽しんだ。picking strawberries とある。"],
+ ["What will the teacher do next week?",["Visit the farm again.","Show pictures in class.","Give a test.","Plant vegetables."],1,"来週授業で写真を見せる。will show them in class next week とある。"],
+ ["What does Aki's mother want to do?",["Visit the farm this weekend.","Meet the teacher.","Buy strawberries at a store.","Grow vegetables."],0,"母が週末に農場を訪ねて野菜を買いたい。Can she visit your farm this weekend? とある。"]
+]],
+['pre2','story',1,[
+ ["How was the kitten when Kenta found it?",["Happy and active.","Wet and shaking.","Sleeping quietly.","Eating bread."],1,"雨に濡れて震えていた。wet ... shaking とある。"],
+ ["What did Kenta name the kitten?",["Tora.","Mugi.","Sora.","Kenta did not name it."],1,"ムギと名付けた。named the kitten Mugi とある。"],
+ ["Who did the kitten really belong to?",["Kenta.","His mother.","The neighbor.","Nobody."],2,"実は隣の人の猫トラだった。This is my cat, Tora! とある。"],
+ ["Why was Kenta sad?",["He lost his towel.","He had to return Tora.","The neighbor was angry.","Mugi was sick."],1,"トラを返さねばならず悲しかった。he returned Tora to her とある。"],
+ ["What did Kenta get in the end?",["A new kitten.","A new friend.","A new towel.","Nothing."],1,"新しい友達(隣の人)を得た。Please come and play with Tora any time. とある。"]
+]],
+['pre2','story',2,[
+ ["Where did Yumi stay in summer?",["At her friend's house.","At her grandmother's house in the mountains.","At a hotel.","At school."],1,"山に住む祖母の家に1週間滞在。stayed for a week とある。"],
+ ["What was different last summer?",["Her grandmother often forgot small things.","The garden was gone.","It rained every day.","Yumi stayed for a month."],0,"祖母が小さなことをよく忘れるようになった。often forgot small things とある。"],
+ ["Where were the glasses?",["On the table.","In the garden.","In the refrigerator.","Under the bed."],2,"眼鏡は冷蔵庫の中にあった。in the refrigerator とある。"],
+ ["What does Yumi do after going home?",["Visits every week.","Calls every Sunday.","Writes letters.","Sends pictures."],1,"帰宅後は毎週日曜に電話する。called her grandmother every Sunday とある。"],
+ ["What did Yumi learn?",["Old stories are boring.","A short call can make someone's day.","Glasses are important.","Mountains are cold."],1,"短い電話が人の一日を良くすると学んだ。a short call can make someone's day とある。"]
 ]]
 ];
 for(const [rg,genre,n,questions] of PRACTICE_READING_DATA){
@@ -1251,7 +1415,7 @@ for(const [rg,genre,n,questions] of PRACTICE_READING_DATA){
   passage:PRACTICE_PASSAGES[group],q,c,a,e
  });
 }
-for(const grade of ['4','5','3']){
+for(const grade of ['4','5','3','pre2']){
  QUESTION_BANKS[grade].station=PRACTICE_ORDER_DATA[grade].map(([jp,units,order,prefix,suffix,e],i)=>{
   const positions=grade==='5'?[1,3]:[2,4];
   const answer=positions.map(p=>order[p-1]);
@@ -1300,7 +1464,7 @@ const BUILDINGS=[
 {id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2'],desc:'本番形式の英作文（3級・準2級のみ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
-function buildingGrades(b){return b.grades||['4','5','3']}
+function buildingGrades(b){return b.grades||['4','5','3','pre2']}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -3159,6 +3323,9 @@ function openSettings(){
    </button>
    <button type="button" class="grade-card" data-grade="3" aria-pressed="${activeGrade==='3'}" aria-label="英検3級" aria-describedby="settings-grade-3-description">
     <span class="grade-name">英検3級</span><span class="grade-description" id="settings-grade-3-description">4級の次のステップへ</span><span class="grade-status">${activeGrade==='3'?'選択中':'選ぶ'}</span>
+   </button>
+   <button type="button" class="grade-card" data-grade="pre2" aria-pressed="${activeGrade==='pre2'}" aria-label="英検準2級" aria-describedby="settings-grade-pre2-description">
+    <span class="grade-name">英検準2級</span><span class="grade-description" id="settings-grade-pre2-description">3級の次のステップへ</span><span class="grade-status">${activeGrade==='pre2'?'選択中':'選ぶ'}</span>
    </button>
   </div>
  </fieldset>
