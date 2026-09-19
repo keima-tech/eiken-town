@@ -1202,6 +1202,17 @@ if (require.main === module) {
     assert.deepEqual(json('state.review'), json('session.qs.slice(0,1).map(item=>item.id)'));
   });
 
+  test('order questions assemble into the sentences quoted in explanations', () => {
+    const app = loadApp();
+    for (const grade of ['4', '5', '3', 'pre2']) {
+      for (const q of app.json(`QUESTION_BANKS['${grade}'].station`)) {
+        const full = (q.prefix + ' ' + q.order.map(n => q.units[n - 1]).join(' ') + ' ' + q.suffix).replace(/\s+/g, ' ').replace(/\s+([.,?!])/g, '$1').trim();
+        const quoted = q.e.split(' の順')[0].trim();
+        assert.equal(full, quoted, `${q.id} assembly`);
+      }
+    }
+  });
+
   test('grade-pre2 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
     assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['pre2'][c].length)`), [18, 18, 18, 18, 18]);
@@ -1212,6 +1223,58 @@ if (require.main === module) {
     assert.equal(app.run(`QUESTION_BANKS['pre2'].essay.length`), 6);
   });
 
+  test('grade-pre2 essay submission records coins without review entries', () => {
+    const app = loadApp();
+    const { run, get, json } = app;
+    run("activeGrade='pre2'; state=freshState('pre2'); state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); startSession('essay',false)");
+    const box = get('#wr-box');
+    box.value = 'I think school uniforms are necessary for students in Japan. First, all students look equal and nobody worries about fashion in class. Second, students can get ready quickly every morning without choosing clothes. However, schools should sometimes allow free dress days for everyone.';
+    box.dispatchEvent({ type: 'input' });
+    get('#wr-submit').click();
+    for (const input of get('#wr-checks').querySelectorAll('input')) {
+      input.checked = true;
+      input.dispatchEvent({ type: 'change' });
+    }
+    get('#wr-done').click();
+    assert.equal(run('session.coinsEarned') > 0, true);
+    assert.deepEqual(json('state.review'), []);
+  });
+
+  test('grade-pre2 flower reading uses one grouped passage and pre2 review ids resolve', () => {
+    const app = loadApp();
+    const { run, get, json } = app;
+    run("activeGrade='pre2'; state=freshState('pre2'); state.coins=1000; BUILDINGS.forEach((b,i)=>confirmBuild(i,b.cat)); state.placed.flower.level=2; startSession('flower',false)");
+    assert.equal(run('session.qs.length'), 3);
+    assert.equal(run('new Set(session.qs.map(item=>item.q.group)).size'), 1, 'single group');
+    assert.equal(run('session.qs.every(item=>item.id.startsWith("gpre2-flower-"))'), true);
+    assert.equal(get('.reading-passage').textContent, run('session.qs[0].q.passage'));
+    assert.equal(run(`validReview('gpre2-station-101','pre2')`), true);
+    assert.equal(run(`validReview('g4-station-101','pre2')`), false);
+    assert.equal(run(`validReview('gpre2-station-101','4')`), false);
+  });
+
+  test('essay workshop unlocks after flower in grade pre2', () => {
+    const app = loadApp();
+    const { run, get } = app;
+    run("activeGrade='pre2'; state=freshState('pre2'); state.coins=1000");
+    run("['library','school','cafe','station','park'].forEach((c,i)=>confirmBuild(i,c)); openPalette()");
+    assert.equal(get('[data-cat="essay"]').disabled, true);
+    run("closeModal(); confirmBuild(5,'flower'); openPalette()");
+    assert.equal(run('state.unlocked.includes("essay")'), true);
+    assert.equal(get('[data-cat="essay"]').disabled, false);
+  });
+
+  test('grade labels show 準2級 and tutorial counts seven buildings', () => {
+    const app = loadApp();
+    const { run, get } = app;
+    run("activeGrade='pre2'; state=freshState('pre2'); refreshGradeUI()");
+    assert.equal(get('#active-grade').textContent, '準2級');
+    run('openTutorial()');
+    assert.match(get('#modal').textContent, /7つの建物/);
+    run("closeModal(); activeGrade='4'; state=freshState('4'); refreshGradeUI(); openTutorial()");
+    assert.match(get('#modal').textContent, /6つの建物/);
+    assert.equal(get('#active-grade').textContent, '4級');
+  });
   test('grade-pre2 essay uses real-exam format with 50-80 word target', () => {
     const app = loadApp();
     const { run, get } = app;
