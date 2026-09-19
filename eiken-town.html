@@ -1264,7 +1264,7 @@ for(const grade of ['4','5','3']){
 }
 </script>
 <script>
-function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'}
+function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'||grade==='pre2'}
 function questionsForGrade(grade=state?.grade||'4'){return typeof QUESTION_BANKS==='undefined'?undefined:QUESTION_BANKS?.[grade]}
 function reviewBanks(grade){return[questionsForGrade(grade),typeof REVIEW_ARCHIVE==='undefined'?undefined:REVIEW_ARCHIVE?.[grade]].filter(bank=>bank&&typeof bank==='object')}
 function questionById(id,grade=state?.grade||'4'){
@@ -1288,7 +1288,8 @@ const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ 
 function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):CAT_TAG[cat]}
 function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
 function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
-function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
+function writingChecks(grade){return[grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':grade==='pre2'?'50〜80語を目標に、理由を2つ書いた':'15〜25語を目標に書いた','大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
+const WRITING_RANGE={'5':[5,15],'3':[25,50],'pre2':[50,80]};
 const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
 {id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',desc:'文法(ぶんぽう)クイズ'},
@@ -1296,7 +1297,7 @@ const BUILDINGS=[
 {id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',desc:'並べかえ(じゅんばん)クイズ'},
 {id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',desc:'リスニング(ちょうかい)'},
 {id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'},
-{id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3'],desc:'本番形式の英作文（3級のみ）'}
+{id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2'],desc:'本番形式の英作文（3級・準2級のみ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
 function buildingGrades(b){return b.grades||['4','5','3']}
@@ -1425,7 +1426,7 @@ function loadState(){
  if(d&&typeof d==='object'&&!Array.isArray(d)&&d.v===5){
   if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns)){loadBlockError('malformed');return null}
   const next={},nextGrade=validGrade(d.activeGrade)?d.activeGrade:'4';
-  for(const grade of ['4','5','3']){
+  for(const grade of ['4','5','3','pre2']){
    if(!Object.hasOwn(d.towns,grade))continue;
    const town=migrate(d.towns[grade],grade);
    if(!town){loadBlockError('malformed');return null}
@@ -1635,7 +1636,7 @@ function openTutorial(){
 function renderTut(){
  const p=TUT[tutPage];
  const last=tutPage===TUT.length-1;
- const body=tutPage===0?p.d.replace('6つの建物',(state.grade==='3'?'7つの建物':'6つの建物')):p.d;
+ const body=tutPage===0?p.d.replace('6つの建物',((state.grade==='4'||state.grade==='5')?'6つの建物':'7つの建物')):p.d;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${body}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
@@ -2956,8 +2957,8 @@ function wordCount(s){return s.trim()?s.trim().split(/\s+/).filter(Boolean).leng
 function renderWriting(card,zone,item){
  const s=session,i=s.i;
  const q=item.q;
- const min=s.grade==='5'?5:s.grade==='3'?25:15,max=s.grade==='5'?15:s.grade==='3'?50:25;
- card.innerHTML=`<span class="qcat-tag">${s.grade==='3'?'英作文（本番形式）':'追加作文練習（本番の試験ではありません）'}</span>
+ const[min,max]=WRITING_RANGE[s.grade]||[15,25];
+ card.innerHTML=`<span class="qcat-tag">${s.grade==='5'?'追加作文練習（本番の試験ではありません）':'英作文（本番形式）'}</span>
  <div class="qtext" style="font-size:min(4.8vw,23px)">${q.en}</div>
  ${q.points?`<div class="order-frame" style="margin-top:10px"><b>📝 POINTS（観点）:</b><br>${q.points.map((p,k)=>`${k+1}. ${p}`).join('<br>')}</div>`:''}
  <div class="qjp">${q.jp}</div>
