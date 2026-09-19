@@ -1415,6 +1415,26 @@ if (require.main === module) {
     assert.match(get('#modal').textContent, /8つの建物/);
     assert.equal(get('#active-grade').textContent, '2級');
   });
+
+  test('title flower guide renders breaks instead of raw markup', () => {
+    const app = loadApp();
+    app.run("activeGrade='4'; refreshGradeUI()");
+    assert.match(app.get('#title-flower').innerHTML, /<br/);
+    assert.doesNotMatch(app.get('#title-flower').textContent, /<br/);
+  });
+
+  test('tutorial finish toast appears only after starting the town', () => {
+    const { run, get } = loadApp();
+    const count = () => get('#toast-root').children.length;
+    run("show('scr-title'); openTutorial(); tutPage=5; renderTut()");
+    const before = count();
+    get('#tut-next').click();
+    assert.equal(count(), before);
+    run("show('scr-town'); openTutorial(); tutPage=5; renderTut()");
+    get('#tut-next').click();
+    assert.equal(count(), before + 1);
+    assert.match(get('#toast-root').children.at(-1).textContent, /図書館/);
+  });
   test('grade-pre2 essay uses real-exam format with 50-80 word target', () => {
     const app = loadApp();
     const { run, get } = app;

@@ -2004,7 +2004,7 @@ function renderTut(){
  <button class="btn pinky big" id="tut-next">${last?'さあ、はじめよう!🎉':'つぎへ ▶'}</button>
  </div>`);
  $('#tut-next').onclick=()=>{
-  if(last){closeModal();toast('街づくりの基本はOK!まずは図書館📚を建ててみよう!')}
+  if(last){closeModal();if($('#scr-town').classList.contains('active'))toast('街づくりの基本はOK!まずは図書館📚を建ててみよう!')}
   else{tutPage++;renderTut()}
  };
  $('#tut-skip').onclick=closeModal;
@@ -3442,7 +3442,7 @@ function goHome(){
 }
 
 function refreshGradeUI(){
- $('#title-flower').textContent=flowerGuide(activeGrade);
+ $('#title-flower').innerHTML=flowerGuide(activeGrade);
  const exists=!!towns[activeGrade];
  document.querySelectorAll('.grade-card').forEach(button=>{
   const selected=button.dataset.grade===activeGrade;
