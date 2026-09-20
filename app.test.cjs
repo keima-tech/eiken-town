@@ -244,7 +244,7 @@ if (require.main === module) {
     const app = loadApp({ html });
     assert.deepEqual(app.json('Object.keys(QUESTION_BANKS)'), ['2', '3', '4', '5', 'pre2', 'pre1']);
     for (const grade of ['4', '5', '3', 'pre2', '2', 'pre1']) {
-      const expectedCats = (grade === '4' || grade === '5') ? ['library', 'school', 'cafe', 'station', 'park', 'flower'] : grade === '3' ? ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay'] : grade === 'pre1' ? ['library', 'flower', 'station', 'park'] : ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay', 'summary'];
+      const expectedCats = (grade === '4' || grade === '5') ? ['library', 'school', 'cafe', 'station', 'park', 'flower'] : grade === '3' ? ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay'] : grade === 'pre1' ? ['library', 'flower', 'station', 'park', 'essay', 'summary'] : ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay', 'summary'];
       assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['${grade}'])`), expectedCats);
     }
   });
@@ -257,7 +257,7 @@ if (require.main === module) {
   });
 
   for (const grade of ['4', '5', '3', 'pre2', '2', 'pre1']) {
-    for (const cat of ((grade === '4' || grade === '5') ? ['library', 'school', 'cafe', 'station', 'park', 'flower'] : grade === '3' ? ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay'] : grade === 'pre1' ? ['library', 'flower', 'station', 'park'] : ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay', 'summary'])) {
+    for (const cat of ((grade === '4' || grade === '5') ? ['library', 'school', 'cafe', 'station', 'park', 'flower'] : grade === '3' ? ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay'] : grade === 'pre1' ? ['library', 'flower', 'station', 'park', 'essay', 'summary'] : ['library', 'school', 'cafe', 'station', 'park', 'flower', 'essay', 'summary'])) {
       for (const level of [1, 2, 3]) {
         test(`grade ${grade} ${cat} level ${level} tile opens menu and start button renders quiz`, () => {
           const { run, get, json } = loadApp();
@@ -1604,11 +1604,16 @@ if (require.main === module) {
 
   test('grade-pre1 banks hold library, flower, cloze and listening sets', () => {
     const app = loadApp();
-    assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['pre1'])`), ['library', 'flower', 'station', 'park']);
+    assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['pre1'])`), ['library', 'flower', 'station', 'park', 'essay', 'summary']);
     assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].library.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].flower.length`), 20);
     assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].flower.map(q=>q.group))].sort()`), ['gpre1-reading-email-1', 'gpre1-reading-email-2', 'gpre1-reading-notice-1', 'gpre1-reading-notice-2', 'gpre1-reading-story-1', 'gpre1-reading-story-2']);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].station.length`), 18);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 18);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.length`), 6);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.length`), 6);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.every(q=>{const n=wordCount(q.sample);return n>=120&&n<=150})`), true);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.every(q=>{const n=wordCount(q.sample);return n>=60&&n<=90})`), true);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 18);
     assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['pre1'].park.filter(q=>q.part===part).length===6)`), true);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].station.every(q=>q.kind==='reading')`), true);
@@ -1648,7 +1653,9 @@ if (require.main === module) {
     assert.equal(get('[data-cat="station"]').disabled, true);
     assert.equal(get('[data-cat="flower"]').disabled, true);
     assert.equal(get('[data-cat="park"]').disabled, true);
-    for (const missing of ['school', 'cafe', 'essay', 'summary']) assert.equal(get(`[data-cat="${missing}"]`), null);
+    assert.equal(get('[data-cat="essay"]').disabled, true);
+    assert.equal(get('[data-cat="summary"]').disabled, true);
+    for (const missing of ['school', 'cafe']) assert.equal(get(`[data-cat="${missing}"]`), null);
     run("closeModal(); confirmBuild(0,'library'); openPalette()");
     assert.equal(run('state.unlocked.includes("station")'), true);
     assert.equal(run('state.unlocked.includes("flower")'), false);
@@ -1660,8 +1667,15 @@ if (require.main === module) {
     run("closeModal(); confirmBuild(2,'park'); openPalette()");
     assert.equal(run('state.unlocked.includes("flower")'), true);
     assert.equal(get('[data-cat="flower"]').disabled, false);
+    run("closeModal(); confirmBuild(3,'flower'); openPalette()");
+    assert.equal(run('state.unlocked.includes("essay")'), true);
+    assert.equal(run('state.unlocked.includes("summary")'), false);
+    assert.equal(get('[data-cat="essay"]').disabled, false);
+    run("closeModal(); confirmBuild(4,'essay'); openPalette()");
+    assert.equal(run('state.unlocked.includes("summary")'), true);
+    assert.equal(get('[data-cat="summary"]').disabled, false);
     run("closeModal(); renderMap()");
-    assert.equal(get('#town-stats').textContent, '建物 3/4');
+    assert.equal(get('#town-stats').textContent, '建物 5/6');
   });
 
   test('grade labels show 準1級 and tutorial counts staged buildings', () => {
@@ -1670,7 +1684,7 @@ if (require.main === module) {
     run("activeGrade='pre1'; state=freshState('pre1'); refreshGradeUI()");
     assert.equal(get('#active-grade').textContent, '準1級');
     run('openTutorial()');
-    assert.match(get('#modal').textContent, /4つの建物/);
+    assert.match(get('#modal').textContent, /6つの建物/);
   });
 
   test('grade4 flower metadata is reading while grade5 remains optional writing', () => {
@@ -1684,6 +1698,8 @@ if (require.main === module) {
     assert.equal(app.run('buildingDesc("flower","pre1")').includes('読解'), true);
     assert.equal(app.run('catTag("station","pre1")'), '📖 ちょうぶんほきゅう');
     assert.match(app.run('buildingDesc("station","pre1")'), /空所/);
+    assert.match(app.run('writingChecks("pre1")[0]'), /120〜150語/);
+    assert.match(app.run('writingChecks("pre1",true)[0]'), /自分の言葉/);
     assert.equal(app.run('buildingDesc("flower","5")').includes('本番の試験ではありません'), true);
     assert.equal(app.run('flowerGuide("4")').includes('読解'), true);
     assert.equal(app.run('flowerGuide("3")').includes('読解'), true);
