@@ -844,6 +844,13 @@ if (require.main === module) {
     assert.ok(get('#st-import-file'));
   });
 
+  test('save export on empty storage reports no data', () => {
+    const { run, get } = loadApp();
+    assert.equal(run('exportSaveJSON()'), null);
+    run('exportSave()');
+    assert.match(get('#toast-root').children.at(-1).textContent, /まだありません/);
+  });
+
   test('title screen can start from a transferred save file', () => {
     const src = loadApp();
     src.run("confirmBuild(0,'library'); state.coins=77; save()");

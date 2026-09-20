@@ -1846,6 +1846,8 @@ function exportSaveJSON(){
 }
 function exportSave(){
  if(loadBlocked||activeSession())return;
+ const r0=readRaw();
+ if(!r0.ok||!r0.raw){toast('保存するデータがまだありません');return}
  try{
   const text=exportSaveJSON();
   if(text===null||typeof Blob==='undefined'||typeof URL==='undefined'){toast('保存に失敗しました');return}
@@ -1896,6 +1898,7 @@ function importSave(file){
  try{
   const reader=new FileReader();
   reader.onload=()=>importSaveFromText(reader.result);
+  reader.onerror=()=>toast('ファイルが正しくありません');
   reader.readAsText(file);
  }catch(e){toast('ファイルが正しくありません')}
 }
