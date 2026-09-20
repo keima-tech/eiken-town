@@ -1255,6 +1255,19 @@ if (require.main === module) {
     assert.deepEqual(json('state.review'), []);
   });
 
+  test('reading answers are grounded in their passages except listed inference questions', () => {
+    const app = loadApp();
+    const stop = new Set('this,that,with,from,they,have,what,when,where,there,here,will,would,should,could,your,about,into,over,after,before,than,then,also,just,only,very,more,most,some,such,same,other,each,them,been,were,has,had,does,doing,done'.split(','));
+    const allowed = new Set(['g4-flower-108', 'gpre2-flower-101']);
+    for (const grade of ['4', '3', 'pre2', '2', 'pre1']) {
+      for (const q of app.json(`QUESTION_BANKS['${grade}'].flower`)) {
+        if (allowed.has(q.id)) continue;
+        const words = q.c[q.a].replace(/[^a-zA-Z ]/g, '').toLowerCase().split(' ').filter(w => w.length >= 4 && !stop.has(w));
+        assert.ok(words.some(w => q.passage.toLowerCase().includes(w)), `${q.id} grounded`);
+      }
+    }
+  });
+
   test('grade-2 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
     assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['2'][c].length)`), [18, 18, 18, 18, 18]);

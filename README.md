@@ -467,7 +467,7 @@
 
 ## 19. 開発・テスト
 
-- 自動テスト: `node --test app.test.cjs`（267件）。セーブデータの整合性、級別の問題バンク、UI描画、音声再生、保存エラー処理などを検証
+- 自動テスト: `node --test app.test.cjs`（268件）。セーブデータの整合性、級別の問題バンク、UI描画、音声再生、保存エラー処理などを検証
 - 問題バンクは HTML 内の `question-bank` スクリプトで定義し、級ごとに `QUESTION_BANKS` と `REVIEW_ARCHIVE` を管理
 
 ---
