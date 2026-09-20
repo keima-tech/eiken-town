@@ -1181,7 +1181,13 @@ const PRACTICE_PASSAGES = {
 'gpre1-reading-email-1':"Hi John,\nHow is life in London? I heard you entered a high school there last month. Is your English improving? Please write to me in English next time.\nI joined the English club at my school. There are twenty members, and we meet every Friday. Last week, we enjoyed talking with an exchange student from Canada. She spoke slowly, so I could understand her well.\nMy dream is to study abroad in the future like you. I will practice English hard.\nYuta",
 'gpre1-reading-email-2':"Dear Mrs. Smith,\nThank you for your kind letter. I was very happy to hear that you are well.\nI still remember the summer I spent at your house five years ago. You taught me how to make cookies, and we ate them in the garden. It was one of the most enjoyable memories of my childhood.\nNow I am practicing the piano every day because I will play at the school concert next month. I feel nervous, but I will do my best.\nPlease take care of yourself.\nSincerely,\nEmi",
 'gpre1-reading-story-1':"When Dr. Ada was a child, she loved looking at the night sky through her father's telescope. She often wondered what stars are made of. Her teachers encouraged her to study science, and she entered a famous university at eighteen.\nAfter graduation, she joined a team studying distant planets. For ten years, she observed the sky every night and recorded a huge amount of data. Many people thought her theory was wrong, but she continued her research.\nLast year, she finally discovered a new planet. Her discovery was reported in newspapers around the world. When asked about her success, she said, \"Curiosity and continuous effort brought me here. Never stop asking why.\"",
-'gpre1-reading-story-2':"Takeshi runs a small bakery in a quiet town. Every morning, he gets up at four and bakes fresh bread. His shop opens at seven, and neighbors come to buy warm bread for breakfast. His special melon bread is very popular.\nFive years ago, a large supermarket opened near his shop. Many people started shopping there because everything was cheaper. Takeshi's sales fell by half, and he thought about closing the shop.\nHowever, his regular customers encouraged him. He decided to make bread with local ingredients and tell customers about the farmers. Gradually, new customers who care about local food began to visit. Now his bakery is busier than before. Takeshi learned that small shops can survive by offering something special."
+'gpre1-reading-story-2':"Takeshi runs a small bakery in a quiet town. Every morning, he gets up at four and bakes fresh bread. His shop opens at seven, and neighbors come to buy warm bread for breakfast. His special melon bread is very popular.\nFive years ago, a large supermarket opened near his shop. Many people started shopping there because everything was cheaper. Takeshi's sales fell by half, and he thought about closing the shop.\nHowever, his regular customers encouraged him. He decided to make bread with local ingredients and tell customers about the farmers. Gradually, new customers who care about local food began to visit. Now his bakery is busier than before. Takeshi learned that small shops can survive by offering something special.",
+'gpre1-cloze-notice-1':"Book Fair\nOur school will hold a book fair (1) November 10th to 15th in the library. More than 500 books will be sold at low prices. Students can also sell books (2) they do not read anymore. If you want to sell your books, bring them to the library by November 5th. Part of the money will be used (3) new books for the library.",
+'gpre1-cloze-notice-2':"Lost and Found\nIf you lose something at school, go to the lost and found box (1) the school office. Many umbrellas, pens, and jackets are waiting (2) their owners there. Please write your name on your things. It is much easier (3) lost things when they have names.",
+'gpre1-cloze-email-1':"Dear Mr. Brown,\nThank you for showing us around your factory last week. We learned (1) chocolate is made. Your explanation was very clear, and all the students enjoyed the trip.\nWe are now studying how food is produced in different countries. Could you tell us (2) cocoa beans are grown? We would also like to know how many people (3) in your factory.\nThank you again for the wonderful trip.\nSincerely,\nKen",
+'gpre1-cloze-email-2':"Hi Aya,\nThank you for inviting me to your birthday party. I am very happy (1) you remembered my birthday. I will bring a small present. My mother made cookies (2) you. She hopes you will like (3).\nSee you on Sunday!\nMika",
+'gpre1-cloze-story-1':"Thomas Edison is famous as the inventor of the electric light. As a child, he asked many questions, and his teachers thought he was a strange boy. He left school after only three months and (1) at home by his mother. Later, he worked hard and got more than a thousand patents. He once said, \"Genius is one percent inspiration and ninety-nine percent perspiration.\" His words still (2) many people today. Edison slept only a few hours a night because he wanted to use his time (3).",
+'gpre1-cloze-story-2':"Many sea turtles lay their eggs on warm beaches at night. Two months later, baby turtles come out and walk toward the sea. However, only a few of them survive. Most of them (1) eaten by birds. Recently, people have started to protect turtle eggs (2) putting fences around nests. Thanks to these efforts, more baby turtles can safely (3) the sea."
 };
 const QUESTION_BANKS = {
 '4': {
@@ -1288,7 +1294,8 @@ summary:REVIEW_ARCHIVE['2'].summary
 },
 'pre1': {
 library:REVIEW_ARCHIVE['pre1'].library,
-flower:[]
+flower:[],
+station:[]
 }
 };
 const PRACTICE_ORDER_DATA = {
@@ -1671,6 +1678,82 @@ for(const [rg,genre,n,questions] of PRACTICE_READING_DATA){
   passage:PRACTICE_PASSAGES[group],q,c,a,e
  });
 }
+const PRACTICE_CLOZE_DATA=[
+['pre1','notice',1,[
+ ["Which word fits (1)?",
+  ["from","between","during","among"],0,
+  "from November 10th to 15th とある。from A to B でAからBまで。"],
+ ["Which word fits (2)?",
+  ["who","which","what","whose"],1,
+  "books which they do not read とある。物を説明する関係代名詞は which。"],
+ ["Which word fits (3)?",
+  ["buy","to buy","buying","bought"],1,
+  "will be used to buy とある。be used to + 原形で〜するために使われる。"]
+]],
+['pre1','notice',2,[
+ ["Which word fits (1)?",
+  ["next to","far","close","near to"],0,
+  "box next to the office とある。next to で〜の隣に。far/close/the office とはつながらない。"],
+ ["Which word fits (2)?",
+  ["for","with","about","of"],0,
+  "waiting for とある。wait for で〜を待つ。"],
+ ["Which word fits (3)?",
+  ["find","to find","finding","found"],1,
+  "easier to find とある。easy to + 原形で〜しやすい。"]
+]],
+['pre1','email',1,[
+ ["Which word fits (1)?",
+  ["how","what","when","where"],0,
+  "learned how chocolate is made とある。how でどのように。"],
+ ["Which word fits (2)?",
+  ["that","which","whose","where"],3,
+  "tell us where cocoa beans are grown とある。場所を聞く・答える where。"],
+ ["Which word fits (3)?",
+  ["work","works","worked","working"],0,
+  "how many people work とある。people は複数なので原形 work。"]
+]],
+['pre1','email',2,[
+ ["Which word fits (1)?",
+  ["that","what","which","whose"],0,
+  "happy that you remembered とある。that 以下がうれしさの内容。"],
+ ["Which word fits (2)?",
+  ["to","with","for","of"],2,
+  "made cookies for you とある。for で〜のために。"],
+ ["Which word fits (3)?",
+  ["it","them","us","her"],1,
+  "like them とある。cookies は複数なので them。"]
+]],
+['pre1','story',1,[
+ ["Which word fits (1)?",
+  ["taught","was taught","has taught","teaches"],1,
+  "was taught at home by his mother とある。受動態で教えられた。"],
+ ["Which word fits (2)?",
+  ["encourage","encourages","encouraged","encouraging"],0,
+  "words still encourage とある。words は複数なので原形 encourage。"],
+ ["Which word fits (3)?",
+  ["wisely","wisdom","wise","wide"],0,
+  "use his time wisely とある。動詞を修飾する副詞 wisely。"]
+]],
+['pre1','story',2,[
+ ["Which word fits (1)?",
+  ["is","are","was","be"],1,
+  "Most of them are eaten とある。most of them は複数扱い。"],
+ ["Which word fits (2)?",
+  ["with","for","by","about"],2,
+  "by putting fences とある。by ~ing で〜することによって。"],
+ ["Which word fits (3)?",
+  ["get","reach","arrive","go"],1,
+  "safely reach the sea とある。reach + 場所で〜に着く。"]
+]]
+];
+for(const [rg,genre,n,questions] of PRACTICE_CLOZE_DATA){
+ const group=`g${rg}-cloze-${genre}-${n}`;
+ const d={notice:1,email:2,story:3}[genre];
+ for(const [q,c,a,e] of questions)QUESTION_BANKS[rg].station.push({
+  id:`g${rg}-station-${101+QUESTION_BANKS[rg].station.length}`,d,kind:'reading',group,genre,
+  passage:PRACTICE_PASSAGES[group],q,c,a,e
+ });
+}
 for(const grade of ['4','5','3','pre2','2']){
  QUESTION_BANKS[grade].station=PRACTICE_ORDER_DATA[grade].map(([jp,units,order,prefix,suffix,e],i)=>{
   const positions=grade==='5'?[1,3]:[2,4];
@@ -1706,8 +1789,8 @@ const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','�
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
 const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん',essay:'✍️ さくぶん',summary:'📝 ようやく'};
-function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):CAT_TAG[cat]}
-function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
+function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):cat==='station'&&grade==='pre1'?'📖 ちょうぶんほきゅう':CAT_TAG[cat]}
+function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':cat==='station'&&grade==='pre1'?'長文の空所を<br class="mbr">埋めよう':B[cat].desc}
 function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
 function writingChecks(grade,summary){return[(summary?'文章の要点を自分の言葉でまとめられた':grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':grade==='pre2'?'50〜80語を目標に、理由を2つ書いた':grade==='2'?'80〜100語を目標に、理由を2つ書いた':'15〜25語を目標に書いた'),'大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
 const WRITING_RANGE={'5':[5,15],'3':[25,50],'pre2':[50,80],'2':[80,100]};
@@ -1716,7 +1799,7 @@ const BUILDINGS=[
 {id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,grades:['5','4','3','pre2','2','pre1'],desc:'単語(たんご)クイズ'},
 {id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',grades:['5','4','3','pre2','2'],desc:'文法(ぶんぽう)クイズ'},
 {id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',grades:['5','4','3','pre2','2'],desc:'会話(かいわ)クイズ'},
-{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',grades:['5','4','3','pre2','2'],desc:'並べかえ(じゅんばん)クイズ'},
+{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',grades:['5','4','3','pre2','2','pre1'],desc:'並べかえ(じゅんばん)クイズ'},
 {id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',grades:['5','4','3','pre2','2'],desc:'リスニング(ちょうかい)'},
 {id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'任意の追加作文練習（本番の試験ではありません）'},
 {id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2','2'],desc:'本番形式の英作文（3級・準2級・2級のみ）'},
