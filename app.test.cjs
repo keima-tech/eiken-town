@@ -844,6 +844,24 @@ if (require.main === module) {
     assert.ok(get('#st-import-file'));
   });
 
+  test('title screen can start from a transferred save file', () => {
+    const src = loadApp();
+    src.run("confirmBuild(0,'library'); state.coins=77; save()");
+    const exported = src.run('exportSaveJSON()');
+    assert.equal(typeof exported, 'string');
+    const dst = loadApp();
+    assert.equal(dst.get('#start-btn').textContent, 'はじめる!');
+    assert.ok(dst.get('#import-btn-title'));
+    assert.ok(dst.get('#title-import-file'));
+    assert.equal(typeof dst.get('#import-btn-title').onclick, 'function');
+    dst.run(`importSaveFromText(${JSON.stringify(exported)})`);
+    dst.get('#yn-yes').click();
+    assert.equal(dst.run('state.coins'), 77);
+    assert.deepEqual(dst.json('state.placed'), { library: { tile: 0, level: 1 } });
+    assert.equal(dst.get('#start-btn').textContent, 'つづきから!');
+    assert.equal(dst.get('#scr-title').classList.contains('active'), true);
+  });
+
   test('mobile readability uses mobile-only breaks in long explanations', () => {
     const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
     const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];

@@ -478,6 +478,8 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
         <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
         <button class="btn ghosty small hidden" id="reset-btn-top">今の級の街だけを消して最初から</button>
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
+        <button class="btn ghosty small" id="import-btn-title">📂 ファイルからつづきをよみこむ</button>
+        <input type="file" id="title-import-file" accept=".json,application/json" class="hidden">
         <p class="save-note">英検5級・4級・3級・準2級・2級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
       </div>
     </div>
@@ -3639,6 +3641,8 @@ $('#rename-btn').onclick=()=>openNaming(false);
 $('#build-open').onclick=()=>openPalette();
 $('#settings-btn').onclick=openSettings;
 $('#how-btn-title').onclick=openTutorial;
+$('#import-btn-title').onclick=()=>{if(loadBlocked||activeSession())return;$('#title-import-file').click()};
+$('#title-import-file').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importSave(f)};
 $('#cam-reset').onclick=()=>{
  R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};
