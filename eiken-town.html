@@ -473,12 +473,15 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
             <button type="button" class="grade-card" data-grade="2" aria-pressed="false" aria-label="英検2級" aria-describedby="title-grade-2-description">
               <span class="grade-name">英検2級</span><span class="grade-description" id="title-grade-2-description">準2級の次のステップへ</span><span class="grade-status">選ぶ</span>
             </button>
+            <button type="button" class="grade-card" data-grade="pre1" aria-pressed="false" aria-label="英検準1級" aria-describedby="title-grade-pre1-description">
+              <span class="grade-name">英検準1級</span><span class="grade-description" id="title-grade-pre1-description">2級の次のステップへ</span><span class="grade-status">選ぶ</span>
+            </button>
           </div>
         </fieldset>
         <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
         <button class="btn ghosty small hidden" id="reset-btn-top">今の級の街だけを消して最初から</button>
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
-        <p class="save-note">英検5級・4級・3級・準2級・2級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
+        <p class="save-note">英検5級・4級・3級・準2級・2級・準1級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
       </div>
     </div>
   </section>
@@ -1610,8 +1613,8 @@ for(const grade of ['4','5','3','pre2','2']){
 }
 </script>
 <script>
-function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'||grade==='pre2'||grade==='2'}
-function gradeLabel(grade){return grade==='pre2'?'準2級':grade+'級'}
+function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'||grade==='pre2'||grade==='2'||grade==='pre1'}
+function gradeLabel(grade){return grade==='pre2'?'準2級':grade==='pre1'?'準1級':grade+'級'}
 function questionsForGrade(grade=state?.grade||'4'){return typeof QUESTION_BANKS==='undefined'?undefined:QUESTION_BANKS?.[grade]}
 function reviewBanks(grade){return[questionsForGrade(grade),typeof REVIEW_ARCHIVE==='undefined'?undefined:REVIEW_ARCHIVE?.[grade]].filter(bank=>bank&&typeof bank==='object')}
 function questionById(id,grade=state?.grade||'4'){
@@ -1639,17 +1642,18 @@ function writingChecks(grade,summary){return[(summary?'文章の要点を自分�
 const WRITING_RANGE={'5':[5,15],'3':[25,50],'pre2':[50,80],'2':[80,100]};
 const SUMMARY_RANGE={'pre2':[25,35],'2':[45,55]};
 const BUILDINGS=[
-{id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
-{id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',desc:'文法(ぶんぽう)クイズ'},
-{id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',desc:'会話(かいわ)クイズ'},
-{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',desc:'並べかえ(じゅんばん)クイズ'},
-{id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',desc:'リスニング(ちょうかい)'},
-{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'},
+{id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,grades:['5','4','3','pre2','2','pre1'],desc:'単語(たんご)クイズ'},
+{id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',grades:['5','4','3','pre2','2'],desc:'文法(ぶんぽう)クイズ'},
+{id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',grades:['5','4','3','pre2','2'],desc:'会話(かいわ)クイズ'},
+{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',grades:['5','4','3','pre2','2'],desc:'並べかえ(じゅんばん)クイズ'},
+{id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',grades:['5','4','3','pre2','2'],desc:'リスニング(ちょうかい)'},
+{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'任意の追加作文練習（本番の試験ではありません）'},
 {id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2','2'],desc:'本番形式の英作文（3級・準2級・2級のみ）'},
 {id:'summary',name:'まとめ塾',emoji:'📝',cat:'summary',cost:300,req:'essay',grades:['pre2','2'],desc:'要約（本番形式・準2級・2級のみ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
 function buildingGrades(b){return b.grades||['4','5','3','pre2','2']}
+function reqFor(b,grade){const a=BUILDINGS.filter(x=>buildingGrades(x).includes(grade));const i=a.findIndex(x=>x.cat===b.cat);return i>0?a[i-1]:null}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -1670,12 +1674,11 @@ let state=null;
 let towns={},activeGrade='4',legacyLoaded=false;
 function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
 function updateUnlocks(s){
- const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)));
+ const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)&&B[cat]&&buildingGrades(B[cat]).includes(s.grade)));
  unlocked.add('library');
- BUILDINGS.forEach((b,i)=>{
-  if(s.placed[b.cat]){
-   BUILDINGS.slice(0,i+2).forEach(item=>{if(buildingGrades(item).includes(s.grade))unlocked.add(item.cat)});
-  }
+ const avail=BUILDINGS.filter(b=>buildingGrades(b).includes(s.grade));
+ avail.forEach((b,i)=>{
+  if(i===0||s.placed[b.cat]||s.placed[avail[i-1].cat])unlocked.add(b.cat);
  });
  s.unlocked=[...unlocked];
 }
@@ -1782,7 +1785,7 @@ function loadState(){
  if(d&&typeof d==='object'&&!Array.isArray(d)&&d.v===5){
   if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns)){loadBlockError('malformed');return null}
   const next={},nextGrade=validGrade(d.activeGrade)?d.activeGrade:'4';
-  for(const grade of ['4','5','3','pre2','2']){
+  for(const grade of ['4','5','3','pre2','2','pre1']){
    if(!Object.hasOwn(d.towns,grade))continue;
    const town=migrate(d.towns[grade],grade);
    if(!town){loadBlockError('malformed');return null}
@@ -1991,8 +1994,7 @@ function openTutorial(){
 }
 function renderTut(){
  const p=TUT[tutPage];
- const last=tutPage===TUT.length-1;
- const body=tutPage===0?p.d.replace('6つの建物',(state.grade==='4'||state.grade==='5')?'6つの建物':state.grade==='3'?'7つの建物':'8つの建物'):p.d;
+ const last=tutPage===TUT.length-1; const body=tutPage===0?p.d.replace('6つの建物',BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length+'つの建物'):p.d;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${body}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
@@ -2154,7 +2156,7 @@ function openPalette(){
   const locked=!state.unlocked.includes(b.cat);
   const poor=state.coins<b.cost;
   const dis=locked||poor?'disabled':'';
-  const why=locked?`🔒 ${B[b.req].name}を先に建てよう`:poor?'💰 コインが足りない…':'タップして好きな場所へ!';
+  const why=locked?`🔒 ${(reqFor(b,state.grade)||B[b.req]||b).name}を先に建てよう`:poor?'💰 コインが足りない…':'タップして好きな場所へ!';
   return`<button class="bcard ${locked?'locked':''}" ${dis} data-cat="${b.cat}">
    <span class="bc-emoji">${b.emoji}</span>
    <span><span class="bc-name">${b.name}</span><br><span class="bc-desc">${buildingDesc(b.cat)}<br><small style="color:var(--lav-d);font-weight:700">${why}</small></span></span>
@@ -3536,6 +3538,9 @@ function openSettings(){
    </button>
    <button type="button" class="grade-card" data-grade="2" aria-pressed="${activeGrade==='2'}" aria-label="英検2級" aria-describedby="settings-grade-2-description">
     <span class="grade-name">英検2級</span><span class="grade-description" id="settings-grade-2-description">準2級の次のステップへ</span><span class="grade-status">${activeGrade==='2'?'選択中':'選ぶ'}</span>
+   </button>
+   <button type="button" class="grade-card" data-grade="pre1" aria-pressed="${activeGrade==='pre1'}" aria-label="英検準1級" aria-describedby="settings-grade-pre1-description">
+    <span class="grade-name">英検準1級</span><span class="grade-description" id="settings-grade-pre1-description">2級の次のステップへ</span><span class="grade-status">${activeGrade==='pre1'?'選択中':'選ぶ'}</span>
    </button>
   </div>
  </fieldset>

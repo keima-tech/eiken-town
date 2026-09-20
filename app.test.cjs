@@ -208,10 +208,10 @@ function assertGradeCards(app, scope, selected) {
   assert.match(group.querySelector('legend').textContent, /練習する級/);
   assert.equal(group.querySelectorAll('select').length, 0);
   const cards = group.querySelectorAll('.grade-card');
-  assert.deepEqual(cards.map(card => card.dataset.grade), ['5', '4', '3', 'pre2', '2']);
+  assert.deepEqual(cards.map(card => card.dataset.grade), ['5', '4', '3', 'pre2', '2', 'pre1']);
   for (const card of cards) {
     const grade = card.dataset.grade;
-    const display = grade === 'pre2' ? '英検準2級' : `英検${grade}級`;
+    const display = grade === 'pre2' ? '英検準2級' : grade === 'pre1' ? '英検準1級' : `英検${grade}級`;
     assert.equal(card.tagName, 'button');
     assert.equal(card.getAttribute('type'), 'button');
     assert.equal(card.getAttribute('aria-label'), display);
