@@ -473,12 +473,17 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
             <button type="button" class="grade-card" data-grade="2" aria-pressed="false" aria-label="英検2級" aria-describedby="title-grade-2-description">
               <span class="grade-name">英検2級</span><span class="grade-description" id="title-grade-2-description">準2級の次のステップへ</span><span class="grade-status">選ぶ</span>
             </button>
+            <button type="button" class="grade-card" data-grade="pre1" aria-pressed="false" aria-label="英検準1級" aria-describedby="title-grade-pre1-description">
+              <span class="grade-name">英検準1級</span><span class="grade-description" id="title-grade-pre1-description">2級の次のステップへ</span><span class="grade-status">選ぶ</span>
+            </button>
           </div>
         </fieldset>
         <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
         <button class="btn ghosty small hidden" id="reset-btn-top">今の級の街だけを消して最初から</button>
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
-        <p class="save-note">英検5級・4級・3級・準2級・2級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
+        <button class="btn ghosty small" id="import-btn-title">📂 ファイルからつづきをよみこむ</button>
+        <input type="file" id="title-import-file" accept=".json,application/json" class="hidden">
+        <p class="save-note">英検5級・4級・3級・準2級・2級・準1級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
       </div>
     </div>
   </section>
@@ -1102,6 +1107,87 @@ essay:[
 {id:'g2-essay-104',d:2,kind:'writing',en:"Do you think watching sports is more fun than playing sports?",points:["exciting","health","friends"],jp:"あなたの考えとその理由を2つ、80〜100語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think playing sports is more fun than watching sports. First, moving our bodies is exciting and makes us healthy. Second, we can make good friends by playing on the same team. Also, we can learn teamwork and fair play. Watching sports on TV is relaxing, but I prefer playing them outside with my friends. In addition, playing sports regularly will help us sleep well at night. That is why I play soccer with my friends every weekend. Do you play any sports?",e:"比較の意見文では両方に触れるとバランスがよい。80〜100語の長さを意識しよう。"},
 {id:'g2-essay-105',d:3,kind:'writing',en:"Do you think people should use cars less?",points:["environment","health","traffic"],jp:"あなたの考えとその理由を2つ、80〜100語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think people should use cars less. First, car exhaust makes the air dirty and harms the environment. Second, walking or riding bicycles is good for our health. Also, fewer cars mean less traffic on busy roads. Of course, cars are convenient in areas without trains. However, we should use public transportation when we can. In addition, using trains and buses saves money on gasoline. Small actions by many people can change the world greatly. Everyone should think about this problem more seriously.",e:"However で反対側の視点にも触れると高評価につながる。80〜100語の長さを意識しよう。"},
 {id:'g2-essay-106',d:3,kind:'writing',en:"Should high school students have part-time jobs?",points:["money","experience","study"],jp:"あなたの考えとその理由を2つ、80〜100語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think high school students should have part-time jobs. First, they can earn their own money and learn its value. Second, working with adults gives them valuable social experience. However, jobs should not take too much time from their studies. Schools should make rules about working hours to protect students. In addition, meeting various people at work will help them understand society better. I am looking forward to working and learning new things. I am excited about my future job experience.",e:"理由と懸念の両方を書くと説得力が増す。80〜100語の長さを意識しよう。"},
+],
+},
+'pre1': {
+library:[
+{id:'gpre1-library-101',d:1,q:"The results supported the scientists' ___.",c:["tension","session","mission","hypothesis"],a:3,e:"「結果は科学者たちの仮説を支持した」。hypothesis は仮説。"},
+{id:'gpre1-library-102',d:1,q:"Earthquakes are a natural ___.",c:["synonym","spectrum","momentum","phenomenon"],a:3,e:"「地震は自然現象だ」。phenomenon は現象。"},
+{id:'gpre1-library-103',d:1,q:"According to the ___, most people walk to work.",c:["suffix","surplus","supplement","survey"],a:3,e:"「調査によると多くの人が歩いて通勤する」。survey は調査。"},
+{id:'gpre1-library-104',d:1,q:"There is a growing ___ toward remote work.",c:["blend","brand","gland","trend"],a:3,e:"「在宅勤務への高まりがある」。trend は動向・傾向。"},
+{id:'gpre1-library-105',d:1,q:"___ life is often busy and noisy.",c:["Outer","Utter","Upper","Urban"],a:3,e:"「都市生活はしばしば忙しく騒々しい」。urban は都市の。"},
+{id:'gpre1-library-106',d:1,q:"The old temple is well ___.",c:["prepared","presented","pressed","preserved"],a:3,e:"「その古寺はよく保存されている」。preserve は保存する。"},
+{id:'gpre1-library-107',d:2,q:"Think ___ and answer calmly.",c:["loyally","locally","legally","logically"],a:3,e:"「論理的に考えて冷静に答えなさい」。logical の副詞形は logically。"},
+{id:'gpre1-library-108',d:2,q:"The ___ of events was confusing.",c:["scene","sense","sentence","sequence"],a:3,e:"「出来事の順序が混乱していた」。sequence は一連の順序。"},
+{id:'gpre1-library-109',d:2,q:"There is a sharp ___ between the two opinions.",c:["contact","contest","context","contrast"],a:3,e:"「二つの意見には鋭い対照がある」。contrast は対照。"},
+{id:'gpre1-library-110',d:2,q:"The town ___ a new recycling system.",c:["raised","exchanged","excused","embraced"],a:3,e:"「町は新しいリサイクル制度を取り入れた」。embrace は受け入れる・取り入れる。"},
+{id:'gpre1-library-111',d:2,q:"We held a ___ meeting online.",c:["visual","vital","vivid","virtual"],a:3,e:"「オンラインで仮想会議を開いた」。virtual は仮想の。"},
+{id:'gpre1-library-112',d:2,q:"Aging is ___ for everyone.",c:["invisible","incredible","initial","inevitable"],a:3,e:"「老化は誰にとっても避けられない」。inevitable は避けられない。"},
+{id:'gpre1-library-113',d:3,q:"His answer was ___ and confusing.",c:["ambitious","anxious","ample","ambiguous"],a:3,e:"「彼の答えはあいまいで混乱を招いた」。ambiguous はあいまいな。"},
+{id:'gpre1-library-114',d:3,q:"Air quality has ___ in recent years.",c:["decorated","declared","delivered","deteriorated"],a:3,e:"「大気の質は近年悪化した」。deteriorate は悪化する。"},
+{id:'gpre1-library-115',d:3,q:"There is a ___ in his argument.",c:["flow","floor","flour","flaw"],a:3,e:"「彼の主張には欠陥がある」。flaw は欠陥。"},
+{id:'gpre1-library-116',d:3,q:"The ___ is that less is sometimes more.",c:["pair","parade","paragraph","paradox"],a:3,e:"「少ないほど多いこともあるというのは逆説だ」。paradox は逆説。"},
+{id:'gpre1-library-117',d:3,q:"Smoking is ___ among adults here.",c:["present","pleasant","patient","prevalent"],a:3,e:"「ここでは大人に喫煙が広がっている」。prevalent は広く行き渡った。"},
+{id:'gpre1-library-118',d:3,q:"He quickly rose in the company ___.",c:["history","hobby","harmony","hierarchy"],a:3,e:"「彼は社内の階層を速く上った」。hierarchy は階層制。"}
+],
+school:[
+{id:'gpre1-school-101',d:1,q:"These pictures were ___ by my sister.",c:["draw","drew","drawn","drawing"],a:2,e:"「これらの絵は妹が描いた」。were drawn で描かれた(受動態)。"},
+{id:'gpre1-school-102',d:1,q:"I have ___ my key. Help me look for it.",c:["lost","lose","loses","losing"],a:0,e:"「鍵をなくした。探すのを手伝って」。have lost でなくした(現在完了)。"},
+{id:'gpre1-school-103',d:1,q:"This room is ___ than that one.",c:["large","largest","larger","more large"],a:2,e:"「この部屋はあの部屋より広い」。than と比べるので比較級 larger。"},
+{id:'gpre1-school-104',d:1,q:"You must ___ quiet in the library.",c:["are","is","been","be"],a:3,e:"「図書館では静かにしなさい」。must の後は動詞の原形 be。"},
+{id:'gpre1-school-105',d:1,q:"We are going to ___ a party on Sunday.",c:["has","had","having","have"],a:3,e:"「日曜にパーティーを開く予定だ」。be going to の後は原形 have。"},
+{id:'gpre1-school-106',d:1,q:"Can you ___ me your pen?",c:["lends","lent","lending","lend"],a:3,e:"「ペンを貸してくれますか」。Can の後は動詞の原形 lend。"},
+{id:'gpre1-school-107',d:2,q:"It has been ___ since last night.",c:["rain","raining","rained","rains"],a:1,e:"「昨夜からずっと雨が降っている」。has been + ~ing でずっと〜している。"},
+{id:'gpre1-school-108',d:2,q:"The train had already ___ when we got there.",c:["leave","leaves","left","leaving"],a:2,e:"「着いたとき列車はすでに出ていた」。had already + 過去分詞。leave-left-left。"},
+{id:'gpre1-school-109',d:2,q:"This is the book ___ I told you about.",c:["who","which","whose","whom"],a:1,e:"「君に話した本はこれだ」。物を説明する関係代名詞は which。"},
+{id:'gpre1-school-110',d:2,q:"She enjoys ___ to music.",c:["listen","to listen","listened","listening"],a:3,e:"「彼女は音楽を聴くことを楽しむ」。enjoy の後は動名詞 listening。"},
+{id:'gpre1-school-111',d:2,q:"He is too tired ___ anything tonight.",c:["do","doing","done","to do"],a:3,e:"「彼は疲れすぎて今夜は何もできない」。too + 形容詞 + to で〜するには…すぎる。"},
+{id:'gpre1-school-112',d:2,q:"You can't enter ___ you have a ticket.",c:["if","when","because","unless"],a:3,e:"「チケットがないと入れません」。unless は〜でない限り。"},
+{id:'gpre1-school-113',d:3,q:"I wish I ___ speak English well.",c:["can","will","shall","could"],a:3,e:"「英語が上手に話せたらいいのに」。I wish + 過去形で〜だったらいいのに。could は can の過去形。"},
+{id:'gpre1-school-114',d:3,q:"The person ___ I spoke was kind.",c:["to who","to which","to whose","to whom"],a:3,e:"「話した相手は親切だった」。to whom で話した相手に(whom は目的格)。"},
+{id:'gpre1-school-115',d:3,q:"___ in 1990, the bridge is still strong.",c:["Building","Build","Builds","Built"],a:3,e:"「1990年に建てられ、この橋は今も丈夫だ」。Built ... は分詞構文(〜されて)。"},
+{id:'gpre1-school-116',d:3,q:"___ it rains or not, the game will start on time.",c:["Whether","If","Unless","Though"],a:0,e:"「雨が降ろうが降るまいが試合は定刻に始まる」。Whether ... or not で〜であろうとなかろうと。"},
+{id:'gpre1-school-117',d:3,q:"I had my bike ___ yesterday.",c:["steal","stole","stealing","stolen"],a:3,e:"「昨日自転車を盗まれた」。have + 物 + 過去分詞で〜される(被害)。"},
+{id:'gpre1-school-118',d:3,q:"The more you read, the ___ you will learn.",c:["much","many","more","most"],a:2,e:"「読めば読むほど学ぶ」。The more ..., the more ... 。"}
+],
+cafe:[
+{id:'gpre1-cafe-101',d:1,q:"A: Long time no see!\nB: ___",c:["Long is good.","See you later.","Nice weather.","Nice to see you again."],a:3,e:"「久しぶり」「また会えてうれしいよ」。Long time no see! への返事。"},
+{id:'gpre1-cafe-102',d:1,q:"A: I'm just looking around.\nB: ___",c:["Looking is fun.","Around we go.","Just do it.","Take your time."],a:3,e:"「見ているだけです」「ごゆっくりどうぞ」。店員の声かけへの返事は Take your time.。"},
+{id:'gpre1-cafe-103',d:1,q:"A: Anything to drink?\nB: ___",c:["Drink is good.","To drink.","Anything is hot.","Just water, please."],a:3,e:"「何か飲みますか」「水だけでいいです」。Just water, please. が簡潔な返事。"},
+{id:'gpre1-cafe-104',d:1,q:"A: Is the station far from here?\nB: ___",c:["Stations are big.","Far is bad.","I love stations.","No. It's a five-minute walk."],a:3,e:"「駅はここから遠いですか」「いいえ。歩いて5分です」。距離を答える。"},
+{id:'gpre1-cafe-105',d:1,q:"A: May I leave a message?\nB: ___",c:["Messages are short.","Leave it.","May you?","Of course. Go ahead."],a:3,e:"「伝言をお願いできますか」「もちろん。どうぞ」。許可は Of course. Go ahead.。"},
+{id:'gpre1-cafe-106',d:1,q:"A: Thanks for your help.\nB: ___",c:["Help is good.","Thanks too.","You're helpful.","Anytime."],a:3,e:"「助けてくれてありがとう」「いつでもどうぞ」。お礼への返事は Anytime.。"},
+{id:'gpre1-cafe-107',d:2,q:"A: What should we do this weekend?\nB: ___",c:["Weekends are short.","We should do.","Do something.","Why don't we go hiking?"],a:3,e:"「週末は何をしようか」「ハイキングに行くのはどう」。提案は Why don't we ...?。"},
+{id:'gpre1-cafe-108',d:2,q:"A: These bags look heavy. Let me help you.\nB: ___",c:["Bags are heavy.","No, they are light.","Help yourself.","That's very kind of you. I'll take your offer."],a:3,e:"「重そうですね。持ちましょうか」「ご親切に。お願いします」。申し出を受ける返事。"},
+{id:'gpre1-cafe-109',d:2,q:"A: Excuse me. I ordered tea, but this is coffee.\nB: ___",c:["Tea and coffee.","Order again.","Coffee is brown.","I'm sorry. I'll bring tea right away."],a:3,e:"「紅茶を頼んだのにコーヒーです」「申し訳ありません。すぐ紅茶を持ってきます」。店員の謝罪と対応。"},
+{id:'gpre1-cafe-110',d:2,q:"A: Do you think this color suits me?\nB: ___",c:["Colors are nice.","Suits are formal.","I think.","Yes. It matches your eyes."],a:3,e:"「この色は似合うと思う」「はい。あなたの目に合っている」。suit は似合う。"},
+{id:'gpre1-cafe-111',d:2,q:"A: Shall we meet at six in front of the station?\nB: ___",c:["Stations are big.","Six is a number.","All right. See you then.","Sorry, I have another appointment. How about seven?"],a:3,e:"「6時に駅前で会おうか」「ごめん、別の約束がある。7時はどう」。変更の提案を含めて返す。"},
+{id:'gpre1-cafe-112',d:2,q:"A: Thank you for driving me home.\nB: ___",c:["Home is far.","Driving is fun.","No thanks.","You're welcome. Be careful on the stairs."],a:3,e:"「送ってくれてありがとう」「どういたしまして。階段に気をつけて」。お礼への返事は You're welcome.。"},
+{id:'gpre1-cafe-113',d:3,q:"A: Some people say zoos should be closed. What do you think?\nB: ___",c:["Zoos have animals.","Closed is good.","I think zoos.","I agree to some extent, but they also protect animals."],a:3,e:"「動物園は閉鎖すべきという人もいる。どう思う」「ある程度賛成だが、動物保護の役割もある」。自分の意見と留保を述べる。"},
+{id:'gpre1-cafe-114',d:3,q:"A: Could you do me a favor?\nB: ___",c:["Favors are nice.","Do it yourself.","I can.","Sure. What is it?"],a:3,e:"「お願いがあるんだけど」「もちろん。何ですか」。依頼への返事は Sure. What is it?。"},
+{id:'gpre1-cafe-115',d:3,q:"A: I sincerely apologize for the delay.\nB: ___",c:["Delays are bad.","Apologies are long.","You are late.","That's all right. Don't worry about it."],a:3,e:"「遅れて心よりお詫びします」「大丈夫ですよ。気になさらないで」。丁寧な謝罪への返事。"},
+{id:'gpre1-cafe-116',d:3,q:"A: I get nervous before presentations. Any tips?\nB: ___",c:["Nerves are bad.","Presentations are long.","Good luck.","Try taking deep breaths beforehand."],a:3,e:"「発表の前に緊張する。何かコツは」「事前に深呼吸してみては」。助言は Try ...ing ...。"},
+{id:'gpre1-cafe-117',d:3,q:"A: I believe uniforms should be free. What's your opinion?\nB: ___",c:["Uniforms are clothes.","Free is good.","Opinions differ.","I agree. Students can show their individuality."],a:3,e:"「制服は自由であるべきだと思う。あなたは」「賛成です。生徒は個性を出せる」。意見への賛同と理由。"},
+{id:'gpre1-cafe-118',d:3,q:"A: What will you do during the winter vacation?\nB: ___",c:["Winter is cold.","Vacations are fun.","I will do.","I'll visit my grandparents in the countryside."],a:3,e:"「冬休みは何をしますか」「田舎の祖父母を訪ねます」。具体的な予定を答える。"}
+],
+station:[],
+park:[],
+flower:[],
+essay:[
+{id:'gpre1-essay-101',d:1,kind:'writing',en:"Do you think students should be allowed to use smartphones at school?",points:["study","communication","rules"],jp:"あなたの考えとその理由を2つ、120〜150語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think students should be allowed to use smartphones at school. First, they can look up unknown words quickly with dictionary apps. This helps them study by themselves without waiting for teachers. Second, they can take pictures of the blackboard instead of copying everything by hand. This saves a lot of time in class. Also, educational videos help them understand difficult topics more deeply. However, some students play games during class. Therefore, teachers should make clear rules about when smartphones can be used. For example, students should keep them in their bags during tests and turn them off. If schools make good rules, smartphones will be useful tools for learning. I hope more schools will use them well in the future.",e:"理由は観点(POINTS)に沿って2つ書こう。120〜150語の長さを意識しよう。"},
+{id:'gpre1-essay-102',d:1,kind:'writing',en:"Do you think high school students should do volunteer work?",points:["happy","experience","future"],jp:"あなたの考えとその理由を2つ、120〜150語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think high school students should do volunteer work. First, helping other people makes them feel happy and confident. Second, they can learn many things that they cannot learn at school. For example, cleaning parks teaches them to care about nature and their town. Also, working with various people improves communication skills, which will help their future jobs. However, volunteer work should not take too much time from their studies. Schools should help students find good activities on weekends or holidays. Such experience will be useful when they choose their future path. I want to join volunteer activities with my friends someday. Also, talking with teachers about volunteer work at school is helpful. They know many good activities in our town. I am looking forward to starting soon.",e:"理由は観点(POINTS)に沿って2つ書こう。120〜150語の長さを意識しよう。"},
+{id:'gpre1-essay-103',d:2,kind:'writing',en:"Do you think cashless payment is convenient?",points:["money","speed","careful"],jp:"あなたの考えとその理由を2つ、120〜150語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think cashless payment is convenient for our daily lives. First, people do not need to carry many coins or bills. They can pay quickly just by holding up smartphones at stores. Second, they can easily check how much money they used with apps. This helps them control their spending every month. However, older people sometimes find new technology difficult to use. Shops should therefore help such people kindly and patiently. Also, people should be careful not to spend too much money because paying feels too easy. I believe cashless payment will become more popular in Japan. Schools should teach students how to use new technology safely every year because it is an important skill for the future. Let us learn about money and technology together.",e:"理由は観点(POINTS)に沿って2つ書こう。120〜150語の長さを意識しよう。"},
+{id:'gpre1-essay-104',d:2,kind:'writing',en:"Do you think working from home is good?",points:["time","money","teamwork"],jp:"あなたの考えとその理由を2つ、120〜150語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think working from home has both good and bad points. First, workers do not need to spend a long time going to offices. They can use that time for their families or hobbies. Second, companies can save money because they need smaller offices. However, talking directly with coworkers is also important for teamwork. People can share new ideas more easily when they meet in person. Therefore, I think a mix of office work and home work is the best way. Companies should let workers choose where to work depending on their jobs and lifestyles. Talking with family about work styles is also important for everyone. I hope many companies in Japan will try new ways of working next year. Flexible work will make our lives better.",e:"理由は観点(POINTS)に沿って2つ書こう。120〜150語の長さを意識しよう。"},
+{id:'gpre1-essay-105',d:3,kind:'writing',en:"What should Japan do about its aging population?",points:["support","workers","future"],jp:"あなたの考えとその理由を2つ、120〜150語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"Japan has a serious problem with its aging population. First, fewer young people must support more older people. This puts a heavy load on hospitals and pensions. The government already spends a lot of money on care services. Second, many towns do not have enough young workers. Shops and factories in the countryside are closing one after another. To solve these problems, the government should help families raise children. For example, it could give more money to families with small children. Also, robots may help care for older people in the future. Everyone should think seriously about this problem. Schools should teach children about this issue through special classes every year. Young people need to understand how serious the situation is now.",e:"理由は観点(POINTS)に沿って2つ書こう。120〜150語の長さを意識しよう。"},
+{id:'gpre1-essay-106',d:3,kind:'writing',en:"How will artificial intelligence change our lives?",points:["speed","danger","rules"],jp:"あなたの考えとその理由を2つ、120〜150語の英語で書こう。",hints:["I think ...","First, ...","Second, ..."],sample:"I think artificial intelligence will change our lives greatly. First, AI can do difficult calculations much faster than humans. It also helps doctors find illnesses early, which saves many lives. Second, AI robots can work in dangerous places instead of humans, such as disaster areas. However, some people worry that AI will take jobs from humans. Therefore, we need clear rules about how to use AI safely. Schools should also teach children about both the good points and dangers of AI. If we use it wisely, AI will make our future brighter. Children should learn how AI works at school from an early age. Understanding new technology will help them choose good jobs in the future. Let us think carefully about living with AI.",e:"理由は観点(POINTS)に沿って2つ書こう。120〜150語の長さを意識しよう。"}
+],
+summary:[
+{id:'gpre1-summary-101',d:1,kind:'summary',en:"Summarize the passage in 60-90 words.",passage:"Convenience stores are very useful in Japan. They are open twenty-four hours every day. People can buy food, drinks, and daily goods there at any time. They can also pay bills, send packages, and use cash machines. Recently, some stores started selling healthy food for older people. Workers keep the stores clean and bright all night. Many foreign visitors are surprised at how convenient Japanese convenience stores are.",jp:"英文を読んで内容を60〜90語の英語でまとめよう。",hints:["Convenience stores ...","People can ...","Workers keep ..."],sample:"Convenience stores in Japan are open all day and night. People can buy food and daily goods there anytime. They can also pay bills and use cash machines. Some stores sell healthy food now. Workers keep them clean and bright. Foreign visitors are surprised at their convenience. They also offer many services that help busy people every day. That is why they are loved.",e:"営業時間・商品・サービスの3点を押さえよう。60〜90語に収める。"},
+{id:'gpre1-summary-102',d:1,kind:'summary',en:"Summarize the passage in 60-90 words.",passage:"Japanese trains are famous for arriving on time. Even a delay of one minute is unusual. Station workers practice hard to keep trains on schedule. If a train is late, the company gives passengers a note for their school or office. Many people use trains to go to work or school every day. Thanks to everyone's efforts, passengers can trust train schedules in Japan.",jp:"英文を読んで内容を60〜90語の英語でまとめよう。",hints:["Japanese trains ...","Station workers ...","Many people ..."],sample:"Japanese trains almost always arrive on time. Station workers practice hard to keep schedules. If a train is late, the company gives notes to passengers. Many people use trains daily. Passengers can trust Japanese train schedules thanks to everyone's efforts. Trains connect big cities and small towns across the country. Riding clean and safe trains is comfortable for everyone. That is why trains are loved by many people.",e:"定時性・取り組み・利用の3点を押さえよう。60〜90語に収める。"},
+{id:'gpre1-summary-103',d:2,kind:'summary',en:"Summarize the passage in 60-90 words.",passage:"Department stores in Japan have large food floors in the basement. They are called depachika. Many kinds of fresh food, sweets, and lunch boxes are sold there. At night, workers put discount stickers on foods that must be sold that day. Many office workers stop there on their way home to buy dinner. On weekends, families enjoy tasting free samples together. Depachika is a fun place for both shopping and eating.",jp:"英文を読んで内容を60〜90語の英語でまとめよう。",hints:["Department stores ...","Many kinds ...","Office workers ..."],sample:"Japanese department stores have large food floors called depachika. Many kinds of fresh food and sweets are sold there. At night, workers discount foods to sell out. Office workers buy dinner on their way home. On weekends, families enjoy free samples together. It is fun for shopping and eating. Many foreign visitors also enjoy depachika very much every year. It is a special place only in Japan.",e:"売り場・商品・客層の3点を押さえよう。60〜90語に収める。"},
+{id:'gpre1-summary-104',d:2,kind:'summary',en:"Summarize the passage in 60-90 words.",passage:"Many towns in Japan hold summer festivals in August. People wear light cotton clothes called yukata and walk to the shrine. Along the streets, there are many food stands selling noodles, grilled corn, and shaved ice. In the evening, fireworks light up the dark sky. Children enjoy catching small games at game stands. Summer festivals are an important chance for neighbors to meet and talk. Many people look forward to them every year.",jp:"英文を読んで内容を60〜90語の英語でまとめよう。",hints:["Many towns hold ...","People wear ...","Festivals let ..."],sample:"Many Japanese towns hold summer festivals in August. People wear yukata and walk to the shrine. Streets have food stands with noodles and shaved ice. In the evening, fireworks light the sky. Festivals let neighbors meet and talk. Children enjoy games, and many look forward to them yearly. Summer festivals are the best part of summer vacation. I want to go there with my family.",e:"時期・内容・意義の3点を押さえよう。60〜90語に収める。"},
+{id:'gpre1-summary-105',d:3,kind:'summary',en:"Summarize the passage in 60-90 words.",passage:"Plastic waste in the sea is a serious problem around the world. Every year, millions of tons of plastic flow into oceans. Sea animals sometimes eat plastic by mistake and get sick. Small pieces of plastic have been found even in deep seas. Many countries are now trying to use less plastic. Some shops charge money for plastic bags. Scientists are also developing new materials that break down naturally. Everyone needs to think about what they buy and throw away.",jp:"英文を読んで内容を60〜90語の英語でまとめよう。",hints:["Plastic waste ...","Sea animals ...","Many countries ..."],sample:"Plastic waste in the sea is a serious world problem. Millions of tons flow into oceans yearly. Sea animals eat plastic by mistake and get sick. Many countries try to use less plastic, and shops charge for bags. Scientists develop natural materials. Everyone must think about buying and throwing away. Small actions by many people can change the world greatly. Everyone should think about this problem more seriously.",e:"問題・影響・対策の3点を押さえよう。60〜90語に収める。"},
+{id:'gpre1-summary-106',d:3,kind:'summary',en:"Summarize the passage in 60-90 words.",passage:"Japan has many earthquakes every year. Most of them are too small to feel, but big ones sometimes damage houses and roads. Schools teach children to hide under desks when shaking starts. Families keep water, food, and flashlights ready for emergencies. After a big earthquake, neighbors help each other and share information. Scientists study earthquakes to predict them, but it is still very difficult. Being ready every day is the most important thing.",jp:"英文を読んで内容を60〜90語の英語でまとめよう。",hints:["Japan has ...","Schools teach ...","Families keep ..."],sample:"Japan has many earthquakes yearly, though most are too small to feel. Schools teach children to hide under desks. Families keep water, food, and flashlights ready. After big quakes, neighbors help each other. Scientists study prediction, but it remains difficult. Daily readiness matters most. Everyone should check emergency goods at home twice a year. Talking with family about emergencies is also important.",e:"現状・備え・教訓の3点を押さえよう。60〜90語に収める。"}
 ]
 }
 };
@@ -1143,7 +1229,19 @@ const PRACTICE_PASSAGES = {
 'g2-reading-email-1':"Hi John,\nHow is life in London? I heard you entered a high school there last month. Is your English improving? Please write to me in English next time.\nI joined the English club at my school. There are twenty members, and we meet every Friday. Last week, we enjoyed talking with an exchange student from Canada. She spoke slowly, so I could understand her well.\nMy dream is to study abroad in the future like you. I will practice English hard.\nYuta",
 'g2-reading-email-2':"Dear Mrs. Smith,\nThank you for your kind letter. I was very happy to hear that you are well.\nI still remember the summer I spent at your house five years ago. You taught me how to make cookies, and we ate them in the garden. It was one of the most enjoyable memories of my childhood.\nNow I am practicing the piano every day because I will play at the school concert next month. I feel nervous, but I will do my best.\nPlease take care of yourself.\nSincerely,\nEmi",
 'g2-reading-story-1':"When Takeshi was a high school student, he loved watching baseball on TV. One day, he decided to play baseball himself. He bought a glove with his own money and joined the school team. At first, he could not catch the ball at all. His teammates laughed at him, but the coach said, \"Keep trying. You will improve.\"\nTakeshi practiced swinging the bat every morning before school. Gradually, he got better. In his second year, he became a regular player. In the final game of the summer tournament, he hit a home run. His team won the game. Takeshi learned that effort is more important than talent.",
-'g2-reading-story-2':"Last spring, Aya traveled to Kyoto with her family. On the second day, she got separated from her family at a large temple. She did not have a phone, and she could not remember the name of the hotel.\nAya was worried, but she decided to ask a shopkeeper for help. The kind woman called Aya's father. While waiting, the woman gave Aya some green tea and sweets. Aya's father arrived in twenty minutes. Aya thanked the woman many times.\nAfter returning home, Aya wrote about the experience in her English diary. She learned two things: it is important to ask for help, and kindness makes people happy."
+'g2-reading-story-2':"Last spring, Aya traveled to Kyoto with her family. On the second day, she got separated from her family at a large temple. She did not have a phone, and she could not remember the name of the hotel.\nAya was worried, but she decided to ask a shopkeeper for help. The kind woman called Aya's father. While waiting, the woman gave Aya some green tea and sweets. Aya's father arrived in twenty minutes. Aya thanked the woman many times.\nAfter returning home, Aya wrote about the experience in her English diary. She learned two things: it is important to ask for help, and kindness makes people happy.",
+'gpre1-reading-notice-1':"International Food Festival\nOur town will hold an International Food Festival on November 3rd in Central Park. More than thirty groups from fifteen countries will open food stalls. Visitors can enjoy traditional dishes from Asia, Europe, and South America. Cooking demonstrations will start at eleven in the morning and two in the afternoon. Tickets cost 500 yen, and children under six are free. Part of the money will be used to support school lunch programs in developing countries. If it rains, the festival will be held in the city gym. For more information, visit the town website.",
+'gpre1-reading-notice-2':"New Train Line\nA new train line will open between our town and the city next spring. It will take only twenty minutes, half the present time. Trains will run every ten minutes from five in the morning to midnight. The new line is expected to carry 20,000 people a day. Many shops and restaurants are already being built around the new station. Some residents worry about noise, but the company promises to build high walls to reduce it. The opening ceremony will be held on March 25th, and everyone is welcome.",
+'gpre1-reading-email-1':"Hi Kate,\nHow are you? I started studying English harder last spring. I learned new words every day for six months. Now I can read easy books without a dictionary.\nListening is still the most difficult part for me. I cannot catch fast conversations on TV. Do you have any good advice? Please write back soon.\nSota",
+'gpre1-reading-email-2':"Dear Mrs. Smith,\nThank you for your kind letter. I was very happy to hear that you are well.\nI still remember the summer I spent at your house five years ago. You taught me how to make cookies, and we ate them in the garden. It was one of the most enjoyable memories of my childhood.\nNow I am practicing the piano every day because I will play at the school concert next month. I feel nervous, but I will do my best.\nPlease take care of yourself.\nSincerely,\nEmi",
+'gpre1-reading-story-1':"When Dr. Ada was a child, she loved looking at the night sky through her father's telescope. She often wondered what stars are made of. Her teachers encouraged her to study science, and she entered a famous university at eighteen.\nAfter graduation, she joined a team studying distant planets. For ten years, she observed the sky every night and recorded a huge amount of data. Many people thought her theory was wrong, but she continued her research.\nLast year, she finally discovered a new planet. Her discovery was reported in newspapers around the world. When asked about her success, she said, \"Curiosity and continuous effort brought me here. Never stop asking why.\"",
+'gpre1-reading-story-2':"Takeshi runs a small bakery in a quiet town. Every morning, he gets up at four and bakes fresh bread. His shop opens at seven, and neighbors come to buy warm bread for breakfast. His special melon bread is very popular.\nFive years ago, a large supermarket opened near his shop. Many people started shopping there because everything was cheaper. Takeshi's sales fell by half, and he thought about closing the shop.\nHowever, his regular customers encouraged him. He decided to make bread with local ingredients and tell customers about the farmers. Gradually, new customers who care about local food began to visit. Now his bakery is busier than before. Takeshi learned that small shops can survive by offering something special.",
+'gpre1-cloze-notice-1':"Book Fair\nOur school will hold a book fair (1) November 10th to 15th in the library. More than 500 books will be sold at low prices. Students can also sell books (2) they do not read anymore. If you want to sell your books, bring them to the library by November 5th. Part of the money will be used (3) new books for the library.",
+'gpre1-cloze-notice-2':"Lost and Found\nIf you lose something at school, go to the lost and found box (1) the school office. Many umbrellas, pens, and jackets are waiting (2) their owners there. Please write your name on your things. It is much easier (3) lost things when they have names.",
+'gpre1-cloze-email-1':"Dear Mr. Brown,\nThank you for showing us around your factory last week. We learned (1) chocolate is made. Your explanation was very clear, and all the students enjoyed the trip.\nWe are now studying how food is produced in different countries. Could you tell us (2) cocoa beans are grown? We would also like to know how many people (3) in your factory.\nThank you again for the wonderful trip.\nSincerely,\nKen",
+'gpre1-cloze-email-2':"Hi Aya,\nThank you for inviting me to your birthday party. I am very happy (1) you remembered my birthday. I will bring a small present. My mother made cookies (2) you. She hopes you will like (3).\nSee you on Sunday!\nMika",
+'gpre1-cloze-story-1':"Thomas Edison is famous as the inventor of the electric light. As a child, he asked many questions, and his teachers thought he was a strange boy. He left school after only three months and (1) at home by his mother. Later, he worked hard and got more than a thousand patents. He once said, \"Genius is one percent inspiration and ninety-nine percent perspiration.\" His words still (2) many people today. Edison slept only a few hours a night because he wanted to use his time (3).",
+'gpre1-cloze-story-2':"Many sea turtles lay their eggs on warm beaches at night. Two months later, baby turtles come out and walk toward the sea. However, only a few of them survive. Most of them (1) eaten by birds. Recently, people have started to protect turtle eggs (2) putting fences around nests. Thanks to these efforts, more baby turtles can safely (3) the sea."
 };
 const QUESTION_BANKS = {
 '4': {
@@ -1247,6 +1345,16 @@ park:[],
 flower:[],
 essay:REVIEW_ARCHIVE['2'].essay,
 summary:REVIEW_ARCHIVE['2'].summary
+},
+'pre1': {
+library:REVIEW_ARCHIVE['pre1'].library,
+school:REVIEW_ARCHIVE['pre1'].school,
+cafe:REVIEW_ARCHIVE['pre1'].cafe,
+flower:[],
+station:[],
+park:[],
+essay:REVIEW_ARCHIVE['pre1'].essay,
+summary:REVIEW_ARCHIVE['pre1'].summary
 }
 };
 const PRACTICE_ORDER_DATA = {
@@ -1412,6 +1520,26 @@ const PRACTICE_LISTENING_DATA = {
  ['passage',3,[{speaker:'narrator',text:"Many people in our town ride bicycles to work or school. Bicycles do not use gasoline, so the air stays clean. Also, riding a bicycle is good exercise. Our town made new bicycle roads last year. Now more people enjoy riding."}],"Why is riding bicycles good for the town?",["Because bicycles are fast.","Because the air stays clean.","Because bicycles are cheap.","Because roads are wide."],1,"「町の多くの人が自転車通勤・通学する。ガソリンを使わないので空気がきれいに保たれる」。the air stays clean が理由。"],
  ['passage',3,[{speaker:'narrator',text:"Kenji entered a speech contest last month. He practiced his speech every day for three weeks. On the day, he was very nervous at first. But he spoke slowly and clearly. In the end, he won second prize. He wants to try again next year."}],"What prize did Kenji win?",["First prize.","Second prize.","Third prize.","He won nothing."],1,"「ケンジは先月スピーチコンテストに出た。3週間毎日練習し、本番は最初緊張したがゆっくりはっきり話し、2位になった」。second prize が結果。"]
 ],
+'pre1':[
+ ['response',1,[{speaker:'A',text:"What does your sister do?"}],"",["She's a nurse.","She's tall.","She's kind."],0,"「妹さんは何をしていますか(職業)」「看護師です」。What does ... do? は職業。",'school'],
+ ['response',1,[{speaker:'A',text:"When does the bank open?"}],"",["At nine.","On weekdays.","Near the station."],0,"「銀行は何時に開きますか」「9時です」。When は時刻。",'shop'],
+ ['response',2,[{speaker:'A',text:"How long have you lived here?"}],"",["For five years.","Five years ago.","In this town."],0,"「ここにどのくらい住んでいますか」「5年間」。How long have you ...? は期間。",'library'],
+ ['response',2,[{speaker:'A',text:"What do you do on weekends?"}],"",["I play tennis.","On Saturday.","With friends."],0,"「週末は何をしますか」「テニスをします」。What do you do は行動。",'sports'],
+ ['response',3,[{speaker:'A',text:"Why did you choose this university?"}],"",["Because of its science program.","Last year.","In Tokyo."],0,"「なぜこの大学を選んだのですか」「理系の課程が理由」。Why には理由。",'school'],
+ ['response',3,[{speaker:'A',text:"Could you explain that again?"}],"",["Sure. I'll speak slowly.","Explain later.","Again tomorrow."],0,"「もう一度説明してもらえますか」「はい。ゆっくり話します」。依頼への承諾。",'phone'],
+ ['dialogue',1,[{speaker:'A',text:"What did you eat for breakfast?"},{speaker:'B',text:"Toast and eggs."}],"What did he eat?",["Toast and eggs.","Rice and fish.","Bread and jam.","Noodles."],0,"「朝食に何を食べたの」「トーストと卵」。toast and eggs が食事。"],
+ ['dialogue',1,[{speaker:'A',text:"Whose umbrella is this?"},{speaker:'B',text:"It's mine."}],"Whose umbrella is it?",["It's mine.","It's yours.","It's his.","It's hers."],0,"「これは誰の傘」「私のです」。It's mine が所有者。"],
+ ['dialogue',2,[{speaker:'A',text:"Why were you late this morning?"},{speaker:'B',text:"I missed the bus."}],"Why was he late?",["He missed the bus.","He overslept.","He walked slowly.","The bus was early."],0,"「なぜ今朝遅れたの」「バスに乗り遅れた」。missed the bus が理由。"],
+ ['dialogue',2,[{speaker:'A',text:"How long will you stay in Osaka?"},{speaker:'B',text:"For about a week."}],"How long will she stay?",["For a day.","For about a week.","For a month.","For a year."],1,"「大阪にどのくらい滞在するの」「約1週間」。for about a week が期間。"],
+ ['dialogue',3,[{speaker:'A',text:"Did you finish the report?"},{speaker:'B',text:"Not yet. I'll finish it tonight."}],"Has she finished the report?",["Yes, she has.","No, she hasn't.","She has no report.","She finished it yesterday."],1,"「報告書は終わった」「まだだよ。今夜終える」。Not yet はまだ〜していない。"],
+ ['dialogue',3,[{speaker:'A',text:"What do you do when you have free time?"},{speaker:'B',text:"I often go fishing with my father."}],"What does he often do?",["Go fishing.","Play baseball.","Watch movies.","Read books."],0,"「ひまなとき何をするの」「父とよく釣りに行く」。go fishing が行動。"],
+ ['passage',1,[{speaker:'narrator',text:"Last Friday, our class visited the fire station near our school. A firefighter showed us a big red fire engine. We climbed into the driver's seat and took pictures. The firefighters taught us how to call for help in a fire. It was an exciting trip."}],"What did the students do at the fire station?",["They climbed into the fire engine.","They put out a fire.","They cooked lunch.","They swam in a pool."],0,"「先週金曜に消防署を見学した。大きな赤い消防車の運転席に座り写真を撮った」。climbed into the fire engine が行動。"],
+ ['passage',1,[{speaker:'narrator',text:"There is a big aquarium in our city. Many fish swim in a huge glass tank. Children like the dolphin show best. The dolphins jump high and catch balls. The show starts at eleven and three every day."}],"What do children like best?",["The glass tank.","The dolphin show.","The balls.","The fish food."],1,"「市に大きな水族館がある。子どもたちはイルカショーが一番好き」。the dolphin show best が答え。"],
+ ['passage',2,[{speaker:'narrator',text:"Yesterday morning, the train suddenly stopped between stations. An announcement said a tree had fallen on the tracks. The passengers waited quietly for thirty minutes. Then workers removed the tree, and the train started again. I was late for school, but my teacher understood."}],"Why did the train stop?",["A tree had fallen on the tracks.","It was raining hard.","The driver was sick.","There were too many passengers."],0,"「昨朝電車が駅間で急停止した。線路に木が倒れていたから」。a tree had fallen が理由。"],
+ ['passage',2,[{speaker:'narrator',text:"My grandmother will be eighty years old next Sunday. Our family will have a big birthday party for her. My mother will cook her favorite food. I will make a card with my sister. Many relatives will come from far away. My grandmother does not know about the party. It will be a surprise."}],"What will the speaker make?",["Food.","A card.","A cake.","A song."],1,"「来週日曜に祖母の80歳の誕生日会を開く。妹とカードを作る」。make a card が行動。"],
+ ['passage',3,[{speaker:'narrator',text:"A big typhoon came to our town last night. Strong winds broke many trees, and heavy rain flooded the streets. Our house lost electricity for five hours. My family used candles and talked together in the dark. This morning, neighbors helped each other clean the streets. I learned that people become strong when they work together."}],"What did the speaker learn?",["Typhoons are scary.","People become strong when they work together.","Candles are dangerous.","Streets are dirty."],1,"「昨夜大きな台風が来た。停電の中、朝には隣人と協力して掃除した。協力すると人は強くなると学んだ」。work together が要点。"],
+ ['passage',3,[{speaker:'narrator',text:"A student from Australia stayed with us for two weeks. At first, she was quiet because her Japanese was not good. We spoke English slowly and used many gestures. Gradually, she started to smile a lot. On the last day, she said, \"Thank you. I will never forget this trip.\" Saying goodbye was sad, but we promised to write e-mails."}],"How did they communicate at first?",["In Japanese.","In English slowly with gestures.","By phone.","By letter."],1,"「オーストラリアの生徒が2週間ホームステイした。最初は英語をゆっくり話し身振りを交えた」。spoke English slowly and used gestures が方法。"],
+],
 '2':[
  ['response',1,[{speaker:'A',text:"What time is it now?"}],"",["It's three thirty.","It's sunny.","It's Tuesday."],0,"「今何時ですか」「3時半です」。What time は時刻。",'school'],
  ['response',1,[{speaker:'A',text:"Where is my notebook?"}],"",["On the desk.","It's new.","I like it."],0,"「ノートはどこ」「机の上だよ」。Where は場所。",'library'],
@@ -1453,7 +1581,7 @@ const PRACTICE_LISTENING_DATA = {
 ['passage',3,[{speaker:'narrator',text:"Last month, Emma joined a running club. She wanted to run faster, but she did not enjoy practicing alone. Now she runs with five other students twice a week. They encourage each other. Emma likes running much more now and wants to enter a race in October."}],"Why did Emma join the running club?",["To teach young children.","To spend less time running.","To practice alone every day.","To learn to run faster with other people."],3,"「先月エマは走るクラブに入りました。もっと速くなりたかったが一人での練習は楽しくありませんでした。今は他の生徒5人と週2回走り、互いに励まし合っています。10月の大会に出たいと思っています」。他の人と練習して速く走れるようになるために入部。"]
 ]
 };
-for(const grade of ['4','5','3','pre2','2']){
+for(const grade of ['4','5','3','pre2','2','pre1']){
  QUESTION_BANKS[grade].park=PRACTICE_LISTENING_DATA[grade].map(([part,d,segments,q,c,a,e,scene],i)=>({
   id:`g${grade}-park-${101+i}`,d,kind:'listening',part,segments,q,c,a,e,
   ...(scene?{scene,picture:PRACTICE_PICTURES[scene]}:{})
@@ -1587,6 +1715,38 @@ const PRACTICE_READING_DATA = [
  ["What did the woman give Aya?",["Money and maps.","Green tea and sweets.","Books and pens.","An umbrella."],1,"お茶とお菓子をもらった。green tea and sweets とある。"],
  ["How long did it take her father to arrive?",["Ten minutes.","Twenty minutes.","Thirty minutes.","An hour."],1,"父は20分で到着した。arrived in twenty minutes とある。"],
  ["What did Aya learn?",["Traveling is fun.","It is important to ask for help.","Kyoto is large.","Diaries are useful."],1,"助けを求めることの大切さを学んだ。it is important to ask for help とある。"]
+]],
+['pre1','notice',1,[
+ ["When will the food festival be held?",["On October 10th.","On November 3rd.","On November 10th.","On December 3rd."],1,"11月3日開催。will be held on November 3rd とある。"],
+ ["What will part of the money be used for?",["Building a new park.","Supporting school lunch programs.","Opening new stalls.","Buying cooking tools."],1,"収益の一部は発展途上国の給食支援に。will be used to support school lunch programs とある。"]
+]],
+['pre1','notice',2,[
+ ["How long will it take to the city by the new line?",["Ten minutes.","Twenty minutes.","Forty minutes.","An hour."],1,"20分で結ぶ。It will take only twenty minutes とある。現行の半分。"],
+ ["What are some residents worried about?",["The cost of tickets.","Noise.","Fewer trains.","Closed shops."],1,"騒音を心配する住民がいる。worry about noise とある。防音壁で対応。"]
+]],
+['pre1','email',1,[
+ ["How long did Sota study vocabulary?",["For a month.","For three months.","For six months.","For a year."],2,"6か月毎日語彙を学習。every day for six months とある。"],
+ ["What is the most difficult part for Sota?",["Writing.","Reading.","Listening.","Speaking."],2,"最も難しいのはリスニング。Listening is still the most difficult とある。"],
+ ["What does Sota want Kate to do?",["Visit Japan.","Give advice.","Teach English.","Lend books."],1,"助言がほしい。Do you have any good advice? とある。"]
+]],
+['pre1','email',2,[
+ ["What did Emi enjoy five years ago?",["Swimming in the sea.","Making cookies.","Playing tennis.","Reading books."],1,"5年前にクッキーを作った思い出。how to make cookies とある。"],
+ ["Why is Emi practicing the piano?",["She will play at the school concert.","She likes music.","She wants to be a teacher.","She has a test."],0,"来月の学校コンサートで弾くため。I will play at the school concert next month とある。"],
+ ["What does Emi want Mrs. Smith to do?",["Visit Japan.","Write back soon.","Take care of herself.","Send cookies."],2,"お体を大切にと結んでいる。Please take care of yourself. とある。"]
+]],
+['pre1','story',1,[
+ ["What did Dr. Ada love as a child?",["Playing sports.","Looking at the night sky.","Reading novels.","Traveling abroad."],1,"幼い頃から望遠鏡で夜空を見るのが好きだった。looking at the night sky とある。"],
+ ["How long did she observe the sky?",["For a year.","For five years.","For ten years.","For twenty years."],2,"10年間毎夜観測。For ten years ... every night とある。"],
+ ["What did she discover last year?",["A new star.","A new planet.","A new telescope.","A new theory."],1,"去年新しい惑星を発見。discovered a new planet とある。"],
+ ["How did people react to her theory at first?",["Many thought it was wrong.","Everyone agreed.","Nobody cared.","Newspapers praised it."],0,"当初多くの人は誤りだと思った。Many people thought her theory was wrong とある。"],
+ ["What did she say about her success?",["Luck brought me here.","Curiosity and continuous effort brought me here.","My teachers did everything.","Talent is enough."],1,"好奇心と継続的な努力がもたらしたと語った。Curiosity and continuous effort ... とある。"]
+]],
+['pre1','story',2,[
+ ["What time does Takeshi get up?",["At four.","At five.","At six.","At seven."],0,"毎朝4時に起きる。gets up at four とある。"],
+ ["Why did his sales fall?",["Bread became unpopular.","A supermarket opened nearby.","He raised prices.","The shop moved."],1,"近くに大型スーパーが開店したため。A large supermarket opened near his shop とある。"],
+ ["How did he save his bakery?",["He lowered all prices.","He used local ingredients.","He opened a new shop.","He sold the shop."],1,"地元食材を使い生産者を紹介することで立て直した。make bread with local ingredients とある。"],
+ ["What is popular at his shop?",["Melon bread.","Curry bread.","Croissants.","Sandwiches."],0,"メロンパンが人気。special melon bread is very popular とある。"],
+ ["What did Takeshi learn?",["Big shops always win.","Small shops can survive by offering something special.","Baking is easy.","Advertising is everything."],1,"特別なものを提供すれば小さな店も生き残れると学んだ。small shops can survive by offering something special とある。"]
 ]]
 ];
 for(const [rg,genre,n,questions] of PRACTICE_READING_DATA){
@@ -1594,6 +1754,82 @@ for(const [rg,genre,n,questions] of PRACTICE_READING_DATA){
  const d={notice:1,email:2,story:3}[genre];
  for(const [q,c,a,e] of questions)QUESTION_BANKS[rg].flower.push({
   id:`g${rg}-flower-${101+QUESTION_BANKS[rg].flower.length}`,d,kind:'reading',group,genre,
+  passage:PRACTICE_PASSAGES[group],q,c,a,e
+ });
+}
+const PRACTICE_CLOZE_DATA=[
+['pre1','notice',1,[
+ ["Which word fits (1)?",
+  ["from","between","during","among"],0,
+  "from November 10th to 15th とある。from A to B でAからBまで。"],
+ ["Which word fits (2)?",
+  ["who","which","what","whose"],1,
+  "books which they do not read とある。物を説明する関係代名詞は which。"],
+ ["Which word fits (3)?",
+  ["buy","to buy","buying","bought"],1,
+  "will be used to buy とある。be used to + 原形で〜するために使われる。"]
+]],
+['pre1','notice',2,[
+ ["Which word fits (1)?",
+  ["next to","far","close","near to"],0,
+  "box next to the office とある。next to で〜の隣に。far/close/the office とはつながらない。"],
+ ["Which word fits (2)?",
+  ["for","with","about","of"],0,
+  "waiting for とある。wait for で〜を待つ。"],
+ ["Which word fits (3)?",
+  ["find","to find","finding","found"],1,
+  "easier to find とある。easy to + 原形で〜しやすい。"]
+]],
+['pre1','email',1,[
+ ["Which word fits (1)?",
+  ["how","what","when","where"],0,
+  "learned how chocolate is made とある。how でどのように。"],
+ ["Which word fits (2)?",
+  ["that","which","whose","where"],3,
+  "tell us where cocoa beans are grown とある。場所を聞く・答える where。"],
+ ["Which word fits (3)?",
+  ["work","works","worked","working"],0,
+  "how many people work とある。people は複数なので原形 work。"]
+]],
+['pre1','email',2,[
+ ["Which word fits (1)?",
+  ["that","what","which","whose"],0,
+  "happy that you remembered とある。that 以下がうれしさの内容。"],
+ ["Which word fits (2)?",
+  ["to","with","for","of"],2,
+  "made cookies for you とある。for で〜のために。"],
+ ["Which word fits (3)?",
+  ["it","them","us","her"],1,
+  "like them とある。cookies は複数なので them。"]
+]],
+['pre1','story',1,[
+ ["Which word fits (1)?",
+  ["taught","was taught","has taught","teaches"],1,
+  "was taught at home by his mother とある。受動態で教えられた。"],
+ ["Which word fits (2)?",
+  ["encourage","encourages","encouraged","encouraging"],0,
+  "words still encourage とある。words は複数なので原形 encourage。"],
+ ["Which word fits (3)?",
+  ["wisely","wisdom","wise","wide"],0,
+  "use his time wisely とある。動詞を修飾する副詞 wisely。"]
+]],
+['pre1','story',2,[
+ ["Which word fits (1)?",
+  ["is","are","was","be"],1,
+  "Most of them are eaten とある。most of them は複数扱い。"],
+ ["Which word fits (2)?",
+  ["with","for","by","about"],2,
+  "by putting fences とある。by ~ing で〜することによって。"],
+ ["Which word fits (3)?",
+  ["get","reach","arrive","go"],1,
+  "safely reach the sea とある。reach + 場所で〜に着く。"]
+]]
+];
+for(const [rg,genre,n,questions] of PRACTICE_CLOZE_DATA){
+ const group=`g${rg}-cloze-${genre}-${n}`;
+ const d={notice:1,email:2,story:3}[genre];
+ for(const [q,c,a,e] of questions)QUESTION_BANKS[rg].station.push({
+  id:`g${rg}-station-${101+QUESTION_BANKS[rg].station.length}`,d,kind:'reading',group,genre,
   passage:PRACTICE_PASSAGES[group],q,c,a,e
  });
 }
@@ -1610,8 +1846,8 @@ for(const grade of ['4','5','3','pre2','2']){
 }
 </script>
 <script>
-function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'||grade==='pre2'||grade==='2'}
-function gradeLabel(grade){return grade==='pre2'?'準2級':grade+'級'}
+function validGrade(grade){return grade==='4'||grade==='5'||grade==='3'||grade==='pre2'||grade==='2'||grade==='pre1'}
+function gradeLabel(grade){return grade==='pre2'?'準2級':grade==='pre1'?'準1級':grade+'級'}
 function questionsForGrade(grade=state?.grade||'4'){return typeof QUESTION_BANKS==='undefined'?undefined:QUESTION_BANKS?.[grade]}
 function reviewBanks(grade){return[questionsForGrade(grade),typeof REVIEW_ARCHIVE==='undefined'?undefined:REVIEW_ARCHIVE?.[grade]].filter(bank=>bank&&typeof bank==='object')}
 function questionById(id,grade=state?.grade||'4'){
@@ -1632,24 +1868,25 @@ const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','�
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
 const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん',essay:'✍️ さくぶん',summary:'📝 ようやく'};
-function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):CAT_TAG[cat]}
-function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':B[cat].desc}
+function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):cat==='station'&&grade==='pre1'?'📖 ちょうぶんほきゅう':CAT_TAG[cat]}
+function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':cat==='station'&&grade==='pre1'?'長文の空所を<br class="mbr">埋めよう':B[cat].desc}
 function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
-function writingChecks(grade,summary){return[(summary?'文章の要点を自分の言葉でまとめられた':grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':grade==='pre2'?'50〜80語を目標に、理由を2つ書いた':grade==='2'?'80〜100語を目標に、理由を2つ書いた':'15〜25語を目標に書いた'),'大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
-const WRITING_RANGE={'5':[5,15],'3':[25,50],'pre2':[50,80],'2':[80,100]};
-const SUMMARY_RANGE={'pre2':[25,35],'2':[45,55]};
+function writingChecks(grade,summary){return[(summary?'文章の要点を自分の言葉でまとめられた':grade==='5'?'5〜15語を目標に、短い英文を書いた':grade==='3'?'25〜50語を目標に、理由を2つ書いた':grade==='pre2'?'50〜80語を目標に、理由を2つ書いた':grade==='2'?'80〜100語を目標に、理由を2つ書いた':grade==='pre1'?'120〜150語を目標に、理由を2つ書いた':'15〜25語を目標に書いた'),'大文字とピリオドを忘れていない','スペルをていねいにチェックした']}
+const WRITING_RANGE={'5':[5,15],'3':[25,50],'pre2':[50,80],'2':[80,100],'pre1':[120,150]};
+const SUMMARY_RANGE={'pre2':[25,35],'2':[45,55],'pre1':[60,90]};
 const BUILDINGS=[
-{id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,desc:'単語(たんご)クイズ'},
-{id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',desc:'文法(ぶんぽう)クイズ'},
-{id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',desc:'会話(かいわ)クイズ'},
-{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',desc:'並べかえ(じゅんばん)クイズ'},
-{id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',desc:'リスニング(ちょうかい)'},
-{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',desc:'任意の追加作文練習（本番の試験ではありません）'},
-{id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2','2'],desc:'本番形式の英作文（3級・準2級・2級のみ）'},
-{id:'summary',name:'まとめ塾',emoji:'📝',cat:'summary',cost:300,req:'essay',grades:['pre2','2'],desc:'要約（本番形式・準2級・2級のみ）'}
+{id:'library',name:'図書館',emoji:'📚',cat:'library',cost:0,req:null,grades:['5','4','3','pre2','2','pre1'],desc:'単語(たんご)クイズ'},
+{id:'school',name:'学校',emoji:'🏫',cat:'school',cost:30,req:'library',grades:['5','4','3','pre2','2','pre1'],desc:'文法(ぶんぽう)クイズ'},
+{id:'cafe',name:'カフェ',emoji:'☕️',cat:'cafe',cost:60,req:'school',grades:['5','4','3','pre2','2','pre1'],desc:'会話(かいわ)クイズ'},
+{id:'station',name:'駅',emoji:'🚉',cat:'station',cost:100,req:'cafe',grades:['5','4','3','pre2','2','pre1'],desc:'並べかえ(じゅんばん)クイズ'},
+{id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',grades:['5','4','3','pre2','2','pre1'],desc:'リスニング(ちょうかい)'},
+{id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'任意の追加作文練習（本番の試験ではありません）'},
+{id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2','2','pre1'],desc:'本番形式の英作文（3級・準2級・2級・準1級のみ）'},
+{id:'summary',name:'まとめ塾',emoji:'📝',cat:'summary',cost:300,req:'essay',grades:['pre2','2','pre1'],desc:'要約（本番形式・準2級・2級・準1級のみ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
 function buildingGrades(b){return b.grades||['4','5','3','pre2','2']}
+function reqFor(b,grade){const a=BUILDINGS.filter(x=>buildingGrades(x).includes(grade));const i=a.findIndex(x=>x.cat===b.cat);return i>0?a[i-1]:null}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -1670,12 +1907,11 @@ let state=null;
 let towns={},activeGrade='4',legacyLoaded=false;
 function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
 function updateUnlocks(s){
- const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)));
+ const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)&&B[cat]&&buildingGrades(B[cat]).includes(s.grade)));
  unlocked.add('library');
- BUILDINGS.forEach((b,i)=>{
-  if(s.placed[b.cat]){
-   BUILDINGS.slice(0,i+2).forEach(item=>{if(buildingGrades(item).includes(s.grade))unlocked.add(item.cat)});
-  }
+ const avail=BUILDINGS.filter(b=>buildingGrades(b).includes(s.grade));
+ avail.forEach((b,i)=>{
+  if(i===0||s.placed[b.cat]||s.placed[avail[i-1].cat])unlocked.add(b.cat);
  });
  s.unlocked=[...unlocked];
 }
@@ -1782,7 +2018,7 @@ function loadState(){
  if(d&&typeof d==='object'&&!Array.isArray(d)&&d.v===5){
   if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns)){loadBlockError('malformed');return null}
   const next={},nextGrade=validGrade(d.activeGrade)?d.activeGrade:'4';
-  for(const grade of ['4','5','3','pre2','2']){
+  for(const grade of ['4','5','3','pre2','2','pre1']){
    if(!Object.hasOwn(d.towns,grade))continue;
    const town=migrate(d.towns[grade],grade);
    if(!town){loadBlockError('malformed');return null}
@@ -1831,6 +2067,74 @@ function save(){
  freshStart=false;
  towns[state.grade]=state;
  return persistTowns();
+}
+function exportSaveJSON(){
+ if(loadBlocked)return null;
+ const r=readRaw();
+ if(!r.ok||!r.raw)return null;
+ try{
+  const d=JSON.parse(r.raw);
+  if(!validateImportedSave(d))return null;
+  return JSON.stringify(d);
+ }catch(e){return null}
+}
+function exportSave(){
+ if(loadBlocked||activeSession())return;
+ const r0=readRaw();
+ if(!r0.ok||!r0.raw){toast('保存するデータがまだありません');return}
+ try{
+  const text=exportSaveJSON();
+  if(text===null||typeof Blob==='undefined'||typeof URL==='undefined'){toast('保存に失敗しました');return}
+  const blob=new Blob([text],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='eiken-town-save.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>{try{URL.revokeObjectURL(a.href)}catch(e){}},1000);
+  toast('セーブファイルを保存しました');
+ }catch(e){toast('保存に失敗しました')}
+}
+function validateImportedSave(d){
+ if(!d||typeof d!=='object'||Array.isArray(d)||d.v!==5)return null;
+ if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns))return null;
+ const next={};
+ for(const grade of Object.keys(d.towns)){
+  if(!validGrade(grade))return null;
+  const town=migrate(d.towns[grade],grade);
+  if(!town)return null;
+  next[grade]=town;
+ }
+ if(!Object.keys(next).length)return null;
+ const ag=validGrade(d.activeGrade)&&next[d.activeGrade]?d.activeGrade:Object.keys(next)[0];
+ return{activeGrade:ag,towns:next};
+}
+function importSaveFromText(text){
+ if(loadBlocked||activeSession())return false;
+ let d=null;
+ try{d=JSON.parse(text)}catch(e){}
+ const v=validateImportedSave(d);
+ if(!v){toast('ファイルが正しくありません');return false}
+ askYesNo('ファイルから読み込む?','今の全ての級の街・記録がファイルの内容で上書きされます。よろしいですか?','読み込む',()=>{
+  if(loadBlocked||activeSession())return;
+  towns=v.towns;activeGrade=v.activeGrade;legacyLoaded=false;
+  state=towns[activeGrade]||freshState(activeGrade);
+  freshStart=!towns[activeGrade];
+  if(!persistTowns())return;
+  clearGradeActivity();
+  applyGfx();refreshHUD();refreshNameUI();renderStats();refreshGradeUI();
+  show('scr-title');
+  toast('セーブデータを読み込みました');
+ });
+ return true;
+}
+function importSave(file){
+ if(loadBlocked||activeSession()||!file||typeof FileReader==='undefined')return;
+ try{
+  const reader=new FileReader();
+  reader.onload=()=>importSaveFromText(reader.result);
+  reader.onerror=()=>toast('ファイルが正しくありません');
+  reader.readAsText(file);
+ }catch(e){toast('ファイルが正しくありません')}
 }
 
 let actx=null;
@@ -1991,8 +2295,7 @@ function openTutorial(){
 }
 function renderTut(){
  const p=TUT[tutPage];
- const last=tutPage===TUT.length-1;
- const body=tutPage===0?p.d.replace('6つの建物',(state.grade==='4'||state.grade==='5')?'6つの建物':state.grade==='3'?'7つの建物':'8つの建物'):p.d;
+ const last=tutPage===TUT.length-1; const body=tutPage===0?p.d.replace('6つの建物',BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length+'つの建物'):p.d;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${body}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
@@ -2154,7 +2457,7 @@ function openPalette(){
   const locked=!state.unlocked.includes(b.cat);
   const poor=state.coins<b.cost;
   const dis=locked||poor?'disabled':'';
-  const why=locked?`🔒 ${B[b.req].name}を先に建てよう`:poor?'💰 コインが足りない…':'タップして好きな場所へ!';
+  const why=locked?`🔒 ${(reqFor(b,state.grade)||B[b.req]||b).name}を先に建てよう`:poor?'💰 コインが足りない…':'タップして好きな場所へ!';
   return`<button class="bcard ${locked?'locked':''}" ${dis} data-cat="${b.cat}">
    <span class="bc-emoji">${b.emoji}</span>
    <span><span class="bc-name">${b.name}</span><br><span class="bc-desc">${buildingDesc(b.cat)}<br><small style="color:var(--lav-d);font-weight:700">${why}</small></span></span>
@@ -3537,11 +3840,17 @@ function openSettings(){
    <button type="button" class="grade-card" data-grade="2" aria-pressed="${activeGrade==='2'}" aria-label="英検2級" aria-describedby="settings-grade-2-description">
     <span class="grade-name">英検2級</span><span class="grade-description" id="settings-grade-2-description">準2級の次のステップへ</span><span class="grade-status">${activeGrade==='2'?'選択中':'選ぶ'}</span>
    </button>
+   <button type="button" class="grade-card" data-grade="pre1" aria-pressed="${activeGrade==='pre1'}" aria-label="英検準1級" aria-describedby="settings-grade-pre1-description">
+    <span class="grade-name">英検準1級</span><span class="grade-description" id="settings-grade-pre1-description">2級の次のステップへ</span><span class="grade-status">${activeGrade==='pre1'?'選択中':'選ぶ'}</span>
+   </button>
   </div>
  </fieldset>
  <button class="btn lavvy big" id="st-help">❓ 遊び方をみる</button>
  <button class="btn ghosty big" id="st-gfx">${gfx}</button>
  <button class="btn ghosty big" id="st-sound">${snd}</button>
+ <button class="btn ghosty big" id="st-export">💾 セーブをファイルに保存</button>
+ <button class="btn ghosty big" id="st-import">📂 ファイルから読み込む</button>
+ <input type="file" id="st-import-file" accept=".json,application/json" class="hidden">
  <button class="btn ghosty" id="st-reset">${gradeLabel(activeGrade)}の街だけ消して最初から</button>
  <button class="btn pinky small" onclick="closeModal()">とじる</button>
  </div>`);
@@ -3556,6 +3865,9 @@ function openSettings(){
   openSettings();
  };
  $('#st-sound').onclick=()=>{state.sound=!state.sound;save();refreshHUD();openSettings()};
+ $('#st-export').onclick=()=>{closeModal();exportSave()};
+ $('#st-import').onclick=()=>{if(loadBlocked||activeSession())return;$('#st-import-file').click()};
+ $('#st-import-file').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importSave(f)};
  $('#st-reset').onclick=()=>askYesNo(gradeLabel(activeGrade)+'のデータを消す?','この級の街・おかね・きろくが消えて、<br class="mbr">この級は最初からになります。<br class="wbr"><br class="mbr">他の級の記録は残るよ。いい?','消して最初から',wipeAndRestart);
 }
 $('#save-retry').onclick=retryLoad;
@@ -3568,6 +3880,8 @@ $('#rename-btn').onclick=()=>openNaming(false);
 $('#build-open').onclick=()=>openPalette();
 $('#settings-btn').onclick=openSettings;
 $('#how-btn-title').onclick=openTutorial;
+$('#import-btn-title').onclick=()=>{if(loadBlocked||activeSession())return;$('#title-import-file').click()};
+$('#title-import-file').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importSave(f)};
 $('#cam-reset').onclick=()=>{
  R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};
