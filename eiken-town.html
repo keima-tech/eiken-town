@@ -478,6 +478,8 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
         <button class="btn pinky big" id="start-btn">▶️ はじめる!</button>
         <button class="btn ghosty small hidden" id="reset-btn-top">今の級の街だけを消して最初から</button>
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
+        <button class="btn ghosty small" id="import-btn-title">📂 ファイルからつづきをよみこむ</button>
+        <input type="file" id="title-import-file" accept=".json,application/json" class="hidden">
         <p class="save-note">英検5級・4級・3級・準2級・2級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
       </div>
     </div>
@@ -1831,6 +1833,74 @@ function save(){
  freshStart=false;
  towns[state.grade]=state;
  return persistTowns();
+}
+function exportSaveJSON(){
+ if(loadBlocked)return null;
+ const r=readRaw();
+ if(!r.ok||!r.raw)return null;
+ try{
+  const d=JSON.parse(r.raw);
+  if(!validateImportedSave(d))return null;
+  return JSON.stringify(d);
+ }catch(e){return null}
+}
+function exportSave(){
+ if(loadBlocked||activeSession())return;
+ const r0=readRaw();
+ if(!r0.ok||!r0.raw){toast('保存するデータがまだありません');return}
+ try{
+  const text=exportSaveJSON();
+  if(text===null||typeof Blob==='undefined'||typeof URL==='undefined'){toast('保存に失敗しました');return}
+  const blob=new Blob([text],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='eiken-town-save.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>{try{URL.revokeObjectURL(a.href)}catch(e){}},1000);
+  toast('セーブファイルを保存しました');
+ }catch(e){toast('保存に失敗しました')}
+}
+function validateImportedSave(d){
+ if(!d||typeof d!=='object'||Array.isArray(d)||d.v!==5)return null;
+ if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns))return null;
+ const next={};
+ for(const grade of Object.keys(d.towns)){
+  if(!validGrade(grade))return null;
+  const town=migrate(d.towns[grade],grade);
+  if(!town)return null;
+  next[grade]=town;
+ }
+ if(!Object.keys(next).length)return null;
+ const ag=validGrade(d.activeGrade)&&next[d.activeGrade]?d.activeGrade:Object.keys(next)[0];
+ return{activeGrade:ag,towns:next};
+}
+function importSaveFromText(text){
+ if(loadBlocked||activeSession())return false;
+ let d=null;
+ try{d=JSON.parse(text)}catch(e){}
+ const v=validateImportedSave(d);
+ if(!v){toast('ファイルが正しくありません');return false}
+ askYesNo('ファイルから読み込む?','今の全ての級の街・記録がファイルの内容で上書きされます。よろしいですか?','読み込む',()=>{
+  if(loadBlocked||activeSession())return;
+  towns=v.towns;activeGrade=v.activeGrade;legacyLoaded=false;
+  state=towns[activeGrade]||freshState(activeGrade);
+  freshStart=!towns[activeGrade];
+  if(!persistTowns())return;
+  clearGradeActivity();
+  applyGfx();refreshHUD();refreshNameUI();renderStats();refreshGradeUI();
+  show('scr-title');
+  toast('セーブデータを読み込みました');
+ });
+ return true;
+}
+function importSave(file){
+ if(loadBlocked||activeSession()||!file||typeof FileReader==='undefined')return;
+ try{
+  const reader=new FileReader();
+  reader.onload=()=>importSaveFromText(reader.result);
+  reader.onerror=()=>toast('ファイルが正しくありません');
+  reader.readAsText(file);
+ }catch(e){toast('ファイルが正しくありません')}
 }
 
 let actx=null;
@@ -3542,6 +3612,9 @@ function openSettings(){
  <button class="btn lavvy big" id="st-help">❓ 遊び方をみる</button>
  <button class="btn ghosty big" id="st-gfx">${gfx}</button>
  <button class="btn ghosty big" id="st-sound">${snd}</button>
+ <button class="btn ghosty big" id="st-export">💾 セーブをファイルに保存</button>
+ <button class="btn ghosty big" id="st-import">📂 ファイルから読み込む</button>
+ <input type="file" id="st-import-file" accept=".json,application/json" class="hidden">
  <button class="btn ghosty" id="st-reset">${gradeLabel(activeGrade)}の街だけ消して最初から</button>
  <button class="btn pinky small" onclick="closeModal()">とじる</button>
  </div>`);
@@ -3556,6 +3629,9 @@ function openSettings(){
   openSettings();
  };
  $('#st-sound').onclick=()=>{state.sound=!state.sound;save();refreshHUD();openSettings()};
+ $('#st-export').onclick=()=>{closeModal();exportSave()};
+ $('#st-import').onclick=()=>{if(loadBlocked||activeSession())return;$('#st-import-file').click()};
+ $('#st-import-file').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importSave(f)};
  $('#st-reset').onclick=()=>askYesNo(gradeLabel(activeGrade)+'のデータを消す?','この級の街・おかね・きろくが消えて、<br class="mbr">この級は最初からになります。<br class="wbr"><br class="mbr">他の級の記録は残るよ。いい?','消して最初から',wipeAndRestart);
 }
 $('#save-retry').onclick=retryLoad;
@@ -3568,6 +3644,8 @@ $('#rename-btn').onclick=()=>openNaming(false);
 $('#build-open').onclick=()=>openPalette();
 $('#settings-btn').onclick=openSettings;
 $('#how-btn-title').onclick=openTutorial;
+$('#import-btn-title').onclick=()=>{if(loadBlocked||activeSession())return;$('#title-import-file').click()};
+$('#title-import-file').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)importSave(f)};
 $('#cam-reset').onclick=()=>{
  R.cam={theta:.78,phi:1.02,radius:26};
  R.target={x:0,z:0};

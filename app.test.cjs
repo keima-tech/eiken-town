@@ -794,6 +794,81 @@ if (require.main === module) {
     }
   });
 
+  test('save export produces re-importable JSON and import overwrites with confirmation', () => {
+    const { run, get, json, storage } = loadApp();
+    run("confirmBuild(0,'library'); state.coins=77; save()");
+    run('globalThis.__exp=exportSaveJSON()');
+    const exported = run('globalThis.__exp');
+    assert.equal(typeof exported, 'string');
+    assert.deepEqual(JSON.parse(exported), JSON.parse(storage.get('eikenTownSave_v1')));
+    assert.deepEqual(json('validateImportedSave(JSON.parse(globalThis.__exp)).towns["4"].placed'), { library: { tile: 0, level: 1 } });
+    run("state.coins=5; state.townName='別'");
+    const before = storage.get('eikenTownSave_v1');
+    run('importSaveFromText(globalThis.__exp)');
+    get('#yn-no').click();
+    assert.equal(json('state.coins'), 5);
+    assert.equal(storage.get('eikenTownSave_v1'), before);
+    run('importSaveFromText(globalThis.__exp)');
+    get('#yn-yes').click();
+    assert.equal(run('state.coins'), 77);
+    assert.equal(run('state.townName'), '');
+    assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 } });
+    assert.equal(get('#scr-title').classList.contains('active'), true);
+  });
+
+  test('save import rejects malformed payloads without changing state', () => {
+    const { run, get, json, storage } = loadApp();
+    run("confirmBuild(0,'library'); save()");
+    const beforeState = json('state');
+    const beforeBytes = storage.get('eikenTownSave_v1');
+    for (const bad of ['not json', '{"v":4}', '{"v":5}', '{"v":5,"towns":[]}', '{"v":5,"towns":{}}', '{"v":5,"towns":{"9":{}}}', '{"v":5,"towns":{"4":null}}']) {
+      assert.equal(run(`importSaveFromText(${JSON.stringify(bad)})`), false);
+    }
+    assert.deepEqual(json('state'), beforeState);
+    assert.equal(storage.get('eikenTownSave_v1'), beforeBytes);
+    assert.equal(get('#yn-yes'), null);
+  });
+
+  test('save transfer is blocked during quizzes and broken saves, settings exposes buttons', () => {
+    const { run, get } = loadApp();
+    run("confirmBuild(0,'library'); save()");
+    run('globalThis.__exp=exportSaveJSON()');
+    run("startSession('library',false)");
+    assert.equal(run('importSaveFromText(globalThis.__exp)'), false);
+    assert.equal(run('state.coins'), 50);
+    run('goHome()');
+    get('#yn-yes').click();
+    run('openSettings()');
+    assert.ok(get('#st-export'));
+    assert.ok(get('#st-import'));
+    assert.ok(get('#st-import-file'));
+  });
+
+  test('save export on empty storage reports no data', () => {
+    const { run, get } = loadApp();
+    assert.equal(run('exportSaveJSON()'), null);
+    run('exportSave()');
+    assert.match(get('#toast-root').children.at(-1).textContent, /まだありません/);
+  });
+
+  test('title screen can start from a transferred save file', () => {
+    const src = loadApp();
+    src.run("confirmBuild(0,'library'); state.coins=77; save()");
+    const exported = src.run('exportSaveJSON()');
+    assert.equal(typeof exported, 'string');
+    const dst = loadApp();
+    assert.equal(dst.get('#start-btn').textContent, 'はじめる!');
+    assert.ok(dst.get('#import-btn-title'));
+    assert.ok(dst.get('#title-import-file'));
+    assert.equal(typeof dst.get('#import-btn-title').onclick, 'function');
+    dst.run(`importSaveFromText(${JSON.stringify(exported)})`);
+    dst.get('#yn-yes').click();
+    assert.equal(dst.run('state.coins'), 77);
+    assert.deepEqual(dst.json('state.placed'), { library: { tile: 0, level: 1 } });
+    assert.equal(dst.get('#start-btn').textContent, 'つづきから!');
+    assert.equal(dst.get('#scr-title').classList.contains('active'), true);
+  });
+
   test('mobile readability uses mobile-only breaks in long explanations', () => {
     const html = readFileSync(join(__dirname, 'eiken-town.html'), 'utf8');
     const css = html.match(/<style>([\s\S]*?)<\/style>/)[1];
