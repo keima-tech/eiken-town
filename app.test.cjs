@@ -396,7 +396,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
-    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
+    run("for(const t of [null,undefined,-1,121,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
     assert.deepEqual(json('state'), before);
     run("enterPlace('school'); onTileTap(1)");
     assert.equal(get('#yn-yes'), null);
@@ -418,7 +418,7 @@ if (require.main === module) {
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
     run("for(const id of [null,undefined,'missing','__proto__','library','',0])confirmDeco(5,id)");
-    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
+    run("for(const t of [null,undefined,-1,121,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
     assert.deepEqual(json('state'), before);
     run("confirmDeco(0,'bench'); confirmDeco(1,'bench')");
     assert.deepEqual(json('state'), before);
@@ -462,7 +462,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     const before = json('state');
     run("for(const cat of [null,undefined,'missing','__proto__','constructor','__road','school']){confirmBuild(0,cat);enterPlace(cat);openBuildingMenu(cat);canUpgrade(cat)}");
-    run("exitPlace(); for(const t of [null,undefined,-1,81,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
+    run("exitPlace(); for(const t of [null,undefined,-1,121,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
     assert.deepEqual(json('state'), before);
     run("enterPlace('library'); onTileTap(0); exitPlace()");
     get('#yn-yes').click();
@@ -652,7 +652,7 @@ if (require.main === module) {
     const { run, json } = loadApp();
     run("state=migrate({g:5,coins:Infinity,totalCorrect:-3,totalAnswered:NaN,placed:{library:{lot:5,level:2},school:{tile:1,level:1},cafe:{tile:1,level:2},station:{tile:-1,level:1},park:{tile:NaN,level:1},flower:{tile:4,level:Infinity},bad:{tile:3,level:1}},roads:[0,0,1,5,-1,2.5,null],progress:{library:6,school:-1,cafe:Infinity,park:16,bad:3},unlocked:['bad','park'],review:['library:0','library:0','bad:0','library:999','constructor:0',null]})");
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
-    assert.deepEqual(json('state.roads'), [0, 9]);
+    assert.deepEqual(json('state.roads'), [0, 11]);
     assert.equal(run('state.coins'), 50);
     assert.equal(run('state.totalCorrect'), 0);
     assert.equal(run('state.totalAnswered'), 0);
@@ -724,9 +724,19 @@ if (require.main === module) {
   test('migration sanitizes decorations, remaps legacy tiles and drops collisions', () => {
     const { run, json } = loadApp();
     run("state=migrate({g:7,placed:{library:{tile:0,level:1}},roads:[1],decorations:[{tile:2,kind:'bench'},{tile:9,kind:'fountain'},{tile:16,kind:'lamp'},{tile:0,kind:'sign'},{tile:1,kind:'flowerbed'},{tile:2,kind:'lamp'},{tile:48,kind:'bench'},{tile:3,kind:'missing'},null,'x',{tile:4},{}]})");
-    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 11, kind: 'fountain' }, { tile: 20, kind: 'lamp' }, { tile: 60, kind: 'bench' }]);
+    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 13, kind: 'fountain' }, { tile: 24, kind: 'lamp' }, { tile: 72, kind: 'bench' }]);
     assert.deepEqual(json('migrate({}).decorations'), []);
     assert.deepEqual(json("migrate({decorations:'nope'}).decorations"), []);
+  });
+
+  test('migration remaps 9-grid tiles onto the 11-grid', () => {
+    const { run, json } = loadApp();
+    assert.equal(run('GRID'), 11);
+    run("state=migrate({g:9,placed:{library:{tile:0,level:1},school:{tile:80,level:2}},roads:[8,72],decorations:[{tile:40,kind:'bench'}]})");
+    assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 }, school: { tile: 96, level: 2 } });
+    assert.deepEqual(json('state.roads'), [8, 88]);
+    assert.deepEqual(json('state.decorations'), [{ tile: 48, kind: 'bench' }]);
+    assert.equal(run('state.g'), 11);
   });
 
   test('city rebuild drops animations referencing removed objects', () => {
