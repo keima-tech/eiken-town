@@ -320,7 +320,6 @@ if (require.main === module) {
           run(`session=${previous}`);
           const session = run('session');
           assert.doesNotThrow(() => get('#bm-start').click());
-          assert.doesNotThrow(() => get('#review-btn').click());
           assert.equal(run('session'), session);
           assert.deepEqual(json('state'), before);
           assert.equal(storage.get('eikenTownSave_v1'), bytes);
@@ -361,7 +360,7 @@ if (require.main === module) {
     const app = loadApp();
     const { run, get, json } = app;
     assert.equal(run('state.v'), 5);
-    assert.deepEqual(json('state.unlocked'), ['library']);
+    assert.deepEqual(json('state.unlocked'), ['library', 'review']);
     run("state.coins=500; confirmBuild(0,'library'); confirmBuild(1,'school'); state.progress.school=16; state.totalCorrect=16; state.totalAnswered=18; state.review=['g4-school-001']; openBuildingMenu('school')");
     get('#bm-up').click();
     assert.equal(run('state.placed.school.level'), 2);
@@ -397,7 +396,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
-    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
+    run("for(const t of [null,undefined,-1,121,1.5,NaN,Infinity,'2',{},0,1])tryRoad(t)");
     assert.deepEqual(json('state'), before);
     run("enterPlace('school'); onTileTap(1)");
     assert.equal(get('#yn-yes'), null);
@@ -419,7 +418,7 @@ if (require.main === module) {
     run("confirmBuild(0,'library'); tryRoad(1)");
     const before = json('state');
     run("for(const id of [null,undefined,'missing','__proto__','library','',0])confirmDeco(5,id)");
-    run("for(const t of [null,undefined,-1,81,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
+    run("for(const t of [null,undefined,-1,121,1.5,NaN,Infinity,'2',{},0,1])confirmDeco(t,'bench')");
     assert.deepEqual(json('state'), before);
     run("confirmDeco(0,'bench'); confirmDeco(1,'bench')");
     assert.deepEqual(json('state'), before);
@@ -453,13 +452,17 @@ if (require.main === module) {
     get('#yn-yes').click();
     assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }]);
     assert.equal(run('state.coins'), coinsBefore);
+    assert.equal(run('DECOS.length'), 9);
+    run("state.coins=100; confirmDeco(7,'swing'); confirmDeco(8,'mailbox'); confirmDeco(9,'clocktower'); confirmDeco(10,'busstop')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }, { tile: 7, kind: 'swing' }, { tile: 8, kind: 'mailbox' }, { tile: 9, kind: 'clocktower' }, { tile: 10, kind: 'busstop' }]);
+    assert.equal(run('state.coins'), 100 - 15 - 5 - 20 - 10);
   });
 
   test('core build and category actions validate input, unlocks, funds and stale selection', () => {
     const { run, get, json } = loadApp();
     const before = json('state');
     run("for(const cat of [null,undefined,'missing','__proto__','constructor','__road','school']){confirmBuild(0,cat);enterPlace(cat);openBuildingMenu(cat);canUpgrade(cat)}");
-    run("exitPlace(); for(const t of [null,undefined,-1,81,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
+    run("exitPlace(); for(const t of [null,undefined,-1,121,0.1,NaN,Infinity,'0',{}]){confirmBuild(t,'library');onTileTap(t)}");
     assert.deepEqual(json('state'), before);
     run("enterPlace('library'); onTileTap(0); exitPlace()");
     get('#yn-yes').click();
@@ -649,7 +652,7 @@ if (require.main === module) {
     const { run, json } = loadApp();
     run("state=migrate({g:5,coins:Infinity,totalCorrect:-3,totalAnswered:NaN,placed:{library:{lot:5,level:2},school:{tile:1,level:1},cafe:{tile:1,level:2},station:{tile:-1,level:1},park:{tile:NaN,level:1},flower:{tile:4,level:Infinity},bad:{tile:3,level:1}},roads:[0,0,1,5,-1,2.5,null],progress:{library:6,school:-1,cafe:Infinity,park:16,bad:3},unlocked:['bad','park'],review:['library:0','library:0','bad:0','library:999','constructor:0',null]})");
     assert.deepEqual(json('state.placed'), { library: { tile: 6, level: 2 }, school: { tile: 1, level: 1 } });
-    assert.deepEqual(json('state.roads'), [0, 9]);
+    assert.deepEqual(json('state.roads'), [0, 11]);
     assert.equal(run('state.coins'), 50);
     assert.equal(run('state.totalCorrect'), 0);
     assert.equal(run('state.totalAnswered'), 0);
@@ -677,7 +680,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("state=migrate({v:5,grade:'4',g:9,coins:50,placed:{library:{tile:0,level:1},essay:{tile:1,level:1}},roads:[],decorations:[],progress:{},review:[],unlocked:['library']},'4')");
     assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 } });
-    assert.deepEqual(json('state.unlocked'), ['library', 'school']);
+    assert.deepEqual(json('state.unlocked'), ['library', 'school', 'review']);
     run("state.placed.essay={tile:1,level:1}; updateUnlocks(state)");
     assert.equal(run('state.unlocked.includes("essay")'), false);
     assert.doesNotThrow(() => run("startSession('essay',false)"));
@@ -721,9 +724,19 @@ if (require.main === module) {
   test('migration sanitizes decorations, remaps legacy tiles and drops collisions', () => {
     const { run, json } = loadApp();
     run("state=migrate({g:7,placed:{library:{tile:0,level:1}},roads:[1],decorations:[{tile:2,kind:'bench'},{tile:9,kind:'fountain'},{tile:16,kind:'lamp'},{tile:0,kind:'sign'},{tile:1,kind:'flowerbed'},{tile:2,kind:'lamp'},{tile:48,kind:'bench'},{tile:3,kind:'missing'},null,'x',{tile:4},{}]})");
-    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 11, kind: 'fountain' }, { tile: 20, kind: 'lamp' }, { tile: 60, kind: 'bench' }]);
+    assert.deepEqual(json('state.decorations'), [{ tile: 2, kind: 'bench' }, { tile: 13, kind: 'fountain' }, { tile: 24, kind: 'lamp' }, { tile: 72, kind: 'bench' }]);
     assert.deepEqual(json('migrate({}).decorations'), []);
     assert.deepEqual(json("migrate({decorations:'nope'}).decorations"), []);
+  });
+
+  test('migration remaps 9-grid tiles onto the 11-grid', () => {
+    const { run, json } = loadApp();
+    assert.equal(run('GRID'), 11);
+    run("state=migrate({g:9,placed:{library:{tile:0,level:1},school:{tile:80,level:2}},roads:[8,72],decorations:[{tile:40,kind:'bench'}]})");
+    assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 }, school: { tile: 96, level: 2 } });
+    assert.deepEqual(json('state.roads'), [8, 88]);
+    assert.deepEqual(json('state.decorations'), [{ tile: 48, kind: 'bench' }]);
+    assert.equal(run('state.g'), 11);
   });
 
   test('city rebuild drops animations referencing removed objects', () => {
@@ -1588,7 +1601,7 @@ if (require.main === module) {
     assert.equal(run('pendingPlace'), 'essay');
     run("exitPlace(); closeModal(); activeGrade='4'; state=freshState('4'); openPalette()");
     assert.equal(get('[data-cat="essay"]'), null);
-    assert.deepEqual(json('state.unlocked'), ['library']);
+    assert.deepEqual(json('state.unlocked'), ['library', 'review']);
     assert.equal(run(`'essay' in B && B.essay.req`), 'flower');
   });
 
@@ -1753,7 +1766,39 @@ if (require.main === module) {
     }
     run('renderMap()');
     assert.equal(get('#town-stats').textContent, '建物 8/8');
-    assert.deepEqual(json('[...state.unlocked].sort()'), ['cafe', 'essay', 'flower', 'library', 'park', 'school', 'station', 'summary']);
+    assert.deepEqual(json('[...state.unlocked].sort()'), ['cafe', 'essay', 'flower', 'library', 'park', 'review', 'school', 'station', 'summary']);
+  });
+
+  test('review tower is free from the start, opens a review menu, and stays out of ranks and stats', () => {
+    const { run, get, json } = loadApp();
+    run("activeGrade='4'; state=freshState('4'); state.coins=2000; openPalette()");
+    assert.equal(get('[data-cat="review"]').disabled, false);
+    assert.match(get('[data-cat="review"]').textContent, /無料/);
+    assert.equal(run('state.unlocked.includes("review")'), true);
+    run("closeModal(); confirmBuild(0,'library'); confirmBuild(1,'review')");
+    assert.equal(run('state.coins'), 2000);
+    assert.deepEqual(json('state.placed.review'), { tile: 1, level: 1 });
+    run("confirmBuild(2,'school'); confirmBuild(3,'cafe'); confirmBuild(4,'station'); confirmBuild(5,'park')");
+    run('renderMap()');
+    assert.equal(get('#town-stats').textContent, '建物 5/6');
+    assert.equal(run('sumLevels()'), 5);
+    assert.equal(run("canUpgrade('review')"), false);
+    assert.equal(run("catTag('review')"), '🗼 ふくしゅう');
+    run('onTileTap(1)');
+    assert.match(get('#modal').textContent, /ふくしゅう待ち 0 問/);
+    run("state.review=['g4-library-001']; onTileTap(1)");
+    assert.match(get('#modal').textContent, /ふくしゅう待ち 1 問/);
+    get('#rm-start').click();
+    assert.equal(run('!!session&&session.isReview'), true);
+    assert.equal(run('session.qs.length'), 1);
+    run('goHome()');
+    get('#yn-yes').click();
+    run('onTileTap(1)');
+    get('#rm-remove').click();
+    get('#yn-yes').click();
+    assert.equal(run('state.placed.review'), undefined);
+    run('renderMap()');
+    assert.equal(get('#town-stats').textContent, '建物 5/6');
   });
 
   test('grade labels show 準1級 and tutorial counts staged buildings', () => {
