@@ -1963,7 +1963,7 @@ const GRID=9,TILE=3.0,PITCH=2.9;
 const NAME_IDEAS=['サクラタウン','ひまわり町','みらいシティ','こはる村','スターヒルズ','にじがわ町','あおぞらシティ'];
 const ROAD={id:'__road',name:'道路',emoji:'🛣️',cost:10};
 const FB_DECO=['🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿','🐞','🌱','🌼','🍄','🌿','🦋','🌱','🌸','🍀','🌷','🐞','🌻','🐝','🍀','🌼','🌱','🦋','🌿','🌸','🍄','🌱','🌼','🍀','🌻','🌿'];
-const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん',essay:'✍️ さくぶん',summary:'📝 ようやく'};
+const CAT_TAG={library:'📚 たんご',school:'🏫 ぶんぽう',cafe:'☕️ かいわ',station:'🚉 じゅんじょ',park:'👂 ちょうかい',flower:'✏️ さくぶん',essay:'✍️ さくぶん',summary:'📝 ようやく',review:'🗼 ふくしゅう'};
 function catTag(cat,grade=state?.grade||'4'){return cat==='flower'?(grade==='5'?'✏️ さくぶん':'読解（どっかい）'):cat==='station'&&grade==='pre1'?'📖 ちょうぶんほきゅう':CAT_TAG[cat]}
 function buildingDesc(cat,grade=state?.grade||'4'){return cat==='flower'&&grade!=='5'?'読解：掲示・メール・物語を<br class="mbr">読もう':cat==='station'&&grade==='pre1'?'長文の空所を<br class="mbr">埋めよう':B[cat].desc}
 function flowerGuide(grade){return grade==='5'?'お花屋さんは任意の<br class="mbr">追加作文練習（2問）で、<br class="wbr"><br class="mbr">本番の試験ではありません。':'お花屋さんは読解練習。<br class="wbr"><br class="mbr">レベルに応じて一つの文章と<br class="mbr">2・3・5問に挑戦します。'}
@@ -1978,11 +1978,13 @@ const BUILDINGS=[
 {id:'park',name:'公園',emoji:'🌳',cat:'park',cost:150,req:'station',grades:['5','4','3','pre2','2','pre1'],desc:'リスニング(ちょうかい)'},
 {id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'任意の追加作文練習（本番の試験ではありません）'},
 {id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2','2','pre1'],desc:'本番形式の英作文（3級・準2級・2級・準1級のみ）'},
-{id:'summary',name:'まとめ塾',emoji:'📝',cat:'summary',cost:300,req:'essay',grades:['pre2','2','pre1'],desc:'要約（本番形式・準2級・2級・準1級のみ）'}
+ {id:'summary',name:'まとめ塾',emoji:'📝',cat:'summary',cost:300,req:'essay',grades:['pre2','2','pre1'],desc:'要約（本番形式・準2級・2級・準1級のみ）'},
+ {id:'review',name:'復習塔',emoji:'🗼',cat:'review',cost:120,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'まちがえた問題のふくしゅう専用（町のランクには数えないよ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
 function buildingGrades(b){return b.grades||['4','5','3','pre2','2']}
-function reqFor(b,grade){const a=BUILDINGS.filter(x=>buildingGrades(x).includes(grade));const i=a.findIndex(x=>x.cat===b.cat);return i>0?a[i-1]:null}
+function countableBuildings(grade){return BUILDINGS.filter(b=>b.cat!=='review'&&buildingGrades(b).includes(grade))}
+function reqFor(b,grade){if(b.req&&B[b.req]&&buildingGrades(B[b.req]).includes(grade))return B[b.req];const a=BUILDINGS.filter(x=>buildingGrades(x).includes(grade));const i=a.findIndex(x=>x.cat===b.cat);return i>0?a[i-1]:null}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -2010,9 +2012,9 @@ function updateUnlocks(s){
  const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)&&B[cat]&&buildingGrades(B[cat]).includes(s.grade)));
  unlocked.add('library');
  const avail=BUILDINGS.filter(b=>buildingGrades(b).includes(s.grade));
- avail.forEach((b,i)=>{
-  if(i===0||s.placed[b.cat]||s.placed[avail[i-1].cat])unlocked.add(b.cat);
- });
+  avail.forEach((b,i)=>{
+   if(i===0||s.placed[b.cat]||s.placed[avail[i-1].cat]||(b.req&&s.placed[b.req]))unlocked.add(b.cat);
+  });
  s.unlocked=[...unlocked];
 }
 function validCat(cat){return typeof cat==='string'&&Object.hasOwn(B,cat)}
@@ -2340,7 +2342,7 @@ function stopSpeech(){
 function currentQuestion(s,i){return session===s&&activeSession()&&s.i===i&&!!s.qs[i]}
 function canAnswer(s,i){return currentQuestion(s,i)&&!Object.hasOwn(s.results,i)}
 
-function sumLevels(){return Object.values(state.placed).reduce((s,p)=>s+p.level,0)}
+function sumLevels(){return Object.entries(state.placed).filter(([c])=>c!=='review').reduce((s,[,p])=>s+p.level,0)}
 function rankInfo(){
  const l=sumLevels();
  if(l>=14)return{e:'🏰',n:'えいご王国'};
@@ -2349,6 +2351,7 @@ function rankInfo(){
  return{e:'🏘️',n:'ちいさな村'};
 }
 function canUpgrade(cat){
+ if(cat==='review')return false;
  if(!validCat(cat)||activeSession())return false;
  const p=state.placed[cat];
  if(!p||p.level>=3)return false;
@@ -2395,7 +2398,7 @@ function openTutorial(){
 }
 function renderTut(){
  const p=TUT[tutPage];
- const last=tutPage===TUT.length-1; const body=tutPage===0?p.d.replace('6つの建物',BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length+'つの建物'):p.d;
+ const last=tutPage===TUT.length-1; const body=tutPage===0?p.d.replace('6つの建物',countableBuildings(state.grade).length+'つの建物'):p.d;
  openModal(`<h3 style="font-size:52px;line-height:1.2;margin-bottom:2px">${p.e}</h3>
  <h3>${p.t}</h3>
   <p style="text-align:center;font-size:15.5px;line-height:2;font-weight:700;margin:12px auto 4px;max-width:36em">${body}${tutPage===2?'<br>'+flowerGuide(state.grade)+'<br>練習モードです。模擬試験や合格の保証ではありません。':''}</p>
@@ -2436,8 +2439,9 @@ function onTileTap(t){
   askYesNo(`${b.emoji} ${b.name}`,`${buildingDesc(b.cat)}<br>この場所に建てる?`,`💰${b.cost===0?'無料':b.cost}で ここに建てる!`,()=>{if(pendingPlace===cat)confirmBuild(t,cat)});
   return;
  }
- const cat=catAt(t);
- if(cat)openBuildingMenu(cat);
+const cat=catAt(t);
+if(cat==='review'){openReviewMenu();return}
+if(cat)openBuildingMenu(cat);
  else if(roads().includes(t))openRemoval(t,'__road');
  else if(decoAt(t))openRemoval(t,'deco:'+decoAt(t).kind);
  else openPalette();
@@ -2636,7 +2640,7 @@ function gable(w,hgt,depth,color,x,y,z,g){
  const l=box(len,.1,depth,color,x-w/4-.005,y,z,g);l.rotation.z=slope;
  const r=box(len,.1,depth,color,x+w/4+.005,y,z,g);r.rotation.z=-slope;
 }
-const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4,essay:2.6,summary:2.7};
+const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4,essay:2.6,summary:2.7,review:3.2};
 
 function makeBuilding(cat,level){
  const g=new THREE.Group();
@@ -2780,6 +2784,17 @@ function makeBuilding(cat,level){
   cyl(.02,.02,.1,0x3a3a55,-.6,1.73,.65,g,6);
   [.3,.55,.8].forEach((y,i)=>{box(.5,.09,.4,[0xff8fa3,0xffd166,0x9adcf0][i],.95,y,-.7,g)});
   tree(-1.15,.35,.75,g);
+ }else if(cat==='review'){
+  box(2.2,.3,2.2,0xd8d3cb,0,.15,0,g);
+  box(1.2,1.8,1.2,0xc9b8e0,0,1.2,0,g);
+  box(.95,1.0,.95,0xdccdf0,0,2.6,0,g);
+  pyr(1.0,.55,0xff8fae,0,3.35,0,g);
+  sph(.12,0xE8B84B,0,3.75,0,g);
+  [-.45,.45].forEach(x=>{box(.2,.4,.06,0x9adcf0,x,1.3,.61,g)});
+  box(.9,.6,.06,0xfffdf5,0,.9,.62,g);
+  box(.66,.09,.07,0xff8fa3,0,.82,.63,g);
+  box(.66,.09,.07,0x7fdcae,0,.98,.63,g);
+  tree(1.2,.5,.7,g);flowerDot(-1.0,-.7,0xff6f91,g);
  }
  if(level>=2)box(2.35,.1,2.1,0xffd166,0,cat==='park'?.09:.17,0,g);
  if(level>=3){
@@ -3327,7 +3342,7 @@ function renderMap(){
  const r=rankInfo();
  $('#rank-emoji').textContent=r.e;
  $('#rank-name').textContent=r.n;
- $('#town-stats').textContent=`建物 ${Object.keys(state.placed).filter(c=>B[c]&&buildingGrades(B[c]).includes(state.grade)).length}/${BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).length}`;
+ $('#town-stats').textContent=`建物 ${Object.keys(state.placed).filter(c=>c!=='review'&&B[c]&&buildingGrades(B[c]).includes(state.grade)).length}/${countableBuildings(state.grade).length}`;
  renderStats();
  if(window.THREE&&isWebGLAvailable()){
   $('#scene-fallback').classList.add('hidden');
@@ -3351,6 +3366,22 @@ function renderMap(){
   renderFallbackGrid();
  }
  refreshHUD();
+}
+
+function openReviewMenu(){
+ if(loadBlocked||activeSession()||!state.placed.review)return;
+ const b=B.review,p=state.placed.review;
+ const waiting=state.review.filter(id=>validReview(id)).length;
+ openModal(`<h3>${b.emoji} ${b.name}</h3>
+ <p class="sub">${catTag('review')}・ふくしゅう待ち ${waiting} 問</p>
+ <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${waiting?`まちがえた問題を<br class="mbr">もう一度とくのだ!`:`ふくしゅうする問題はないよ!<br class="mbr">クイズでまちがえると、ここにたまるよ`}</p>
+ <div class="close-row" style="flex-direction:column">
+ <button class="btn minty big" id="rm-start">📖 ふくしゅうをはじめる!</button>
+ <button class="btn ghosty small" id="rm-remove">撤去する</button>
+ <button class="btn ghosty small" onclick="closeModal()">とじる</button>
+ </div>`);
+  $('#rm-start').onclick=()=>startReview();
+ $('#rm-remove').onclick=()=>{if(state.placed.review===p)openRemoval(p.tile,'review')};
 }
 
 function openBuildingMenu(cat){
@@ -3422,7 +3453,7 @@ function buildSession(cat,isReview){
 function startSession(cat,isReview){
  if(loadBlocked)return;
  const bank=questionsForGrade();
- if(!bank||!BUILDINGS.filter(b=>buildingGrades(b).includes(state.grade)).every(b=>Array.isArray(bank[b.cat])&&bank[b.cat].length)){
+  if(!bank||!countableBuildings(state.grade).every(b=>Array.isArray(bank[b.cat])&&bank[b.cat].length)){
   toast('問題データを読み込めません。完全なHTMLファイルを開き直してください。');return;
  }
  if(isReview?!state.review.some(id=>validReview(id)):!validCat(cat)||!state.placed[cat])return;
