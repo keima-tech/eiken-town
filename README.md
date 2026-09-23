@@ -4,6 +4,8 @@
 
 英検準1級・2級・準2級・3級・4級・5級の練習と街づくりを組み合わせた、単一 HTML ファイルのブラウザゲームです。模擬試験や合格の保証ではありません。
 
+🔗 デモ: https://keima-tech.github.io/eiken-town/
+
 変更履歴は [CHANGELOG.md](CHANGELOG.md) を参照してください。
 
 ---
