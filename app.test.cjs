@@ -1447,15 +1447,15 @@ if (require.main === module) {
 
   test('grade-pre2 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
-    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['pre2'][c].length)`), [18, 18, 18, 18, 18]);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].flower.length`), 20);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre2'].flower.map(q=>q.group))].sort()`), ['gpre2-reading-email-1', 'gpre2-reading-email-2', 'gpre2-reading-notice-1', 'gpre2-reading-notice-2', 'gpre2-reading-story-1', 'gpre2-reading-story-2']);
+    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['pre2'][c].length)`), [36, 36, 36, 36, 36]);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].flower.length`), 38);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre2'].flower.map(q=>q.group))].sort()`), ['gpre2-reading-email-1', 'gpre2-reading-email-2', 'gpre2-reading-email-3', 'gpre2-reading-email-4', 'gpre2-reading-notice-1', 'gpre2-reading-notice-2', 'gpre2-reading-notice-3', 'gpre2-reading-story-1', 'gpre2-reading-story-2', 'gpre2-reading-story-3', 'gpre2-reading-story-4']);
     assert.equal(app.run(`QUESTION_BANKS['pre2'].station.every(q=>q.positions.join()==='2,4')`), true);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['pre2'].park.filter(q=>q.part===part).length===6)`), true);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].essay.length`), 6);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 6);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['pre2'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].essay.length`), 24);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 24);
     assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.every(q=>{const n=wordCount(q.sample);return n>=25&&n<=35})`), true);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 6);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 24);
   });
 
   test('grade-pre2 essay submission records coins without review entries', () => {
