@@ -1988,7 +1988,11 @@ const DECOS=[
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
  {id:'fountain',name:'噴水',emoji:'⛲',cost:20,desc:'水がキラキラ光る噴水'},
  {id:'lamp',name:'街灯',emoji:'💡',cost:10,desc:'夜道を明るく照らす街灯'},
- {id:'sign',name:'案内板',emoji:'🪧',cost:5,desc:'まちの案内板'}
+ {id:'sign',name:'案内板',emoji:'🪧',cost:5,desc:'まちの案内板'},
+ {id:'swing',name:'ブランコ',emoji:'🛝',cost:15,desc:'ゆらゆら楽しいブランコ'},
+ {id:'mailbox',name:'ポスト',emoji:'📫',cost:5,desc:'赤いポスト'},
+ {id:'clocktower',name:'時計台',emoji:'🕰️',cost:20,desc:'時を刻む時計台'},
+ {id:'busstop',name:'バス停',emoji:'🚏',cost:10,desc:'バスを待つバス停'}
 ];
 const D=Object.fromEntries(DECOS.map(d=>[d.id,d]));
 function validDeco(id){return typeof id==='string'&&Object.hasOwn(D,id)}
@@ -2811,6 +2815,32 @@ function makeDeco(kind){
   box(.5,.08,.08,0x5a5a66,.2,1.95,0,g);
   sph(.13,0xffe9a3,.42,1.85,0,g);
   cone(.16,.12,0x8a8a8a,.42,2.0,0,g,8);
+ }else if(kind==='swing'){
+  [-.7,.7].forEach(x=>{cyl(.05,.05,1.6,0x6b8cae,x,.8,0,g,8)});
+  box(1.6,.08,.08,0x6b8cae,0,1.6,0,g);
+  [-.3,.3].forEach(x=>{cyl(.015,.015,.8,0x8a8a8a,x,1.15,0,g,6)});
+  box(.75,.06,.3,0xc9986a,0,.72,0,g);
+  tree(1.05,.4,.55,g);
+ }else if(kind==='mailbox'){
+  cyl(.06,.06,1.0,0x5a5a66,0,.5,0,g,8);
+  box(.5,.4,.35,0xe05a5a,0,1.2,0,g);
+  box(.56,.08,.41,0xb84545,0,1.43,0,g);
+  box(.3,.06,.02,0xfffdf5,0,1.25,.19,g);
+  flowerDot(-.5,-.4,0xff6f91,g);flowerDot(.5,-.4,0xffd166,g);
+ }else if(kind==='clocktower'){
+  box(1.2,.3,1.2,0xd8d3cb,0,.15,0,g);
+  box(.8,1.4,.8,0xf3e5c8,0,1.0,0,g);
+  pyr(.68,.5,0x7fb9e8,0,2.0,0,g);
+  const face=cyl(.25,.25,.06,0xfffdf5,0,1.45,.42,g,20);face.rotation.x=Math.PI/2;
+  box(.03,.16,.02,0x3a3a55,0,1.49,.46,g);
+  const hand=box(.12,.03,.02,0x3a3a55,-.04,1.45,.46,g);hand.rotation.z=.5;
+ }else if(kind==='busstop'){
+  [-.5,.5].forEach(x=>{cyl(.04,.04,1.5,0x5a5a66,x,.75,-.2,g,8)});
+  box(1.3,.06,.7,0x7fb9e8,0,1.53,-.05,g);
+  cyl(.05,.05,1.9,0x5a5a66,-.45,.95,.3,g,8);
+  box(.5,.35,.06,0x5a9bd5,-.45,1.6,.3,g);
+  box(.34,.1,.07,0xfffdf5,-.45,1.6,.3,g);
+  box(.8,.08,.3,0xc9986a,.1,.45,-.1,g);
  }else{
   [-.4,.4].forEach(x=>{cyl(.05,.05,1.0,0x9a6b4f,x,.5,0,g,8)});
   box(1.2,.6,.08,0xffdfae,0,.95,0,g);

@@ -453,6 +453,10 @@ if (require.main === module) {
     get('#yn-yes').click();
     assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }]);
     assert.equal(run('state.coins'), coinsBefore);
+    assert.equal(run('DECOS.length'), 9);
+    run("state.coins=100; confirmDeco(7,'swing'); confirmDeco(8,'mailbox'); confirmDeco(9,'clocktower'); confirmDeco(10,'busstop')");
+    assert.deepEqual(json('state.decorations'), [{ tile: 6, kind: 'lamp' }, { tile: 7, kind: 'swing' }, { tile: 8, kind: 'mailbox' }, { tile: 9, kind: 'clocktower' }, { tile: 10, kind: 'busstop' }]);
+    assert.equal(run('state.coins'), 100 - 15 - 5 - 20 - 10);
   });
 
   test('core build and category actions validate input, unlocks, funds and stale selection', () => {
