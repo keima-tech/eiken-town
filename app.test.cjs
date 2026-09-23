@@ -1552,12 +1552,12 @@ if (require.main === module) {
 
   test('grade3 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
-    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['3'][c].length)`), [18, 18, 18, 18, 18]);
-    assert.equal(app.run(`QUESTION_BANKS['3'].flower.length`), 20);
-    assert.equal(app.run(`QUESTION_BANKS['3'].essay.length`), 6);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['3'].flower.map(q=>q.group))].sort()`), ['g3-reading-email-1', 'g3-reading-email-2', 'g3-reading-notice-1', 'g3-reading-notice-2', 'g3-reading-story-1', 'g3-reading-story-2']);
+    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['3'][c].length)`), [36, 36, 36, 36, 36]);
+    assert.equal(app.run(`QUESTION_BANKS['3'].flower.length`), 38);
+    assert.equal(app.run(`QUESTION_BANKS['3'].essay.length`), 24);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['3'].flower.map(q=>q.group))].sort()`), ['g3-reading-email-1', 'g3-reading-email-2', 'g3-reading-email-3', 'g3-reading-email-4', 'g3-reading-notice-1', 'g3-reading-notice-2', 'g3-reading-notice-3', 'g3-reading-story-1', 'g3-reading-story-2', 'g3-reading-story-3', 'g3-reading-story-4']);
     assert.equal(app.run(`QUESTION_BANKS['3'].station.every(q=>q.positions.join()==='2,4')`), true);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['3'].park.filter(q=>q.part===part).length===6)`), true);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['3'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
   });
 
   test('grade3 essay sessions use real-exam format with POINTS and 25-50 word target', () => {
