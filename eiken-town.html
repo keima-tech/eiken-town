@@ -2636,7 +2636,7 @@ function gable(w,hgt,depth,color,x,y,z,g){
  const l=box(len,.1,depth,color,x-w/4-.005,y,z,g);l.rotation.z=slope;
  const r=box(len,.1,depth,color,x+w/4+.005,y,z,g);r.rotation.z=-slope;
 }
-const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4,essay:2.6,summary:2.7,review:3.2};
+const LABEL_Y={library:2.8,school:3.0,cafe:2.65,station:2.3,park:1.9,flower:2.4,essay:2.6,summary:2.7,review:3.9};
 
 function makeBuilding(cat,level){
  const g=new THREE.Group();
@@ -2781,15 +2781,23 @@ function makeBuilding(cat,level){
   [.3,.55,.8].forEach((y,i)=>{box(.5,.09,.4,[0xff8fa3,0xffd166,0x9adcf0][i],.95,y,-.7,g)});
   tree(-1.15,.35,.75,g);
  }else if(cat==='review'){
-  box(2.2,.3,2.2,0xd8d3cb,0,.15,0,g);
-  box(1.2,1.8,1.2,0xc9b8e0,0,1.2,0,g);
-  box(.95,1.0,.95,0xdccdf0,0,2.6,0,g);
-  pyr(1.0,.55,0xff8fae,0,3.35,0,g);
-  sph(.12,0xE8B84B,0,3.75,0,g);
-  [-.45,.45].forEach(x=>{box(.2,.4,.06,0x9adcf0,x,1.3,.61,g)});
-  box(.9,.6,.06,0xfffdf5,0,.9,.62,g);
-  box(.66,.09,.07,0xff8fa3,0,.82,.63,g);
-  box(.66,.09,.07,0x7fdcae,0,.98,.63,g);
+  box(2.0,.2,2.0,0xd8d3cb,0,.1,0,g);
+  [[-.7,-.7,.12,.12],[.7,-.7,-.12,.12],[-.7,.7,.12,-.12],[.7,.7,-.12,-.12]].forEach(([x,z,rz,rx])=>{
+   const leg=box(.22,1.0,.22,0xf5532e,x,.6,z,g);leg.rotation.z=rz;leg.rotation.x=rx;
+  });
+  box(1.5,.45,1.5,0xfffdf5,0,.85,0,g);
+  box(1.15,.45,1.15,0xf5532e,0,1.3,0,g);
+  box(1.45,.22,1.45,0xf5532e,0,1.62,0,g);
+  box(1.47,.1,1.47,0xfffdf5,0,1.62,0,g);
+  box(.8,.5,.8,0xfffdf5,0,2.0,0,g);
+  box(.55,.45,.55,0xf5532e,0,2.45,0,g);
+  box(.85,.18,.85,0xf5532e,0,2.75,0,g);
+  box(.87,.08,.87,0xfffdf5,0,2.75,0,g);
+  cyl(.04,.09,.9,0xf5532e,0,3.25,0,g,8);
+  sph(.07,0xff3b30,0,3.72,0,g);
+  box(.6,.4,.06,0xfffdf5,0,.5,1.02,g);
+  box(.44,.07,.07,0xff8fa3,0,.46,1.03,g);
+  box(.44,.07,.07,0x7fdcae,0,.58,1.03,g);
   tree(1.2,.5,.7,g);flowerDot(-1.0,-.7,0xff6f91,g);
  }
  if(level>=2)box(2.35,.1,2.1,0xffd166,0,cat==='park'?.09:.17,0,g);
