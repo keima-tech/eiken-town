@@ -360,7 +360,7 @@ if (require.main === module) {
     const app = loadApp();
     const { run, get, json } = app;
     assert.equal(run('state.v'), 5);
-    assert.deepEqual(json('state.unlocked'), ['library']);
+    assert.deepEqual(json('state.unlocked'), ['library', 'review']);
     run("state.coins=500; confirmBuild(0,'library'); confirmBuild(1,'school'); state.progress.school=16; state.totalCorrect=16; state.totalAnswered=18; state.review=['g4-school-001']; openBuildingMenu('school')");
     get('#bm-up').click();
     assert.equal(run('state.placed.school.level'), 2);
@@ -1601,7 +1601,7 @@ if (require.main === module) {
     assert.equal(run('pendingPlace'), 'essay');
     run("exitPlace(); closeModal(); activeGrade='4'; state=freshState('4'); openPalette()");
     assert.equal(get('[data-cat="essay"]'), null);
-    assert.deepEqual(json('state.unlocked'), ['library']);
+    assert.deepEqual(json('state.unlocked'), ['library', 'review']);
     assert.equal(run(`'essay' in B && B.essay.req`), 'flower');
   });
 
@@ -1771,7 +1771,7 @@ if (require.main === module) {
 
   test('review tower is free from the start, opens a review menu, and stays out of ranks and stats', () => {
     const { run, get, json } = loadApp();
-    run("activeGrade='4'; state=freshState('4'); state.coins=2000; updateUnlocks(state); openPalette()");
+    run("activeGrade='4'; state=freshState('4'); state.coins=2000; openPalette()");
     assert.equal(get('[data-cat="review"]').disabled, false);
     assert.match(get('[data-cat="review"]').textContent, /無料/);
     assert.equal(run('state.unlocked.includes("review")'), true);

@@ -1983,7 +1983,7 @@ const BUILDINGS=[
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
 function buildingGrades(b){return b.grades||['4','5','3','pre2','2']}
 function countableBuildings(grade){return BUILDINGS.filter(b=>b.cat!=='review'&&buildingGrades(b).includes(grade))}
-function reqFor(b,grade){if(b.req&&B[b.req]&&buildingGrades(B[b.req]).includes(grade))return B[b.req];const a=BUILDINGS.filter(x=>buildingGrades(x).includes(grade));const i=a.findIndex(x=>x.cat===b.cat);return i>0?a[i-1]:null}
+function reqFor(b,grade){if(!b.req)return null;if(b.req&&B[b.req]&&buildingGrades(B[b.req]).includes(grade))return B[b.req];const a=BUILDINGS.filter(x=>buildingGrades(x).includes(grade));const i=a.findIndex(x=>x.cat===b.cat);return i>0?a[i-1]:null}
 const DECOS=[
  {id:'flowerbed',name:'花壇',emoji:'🌼',cost:5,desc:'お花いっぱいの小さな花壇'},
  {id:'bench',name:'ベンチ',emoji:'🪑',cost:10,desc:'ひと休みできるベンチ'},
@@ -2006,7 +2006,7 @@ const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
 
 let state=null;
 let towns={},activeGrade='4',legacyLoaded=false;
-function freshState(grade='4'){return{v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false}}
+function freshState(grade='4'){const s={v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false};updateUnlocks(s);return s}
 function updateUnlocks(s){
  const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)&&B[cat]&&buildingGrades(B[cat]).includes(s.grade)));
  unlocked.add('library');
