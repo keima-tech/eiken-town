@@ -444,7 +444,6 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
     <span class="spacer"></span>
     <button class="iconbtn" id="settings-btn" title="せってい">⚙️</button>
     <button class="iconbtn" id="sound-btn" title="効果音">🔔</button>
-    <button class="iconbtn" id="review-btn" title="ふくしゅう">📖<span class="badge hidden" id="review-badge">0</span></button>
     <button class="iconbtn hidden" id="home-btn" title="まちへもどる">🏠</button>
   </header>
 
@@ -1979,7 +1978,7 @@ const BUILDINGS=[
 {id:'flower',name:'お花屋さん',emoji:'🌷',cat:'flower',cost:200,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'任意の追加作文練習（本番の試験ではありません）'},
 {id:'essay',name:'さくぶん工房',emoji:'✍️',cat:'essay',cost:250,req:'flower',grades:['3','pre2','2','pre1'],desc:'本番形式の英作文（3級・準2級・2級・準1級のみ）'},
  {id:'summary',name:'まとめ塾',emoji:'📝',cat:'summary',cost:300,req:'essay',grades:['pre2','2','pre1'],desc:'要約（本番形式・準2級・2級・準1級のみ）'},
- {id:'review',name:'復習塔',emoji:'🗼',cat:'review',cost:120,req:'park',grades:['5','4','3','pre2','2','pre1'],desc:'まちがえた問題のふくしゅう専用（町のランクには数えないよ）'}
+ {id:'review',name:'復習タワー',emoji:'🗼',cat:'review',cost:0,req:null,grades:['5','4','3','pre2','2','pre1'],desc:'まちがえた問題のふくしゅう専用（町のランクには数えないよ）'}
 ];
 const B=Object.fromEntries(BUILDINGS.map(b=>[b.cat,b]));
 function buildingGrades(b){return b.grades||['4','5','3','pre2','2']}
@@ -2013,7 +2012,7 @@ function updateUnlocks(s){
  unlocked.add('library');
  const avail=BUILDINGS.filter(b=>buildingGrades(b).includes(s.grade));
   avail.forEach((b,i)=>{
-   if(i===0||s.placed[b.cat]||s.placed[avail[i-1].cat]||(b.req&&s.placed[b.req]))unlocked.add(b.cat);
+   if(i===0||!b.req||s.placed[b.cat]||s.placed[avail[i-1].cat]||(b.req&&s.placed[b.req]))unlocked.add(b.cat);
   });
  s.unlocked=[...unlocked];
 }
@@ -2323,9 +2322,6 @@ function show(id){
 }
 function refreshHUD(){
  $('#coin-num').textContent=state.coins;
- const n=state.review.length;
- $('#review-badge').textContent=n;
- $('#review-badge').classList.toggle('hidden',n===0);
  $('#sound-btn').textContent=state.sound?'🔔':'🔕';
   refreshGradeUI();
 }
@@ -2385,8 +2381,8 @@ function openNaming(isFirst){
 
 const TUT=[
 {e:'🏙️✨',t:'ようこそ!',d:'クイズに答えてコイン💰をためて、<br class="mbr">あなただけの街を大きくしよう!<br class="wbr"><br class="mbr">まちには6つの建物と、走る車もあるよ。'},
-{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと<br class="mbr">建物がえらべるよ。<br class="wbr"><br class="mbr">建物をえらんだら、置きたい場所の地面を<br class="mbr">タップして決定!<br class="wbr">まずは無料の図書館📚からどうぞ。'},
-{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!<br class="wbr"><br class="mbr">1回に5問、正解するたびに<br class="mbr">コイン💰がもらえるよ。<br class="wbr"><br class="mbr">まちがえた問題はじどうで<br class="mbr">ふくしゅうリストに入るので、<br class="mbr">📖ボタンで復習できる!'},
+{e:'🏗️',t:'建物を建てよう',d:'左下の「🏗️ こうじする」をおすと<br class="mbr">建物がえらべるよ。<br class="wbr"><br class="mbr">建物をえらんだら、置きたい場所の地面を<br class="mbr">タップして決定!<br class="wbr">まずは無料の図書館📚と復習タワー🗼からどうぞ。'},
+{e:'📝',t:'クイズに挑戦!',d:'建物をタップして「クイズをはじめる」!<br class="wbr"><br class="mbr">1回に5問、正解するたびに<br class="mbr">コイン💰がもらえるよ。<br class="wbr"><br class="mbr">まちがえた問題はじどうで<br class="mbr">ふくしゅうリストに入るので、<br class="mbr">🗼復習タワーを建てて復習しよう!'},
 {e:'🛣️🚗',t:'道路をひこう',d:'道路は1マス💰10。<br class="wbr"><br class="mbr">建物のそばに道を通すと、<br class="mbr">クイズのごほうびコインがプラスされる!<br class="wbr"><br class="mbr">道がつながるとカラフルな車が走りだすよ。'},
 {e:'⭐',t:'レベルアップで成長',d:'同じ建物で正解を重ねるとレベルアップ<br class="mbr">(Lv2は6問+💰40、Lv3は16問+💰100)。<br class="wbr"><br class="mbr">レベル3になると少し難しい練習問題が出るぞ!<br class="wbr"><br class="mbr">街が発展すると称号も変わるよ。'},
 {e:'🖱️',t:'操作のかんばん',d:'ドラッグ=街をまわす/<br class="wbr"><br class="mbr">🖐️ボタン=移動モード<br class="wbr"><br class="mbr">(右ドラッグ・ピンチ2本指でも移動)/<br class="wbr"><br class="mbr">ホイール・ピンチ=ズーム/🎯=視点をもどす。<br class="wbr"><br class="mbr">右上の⚙️せっていから、<br class="mbr">効果音や「遊び方」をいつでも見られるよ!'}
@@ -4054,7 +4050,6 @@ $('#pan-toggle').onclick=()=>{
 $('#title-grade').querySelectorAll('.grade-card').forEach(button=>{button.onclick=()=>switchGrade(button.dataset.grade)});
 $('#reset-btn-top').onclick=()=>askYesNo(gradeLabel(activeGrade)+'のデータをけす?','この級の街と記録が消えて、この級は最初からになります。他の級の記録は残るけどいい?','消して最初から',wipeAndRestart);
 $('#sound-btn').onclick=()=>{state.sound=!state.sound;save();refreshHUD();if(state.sound)sfx('coin')};
-$('#review-btn').onclick=startReview;
 $('#home-btn').onclick=goHome;
 $('#res-town-btn').onclick=goHome;
 

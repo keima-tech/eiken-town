@@ -320,7 +320,6 @@ if (require.main === module) {
           run(`session=${previous}`);
           const session = run('session');
           assert.doesNotThrow(() => get('#bm-start').click());
-          assert.doesNotThrow(() => get('#review-btn').click());
           assert.equal(run('session'), session);
           assert.deepEqual(json('state'), before);
           assert.equal(storage.get('eikenTownSave_v1'), bytes);
@@ -681,7 +680,7 @@ if (require.main === module) {
     const { run, get, json } = loadApp();
     run("state=migrate({v:5,grade:'4',g:9,coins:50,placed:{library:{tile:0,level:1},essay:{tile:1,level:1}},roads:[],decorations:[],progress:{},review:[],unlocked:['library']},'4')");
     assert.deepEqual(json('state.placed'), { library: { tile: 0, level: 1 } });
-    assert.deepEqual(json('state.unlocked'), ['library', 'school']);
+    assert.deepEqual(json('state.unlocked'), ['library', 'school', 'review']);
     run("state.placed.essay={tile:1,level:1}; updateUnlocks(state)");
     assert.equal(run('state.unlocked.includes("essay")'), false);
     assert.doesNotThrow(() => run("startSession('essay',false)"));
@@ -1760,33 +1759,31 @@ if (require.main === module) {
     assert.deepEqual(json('[...state.unlocked].sort()'), ['cafe', 'essay', 'flower', 'library', 'park', 'review', 'school', 'station', 'summary']);
   });
 
-  test('review tower unlocks after park, opens a review menu, and stays out of ranks and stats', () => {
+  test('review tower is free from the start, opens a review menu, and stays out of ranks and stats', () => {
     const { run, get, json } = loadApp();
-    run("activeGrade='4'; state=freshState('4'); state.coins=2000; openPalette()");
-    assert.equal(get('[data-cat="review"]').disabled, true);
-    assert.match(get('[data-cat="review"]').textContent, /公園を先に建てよう/);
-    run("closeModal(); confirmBuild(0,'library'); confirmBuild(1,'school'); confirmBuild(2,'cafe'); confirmBuild(3,'station')");
-    assert.equal(run('state.unlocked.includes("review")'), false);
-    run("confirmBuild(4,'park')");
+    run("activeGrade='4'; state=freshState('4'); state.coins=2000; updateUnlocks(state); openPalette()");
+    assert.equal(get('[data-cat="review"]').disabled, false);
+    assert.match(get('[data-cat="review"]').textContent, /無料/);
     assert.equal(run('state.unlocked.includes("review")'), true);
-    run("confirmBuild(5,'review')");
-    assert.equal(run('state.coins'), 2000 - 30 - 60 - 100 - 150 - 120);
-    assert.deepEqual(json('state.placed.review'), { tile: 5, level: 1 });
+    run("closeModal(); confirmBuild(0,'library'); confirmBuild(1,'review')");
+    assert.equal(run('state.coins'), 2000);
+    assert.deepEqual(json('state.placed.review'), { tile: 1, level: 1 });
+    run("confirmBuild(2,'school'); confirmBuild(3,'cafe'); confirmBuild(4,'station'); confirmBuild(5,'park')");
     run('renderMap()');
     assert.equal(get('#town-stats').textContent, '建物 5/6');
     assert.equal(run('sumLevels()'), 5);
     assert.equal(run("canUpgrade('review')"), false);
     assert.equal(run("catTag('review')"), '🗼 ふくしゅう');
-    run('onTileTap(5)');
+    run('onTileTap(1)');
     assert.match(get('#modal').textContent, /ふくしゅう待ち 0 問/);
-    run("state.review=['g4-library-001']; onTileTap(5)");
+    run("state.review=['g4-library-001']; onTileTap(1)");
     assert.match(get('#modal').textContent, /ふくしゅう待ち 1 問/);
     get('#rm-start').click();
     assert.equal(run('!!session&&session.isReview'), true);
     assert.equal(run('session.qs.length'), 1);
     run('goHome()');
     get('#yn-yes').click();
-    run('onTileTap(5)');
+    run('onTileTap(1)');
     get('#rm-remove').click();
     get('#yn-yes').click();
     assert.equal(run('state.placed.review'), undefined);
