@@ -858,6 +858,19 @@ if (require.main === module) {
     assert.ok(get('#st-import-file'));
   });
 
+  test('credit and guardian support links are present and safe', () => {
+    const { run, get } = loadApp();
+    assert.match(get('#scr-title').textContent, /つくった人：keima_tech/);
+    run('openSettings()');
+    const modal = get('#modal').innerHTML;
+    assert.match(modal, /保護者の方へ/);
+    for (const id of ['n35bdac50da02', 'n2a9bd683282c']) {
+      assert.ok(modal.includes(`https://note.com/keima_tech/n/${id}`), id);
+    }
+    assert.ok(modal.includes('target="_blank"'));
+    assert.ok(modal.includes('rel="noopener"'));
+  });
+
   test('save export on empty storage reports no data', () => {
     const { run, get } = loadApp();
     assert.equal(run('exportSaveJSON()'), null);
@@ -1343,6 +1356,14 @@ if (require.main === module) {
     assert.deepEqual(json('state.review'), []);
   });
 
+  test('reported broken exclamation g5-library-031 takes an adjective, not an interrogative', () => {
+    const app = loadApp();
+    const q = app.json(`QUESTION_BANKS['5'].library.find(q=>q.id==='g5-library-031')`);
+    assert.deepEqual(q.c, ['beautiful', 'beautifully', 'beauty', 'beautify']);
+    assert.equal(q.a, 0);
+    assert.equal(q.q.replace('___', q.c[q.a]), 'What beautiful flowers!');
+  });
+
   test('reading answers are grounded in their passages except listed inference questions', () => {
     const app = loadApp();
     const stop = new Set('this,that,with,from,they,have,what,when,where,there,here,will,would,should,could,your,about,into,over,after,before,than,then,also,just,only,very,more,most,some,such,same,other,each,them,been,were,has,had,does,doing,done'.split(','));
@@ -1358,13 +1379,13 @@ if (require.main === module) {
 
   test('grade-2 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
-    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['2'][c].length)`), [18, 18, 18, 18, 18]);
-    assert.equal(app.run(`QUESTION_BANKS['2'].flower.length`), 20);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['2'].flower.map(q=>q.group))].sort()`), ['g2-reading-email-1', 'g2-reading-email-2', 'g2-reading-notice-1', 'g2-reading-notice-2', 'g2-reading-story-1', 'g2-reading-story-2']);
+    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['2'][c].length)`), [36, 36, 36, 36, 36]);
+    assert.equal(app.run(`QUESTION_BANKS['2'].flower.length`), 38);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['2'].flower.map(q=>q.group))].sort()`), ['g2-reading-email-1', 'g2-reading-email-2', 'g2-reading-email-3', 'g2-reading-email-4', 'g2-reading-notice-1', 'g2-reading-notice-2', 'g2-reading-notice-3', 'g2-reading-story-1', 'g2-reading-story-2', 'g2-reading-story-3', 'g2-reading-story-4']);
     assert.equal(app.run(`QUESTION_BANKS['2'].station.every(q=>q.positions.join()==='2,4')`), true);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['2'].park.filter(q=>q.part===part).length===6)`), true);
-    assert.equal(app.run(`QUESTION_BANKS['2'].essay.length`), 6);
-    assert.equal(app.run(`QUESTION_BANKS['2'].summary.length`), 6);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['2'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
+    assert.equal(app.run(`QUESTION_BANKS['2'].essay.length`), 24);
+    assert.equal(app.run(`QUESTION_BANKS['2'].summary.length`), 24);
     assert.equal(app.run(`QUESTION_BANKS['2'].essay.filter(q=>q.kind==='writing').every(q=>q.points.length===3)`), true);
     assert.equal(app.run(`QUESTION_BANKS['2'].essay.every(q=>{const n=wordCount(q.sample);return n>=80&&n<=100})`), true);
     assert.equal(app.run(`QUESTION_BANKS['2'].summary.every(q=>{const n=wordCount(q.sample);return n>=45&&n<=55})`), true);
@@ -1447,15 +1468,15 @@ if (require.main === module) {
 
   test('grade-pre2 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
-    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['pre2'][c].length)`), [18, 18, 18, 18, 18]);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].flower.length`), 20);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre2'].flower.map(q=>q.group))].sort()`), ['gpre2-reading-email-1', 'gpre2-reading-email-2', 'gpre2-reading-notice-1', 'gpre2-reading-notice-2', 'gpre2-reading-story-1', 'gpre2-reading-story-2']);
+    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['pre2'][c].length)`), [36, 36, 36, 36, 36]);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].flower.length`), 38);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre2'].flower.map(q=>q.group))].sort()`), ['gpre2-reading-email-1', 'gpre2-reading-email-2', 'gpre2-reading-email-3', 'gpre2-reading-email-4', 'gpre2-reading-notice-1', 'gpre2-reading-notice-2', 'gpre2-reading-notice-3', 'gpre2-reading-story-1', 'gpre2-reading-story-2', 'gpre2-reading-story-3', 'gpre2-reading-story-4']);
     assert.equal(app.run(`QUESTION_BANKS['pre2'].station.every(q=>q.positions.join()==='2,4')`), true);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['pre2'].park.filter(q=>q.part===part).length===6)`), true);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].essay.length`), 6);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 6);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['pre2'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].essay.length`), 24);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 24);
     assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.every(q=>{const n=wordCount(q.sample);return n>=25&&n<=35})`), true);
-    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 6);
+    assert.equal(app.run(`QUESTION_BANKS['pre2'].summary.length`), 24);
   });
 
   test('grade-pre2 essay submission records coins without review entries', () => {
@@ -1552,12 +1573,12 @@ if (require.main === module) {
 
   test('grade3 banks hold full practice sets with grouped reading passages', () => {
     const app = loadApp();
-    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['3'][c].length)`), [18, 18, 18, 18, 18]);
-    assert.equal(app.run(`QUESTION_BANKS['3'].flower.length`), 20);
-    assert.equal(app.run(`QUESTION_BANKS['3'].essay.length`), 6);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['3'].flower.map(q=>q.group))].sort()`), ['g3-reading-email-1', 'g3-reading-email-2', 'g3-reading-notice-1', 'g3-reading-notice-2', 'g3-reading-story-1', 'g3-reading-story-2']);
+    assert.deepEqual(app.json(`['library','school','cafe','station','park'].map(c=>QUESTION_BANKS['3'][c].length)`), [36, 36, 36, 36, 36]);
+    assert.equal(app.run(`QUESTION_BANKS['3'].flower.length`), 38);
+    assert.equal(app.run(`QUESTION_BANKS['3'].essay.length`), 24);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['3'].flower.map(q=>q.group))].sort()`), ['g3-reading-email-1', 'g3-reading-email-2', 'g3-reading-email-3', 'g3-reading-email-4', 'g3-reading-notice-1', 'g3-reading-notice-2', 'g3-reading-notice-3', 'g3-reading-story-1', 'g3-reading-story-2', 'g3-reading-story-3', 'g3-reading-story-4']);
     assert.equal(app.run(`QUESTION_BANKS['3'].station.every(q=>q.positions.join()==='2,4')`), true);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['3'].park.filter(q=>q.part===part).length===6)`), true);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['3'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
   });
 
   test('grade3 essay sessions use real-exam format with POINTS and 25-50 word target', () => {
@@ -1706,21 +1727,21 @@ if (require.main === module) {
   test('grade-pre1 banks hold library, flower, cloze and listening sets', () => {
     const app = loadApp();
     assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['pre1'])`), ['library', 'school', 'cafe', 'flower', 'station', 'park', 'essay', 'summary']);
-    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].library.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
-    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].school.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
-    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].cafe.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].flower.length`), 20);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].flower.map(q=>q.group))].sort()`), ['gpre1-reading-email-1', 'gpre1-reading-email-2', 'gpre1-reading-notice-1', 'gpre1-reading-notice-2', 'gpre1-reading-story-1', 'gpre1-reading-story-2']);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].station.length`), 18);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 18);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.length`), 6);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.length`), 6);
+    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].library.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
+    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].school.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
+    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].cafe.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].flower.length`), 38);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].flower.map(q=>q.group))].sort()`), ['gpre1-reading-email-1', 'gpre1-reading-email-2', 'gpre1-reading-email-3', 'gpre1-reading-email-4', 'gpre1-reading-notice-1', 'gpre1-reading-notice-2', 'gpre1-reading-notice-3', 'gpre1-reading-story-1', 'gpre1-reading-story-2', 'gpre1-reading-story-3', 'gpre1-reading-story-4']);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].station.length`), 36);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 36);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.length`), 24);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.length`), 24);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.every(q=>{const n=wordCount(q.sample);return n>=120&&n<=150})`), true);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.every(q=>{const n=wordCount(q.sample);return n>=60&&n<=90})`), true);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 18);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['pre1'].park.filter(q=>q.part===part).length===6)`), true);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 36);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['pre1'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].station.every(q=>q.kind==='reading')`), true);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].station.map(q=>q.group))].sort()`), ['gpre1-cloze-email-1', 'gpre1-cloze-email-2', 'gpre1-cloze-notice-1', 'gpre1-cloze-notice-2', 'gpre1-cloze-story-1', 'gpre1-cloze-story-2']);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].station.map(q=>q.group))].sort()`), ['gpre1-cloze-email-1', 'gpre1-cloze-email-2', 'gpre1-cloze-email-3', 'gpre1-cloze-email-4', 'gpre1-cloze-notice-1', 'gpre1-cloze-notice-2', 'gpre1-cloze-notice-3', 'gpre1-cloze-notice-4', 'gpre1-cloze-story-1', 'gpre1-cloze-story-2', 'gpre1-cloze-story-3', 'gpre1-cloze-story-4']);
   });
 
   test('grade-pre1 flower reading uses one grouped passage and review ids resolve', () => {
@@ -1786,13 +1807,23 @@ if (require.main === module) {
     assert.equal(run("catTag('review')"), '🗼 ふくしゅう');
     run('onTileTap(1)');
     assert.match(get('#modal').textContent, /ふくしゅう待ち 0 問/);
+    assert.match(get('#modal').textContent, /あたらしい問題は図書館などの建物で/);
+    assert.match(get('#rm-go-library').textContent, /図書館でクイズにちょうせん/);
+    get('#rm-go-library').click();
+    assert.match(get('#toast-root').children.at(-1).textContent, /図書館をタップ/);
     run("state.review=['g4-library-001']; onTileTap(1)");
     assert.match(get('#modal').textContent, /ふくしゅう待ち 1 問/);
+    assert.equal(get('#rm-go-library'), null);
     get('#rm-start').click();
     assert.equal(run('!!session&&session.isReview'), true);
     assert.equal(run('session.qs.length'), 1);
     run('goHome()');
     get('#yn-yes').click();
+    run("tryRoad(12)");
+    run("startSession('library',false)");
+    run("for(let i=0;i<5;i++){recordResult(true,2,'t');session.i++}");
+    run('finishSession()');
+    assert.equal(run('session.coinsEarned'), 40);
     run('onTileTap(1)');
     get('#rm-remove').click();
     get('#yn-yes').click();
