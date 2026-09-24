@@ -1793,6 +1793,11 @@ if (require.main === module) {
     assert.equal(run('session.qs.length'), 1);
     run('goHome()');
     get('#yn-yes').click();
+    run("tryRoad(12)");
+    run("startSession('library',false)");
+    run("for(let i=0;i<5;i++){recordResult(true,2,'t');session.i++}");
+    run('finishSession()');
+    assert.equal(run('session.coinsEarned'), 40);
     run('onTileTap(1)');
     get('#rm-remove').click();
     get('#yn-yes').click();
