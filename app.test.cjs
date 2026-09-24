@@ -858,6 +858,19 @@ if (require.main === module) {
     assert.ok(get('#st-import-file'));
   });
 
+  test('credit and guardian support links are present and safe', () => {
+    const { run, get } = loadApp();
+    assert.match(get('#scr-title').textContent, /つくった人：keima_tech/);
+    run('openSettings()');
+    const modal = get('#modal').innerHTML;
+    assert.match(modal, /保護者の方へ/);
+    for (const id of ['n35bdac50da02', 'n2a9bd683282c']) {
+      assert.ok(modal.includes(`https://note.com/keima_tech/n/${id}`), id);
+    }
+    assert.ok(modal.includes('target="_blank"'));
+    assert.ok(modal.includes('rel="noopener"'));
+  });
+
   test('save export on empty storage reports no data', () => {
     const { run, get } = loadApp();
     assert.equal(run('exportSaveJSON()'), null);

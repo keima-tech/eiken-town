@@ -141,6 +141,11 @@ button:disabled{cursor:not-allowed}
 .grade-card[aria-pressed="true"] .grade-status{background:var(--ink);color:#fff}
 @media(max-width:480px){.grade-options{grid-template-columns:minmax(0,1fr)}.grade-card{min-height:112px;padding:14px}}
 .save-note{font-size:13px;color:var(--ink-soft);margin-top:10px}
+.credit-note{font-size:12px;font-weight:700}
+.support-box{margin:12px 0;padding:12px;border:3px solid var(--line);border-radius:16px;background:var(--paper)}
+.support-box h4{margin:0 0 6px;font-size:15px}
+.support-box p{font-size:13px;margin:0 0 8px}
+.support-box .btn{margin:2px}
 
 .town-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 2px 10px}
 .rank-card{display:flex;align-items:center;gap:10px;background:var(--paper);border:3px solid var(--line);border-radius:999px;padding:8px 18px;box-shadow:var(--shadow)}
@@ -477,7 +482,7 @@ textarea.writebox:focus{outline:none;border-color:var(--pink)}
         <button class="btn ghosty small" id="how-btn-title">❓ 遊び方をみる</button>
         <button class="btn ghosty small" id="import-btn-title">📂 ファイルからつづきをよみこむ</button>
         <input type="file" id="title-import-file" accept=".json,application/json" class="hidden">
-        <p class="save-note">英検5級・4級・3級・準2級・2級・準1級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。</p>
+        <p class="save-note">英検5級・4級・3級・準2級・2級・準1級の「たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい」を練習しよう。<br><span id="title-flower"></span><br>これは練習モードで、模擬試験や合格の保証ではありません。<br>級ごとに別の街・コイン・記録を、このブラウザに自動保存します。<br><span class="credit-note">つくった人：keima_tech</span></p>
       </div>
     </div>
   </section>
@@ -4804,6 +4809,12 @@ function openSettings(){
  <button class="btn ghosty big" id="st-import">📂 ファイルから読み込む</button>
  <input type="file" id="st-import-file" accept=".json,application/json" class="hidden">
  <button class="btn ghosty" id="st-reset">${gradeLabel(activeGrade)}の街だけ消して最初から</button>
+ <div class="support-box">
+ <h4>🧑‍💻 保護者の方へ</h4>
+ <p>えいけんタウンは無料で遊べます。つくった人：keima_tech<br>応援いただける場合は、下の記事からチップをお願いします。</p>
+ <a class="btn sunny small" href="https://note.com/keima_tech/n/n35bdac50da02" target="_blank" rel="noopener">📝 開発記をよむ</a>
+ <a class="btn sunny small" href="https://note.com/keima_tech/n/n2a9bd683282c" target="_blank" rel="noopener">📝 準1級対応のおしらせをよむ</a>
+ </div>
  <button class="btn pinky small" onclick="closeModal()">とじる</button>
  </div>`);
  $('#settings-grade').querySelectorAll('.grade-card').forEach(button=>{button.onclick=()=>switchGrade(button.dataset.grade)});
