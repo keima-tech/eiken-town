@@ -1706,21 +1706,21 @@ if (require.main === module) {
   test('grade-pre1 banks hold library, flower, cloze and listening sets', () => {
     const app = loadApp();
     assert.deepEqual(app.json(`Object.keys(QUESTION_BANKS['pre1'])`), ['library', 'school', 'cafe', 'flower', 'station', 'park', 'essay', 'summary']);
-    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].library.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
-    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].school.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
-    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].cafe.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].flower.length`), 20);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].flower.map(q=>q.group))].sort()`), ['gpre1-reading-email-1', 'gpre1-reading-email-2', 'gpre1-reading-notice-1', 'gpre1-reading-notice-2', 'gpre1-reading-story-1', 'gpre1-reading-story-2']);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].station.length`), 18);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 18);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.length`), 6);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.length`), 6);
+    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].library.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
+    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].school.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
+    assert.deepEqual(app.json(`QUESTION_BANKS['pre1'].cafe.map(q=>q.d)`), [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3]);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].flower.length`), 38);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].flower.map(q=>q.group))].sort()`), ['gpre1-reading-email-1', 'gpre1-reading-email-2', 'gpre1-reading-email-3', 'gpre1-reading-email-4', 'gpre1-reading-notice-1', 'gpre1-reading-notice-2', 'gpre1-reading-notice-3', 'gpre1-reading-story-1', 'gpre1-reading-story-2', 'gpre1-reading-story-3', 'gpre1-reading-story-4']);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].station.length`), 36);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 36);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.length`), 24);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.length`), 24);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].essay.every(q=>{const n=wordCount(q.sample);return n>=120&&n<=150})`), true);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].summary.every(q=>{const n=wordCount(q.sample);return n>=60&&n<=90})`), true);
-    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 18);
-    assert.equal(app.run(`['response','dialogue','passage'].every(part=>QUESTION_BANKS['pre1'].park.filter(q=>q.part===part).length===6)`), true);
+    assert.equal(app.run(`QUESTION_BANKS['pre1'].park.length`), 36);
+    assert.deepEqual(app.json(`['response','dialogue','passage'].map(part=>QUESTION_BANKS['pre1'].park.filter(q=>q.part===part).length)`), [12, 12, 12]);
     assert.equal(app.run(`QUESTION_BANKS['pre1'].station.every(q=>q.kind==='reading')`), true);
-    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].station.map(q=>q.group))].sort()`), ['gpre1-cloze-email-1', 'gpre1-cloze-email-2', 'gpre1-cloze-notice-1', 'gpre1-cloze-notice-2', 'gpre1-cloze-story-1', 'gpre1-cloze-story-2']);
+    assert.deepEqual(app.json(`[...new Set(QUESTION_BANKS['pre1'].station.map(q=>q.group))].sort()`), ['gpre1-cloze-email-1', 'gpre1-cloze-email-2', 'gpre1-cloze-email-3', 'gpre1-cloze-email-4', 'gpre1-cloze-notice-1', 'gpre1-cloze-notice-2', 'gpre1-cloze-notice-3', 'gpre1-cloze-notice-4', 'gpre1-cloze-story-1', 'gpre1-cloze-story-2', 'gpre1-cloze-story-3', 'gpre1-cloze-story-4']);
   });
 
   test('grade-pre1 flower reading uses one grouped passage and review ids resolve', () => {
