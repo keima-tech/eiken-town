@@ -4,7 +4,7 @@
 
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠します。
 
-## [Unreleased]
+## [1.7.0] - 2026-09-25
 
 ### 追加
 
