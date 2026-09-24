@@ -1343,6 +1343,14 @@ if (require.main === module) {
     assert.deepEqual(json('state.review'), []);
   });
 
+  test('reported broken exclamation g5-library-031 takes an adjective, not an interrogative', () => {
+    const app = loadApp();
+    const q = app.json(`QUESTION_BANKS['5'].library.find(q=>q.id==='g5-library-031')`);
+    assert.deepEqual(q.c, ['beautiful', 'beautifully', 'beauty', 'beautify']);
+    assert.equal(q.a, 0);
+    assert.equal(q.q.replace('___', q.c[q.a]), 'What beautiful flowers!');
+  });
+
   test('reading answers are grounded in their passages except listed inference questions', () => {
     const app = loadApp();
     const stop = new Set('this,that,with,from,they,have,what,when,where,there,here,will,would,should,could,your,about,into,over,after,before,than,then,also,just,only,very,more,most,some,such,same,other,each,them,been,were,has,had,does,doing,done'.split(','));
@@ -1786,8 +1794,13 @@ if (require.main === module) {
     assert.equal(run("catTag('review')"), '🗼 ふくしゅう');
     run('onTileTap(1)');
     assert.match(get('#modal').textContent, /ふくしゅう待ち 0 問/);
+    assert.match(get('#modal').textContent, /あたらしい問題は図書館などの建物で/);
+    assert.match(get('#rm-go-library').textContent, /図書館でクイズにちょうせん/);
+    get('#rm-go-library').click();
+    assert.match(get('#toast-root').children.at(-1).textContent, /図書館をタップ/);
     run("state.review=['g4-library-001']; onTileTap(1)");
     assert.match(get('#modal').textContent, /ふくしゅう待ち 1 問/);
+    assert.equal(get('#rm-go-library'), null);
     get('#rm-start').click();
     assert.equal(run('!!session&&session.isReview'), true);
     assert.equal(run('session.qs.length'), 1);

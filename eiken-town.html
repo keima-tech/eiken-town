@@ -788,7 +788,7 @@ library:[
 {id:'g5-library-028',d:2,q:"___ your room every week!",c:["Cleans","Cleaned","Cleaning","Clean"],a:3,e:"命令文は動詞の原形 Clean から始める。"},
 {id:'g5-library-029',d:2,q:"I eat ___ at seven.",c:["lunch","dinner","supper","breakfast"],a:3,e:"朝7時に食べるのは breakfast(朝食)。"},
 {id:'g5-library-030',d:2,q:"Open ___ mouth.",c:["my","his","our","your"],a:3,e:"歯医者などで「口を開けて」は Open your mouth。"},
-{id:'g5-library-031',d:3,q:"What ___ flowers!",c:["When","Where","Who","What"],a:3,e:"感嘆文は What + 名詞。「なんてきれいな花!」。"},
+{id:'g5-library-031',d:3,q:"What ___ flowers!",c:["beautiful","beautifully","beauty","beautify"],a:0,e:"「なんて美しい花々!」。What + 形容詞 + 複数名詞の感嘆文。beautiful は美しい。beautifully は副詞、beauty は名詞。"},
 {id:'g5-library-032',d:3,q:"He ___ ten books last month.",c:["borrows","borrow","borrowing","borrowed"],a:3,e:"last month(先月)は過去。borrowed を使う。"},
 {id:'g5-library-033',d:3,q:"Two ___ to Osaka, please.",c:["ticket","coins","papers","tickets"],a:3,e:"Two のあとは複数形 tickets。「大阪まで2枚ください」。"},
 {id:'g5-library-034',d:3,q:"The express ___ here yesterday.",c:["stops","stop","stopping","stopped"],a:3,e:"yesterday(昨日)は過去。stopped を使う。"},
@@ -4168,13 +4168,15 @@ function openReviewMenu(){
  const waiting=state.review.filter(id=>validReview(id)).length;
  openModal(`<h3>${b.emoji} ${b.name}</h3>
  <p class="sub">${catTag('review')}・ふくしゅう待ち ${waiting} 問</p>
- <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${waiting?`まちがえた問題を<br class="mbr">もう一度とくのだ!`:`ふくしゅうする問題はないよ!<br class="mbr">クイズでまちがえると、ここにたまるよ`}</p>
+ <p style="text-align:center;font-weight:700;font-size:14px;margin-bottom:14px">${waiting?`まちがえた問題を<br class="mbr">もう一度とくのだ!`:`ふくしゅうする問題はないよ!<br class="mbr">あたらしい問題は図書館などの建物で<br class="mbr">クイズにちょうせんしよう!`}</p>
  <div class="close-row" style="flex-direction:column">
  <button class="btn minty big" id="rm-start">📖 ふくしゅうをはじめる!</button>
+ ${waiting?'':state.placed.library?'<button class="btn sunny big" id="rm-go-library">📚 図書館でクイズにちょうせん!</button>':'<button class="btn sunny big" id="rm-go-library">📚 無料の図書館を建てよう!</button>'}
  <button class="btn ghosty small" id="rm-remove">撤去する</button>
  <button class="btn ghosty small" onclick="closeModal()">とじる</button>
  </div>`);
   $('#rm-start').onclick=()=>startReview();
+ if(!waiting)$('#rm-go-library').onclick=()=>{closeModal();toast(state.placed.library?'図書館をタップして「クイズをはじめる」をおしてね!':'左下の「🏗️ こうじする」から無料の図書館を建ててね!')};
  $('#rm-remove').onclick=()=>{if(state.placed.review===p)openRemoval(p.tile,'review')};
 }
 
