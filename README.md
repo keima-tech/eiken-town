@@ -15,7 +15,7 @@
 ## 1. 概要
 
 - **タイトル**: えいけんタウン | 英語で街づくり
-- **形式**: 単一 HTML ファイル（ビルド不要）。Three.js とフォントは外部配信元から読み込むため、完全なオフライン動作は保証しません
+- **形式**: 単一 HTML ファイル（`eiken-town.html`）。Three.js とフォントは外部配信元から読み込むため、完全なオフライン動作は保証しません
 - **対象**: 英検5級・4級・3級・準2級・2級・準1級レベルの学習者（小学生〜高校生向け）
 - **コンセプト**: 英検5級・4級・3級・準2級・2級・準1級の6分野（たんご・ぶんぽう・かいわ・じゅんじょ・ちょうかい・さくぶん/どっかい、3級・準2級・2級は本番形式の英作文を加えた7分野）のクイズに答え、コインを獲得して街を発展させる
 - **保存**: ブラウザの localStorage に自動保存（サーバー不要、級ごとに個別保存）
@@ -490,8 +490,11 @@
 
 ## 19. 開発・テスト
 
-- 自動テスト: `node --test app.test.cjs`（273件）。セーブデータの整合性、級別の問題バンク、UI描画、音声再生、保存エラー処理などを検証
-- 問題バンクは HTML 内の `question-bank` スクリプトで定義し、級ごとに `QUESTION_BANKS` と `REVIEW_ARCHIVE` を管理
+- ソース構成: `src/template.html`（殻）+ `src/banks/`（問題データ：`core.js`＋級別 `grade-*.js`＋`assemble.js`）+ `src/app.js`（アプリロジック）
+- ビルド: `node build.mjs`（依存なし）で `eiken-town.html`（単一ファイル配布用）と `index.html`（Pages公開用）を生成。直接編集するのは `src/` 以下で、生成物が `eiken-town.html` / `index.html`
+- 公開: GitHub Pages は `index.html` + `src/banks/*.js` + `src/app.js` の組み合わせで配信（JSの二重管理なし）。`eiken-town.html` はローカル利用・note添付用に残す
+- 自動テスト: `node --test app.test.cjs`（277件）。セーブデータの整合性、級別の問題バンク、UI描画、音声再生、保存エラー処理などを検証。テストは生成後の `eiken-town.html` を読むため、先にビルドすること
+- 問題バンクは `src/question-bank.js` で定義し、級ごとに `QUESTION_BANKS` と `REVIEW_ARCHIVE` を管理
 
 ---
 

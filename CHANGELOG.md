@@ -4,6 +4,14 @@
 
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠します。
 
+## [1.8.0] - 2026-09-28
+
+### 変更
+
+- ソースを `src/`（template.html / question-bank.js / app.js）に分割し、`node build.mjs` で `eiken-town.html` を生成する形に変更。配布物・遊び方は不変
+- GitHub Pages 公開用に `index.html` + 分割JS の組み合わせでも配置できるようビルドを追加（`eiken-town.html` の単一ファイル配布は継続）
+- 問題データを級別ファイル（`src/banks/grade-*.js`、各100KB前後）に分割。問題内容・出題ロジックは不変
+
 ## [1.7.1] - 2026-09-27
 
 ### 修正
