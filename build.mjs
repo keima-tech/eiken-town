@@ -9,18 +9,22 @@ const root = dirname(fileURLToPath(import.meta.url));
 const read = p => readFileSync(join(root, p), 'utf8');
 
 const template = read('src/template.html');
-const bank = read('src/question-bank.js');
+const BANK_PARTS = ['src/banks/core.js', 'src/banks/grade-5.js', 'src/banks/grade-4.js',
+  'src/banks/grade-3.js', 'src/banks/grade-pre2.js', 'src/banks/grade-2.js',
+  'src/banks/grade-pre1.js', 'src/banks/assemble.js'];
+const banks = BANK_PARTS.map(read);
 const app = read('src/app.js');
 
-for (const [name, src] of [['question-bank.js', bank], ['app.js', app]]) {
-  if (src.includes('</script')) throw new Error(`${name} contains "</script" — inline embedding would break the HTML`);
+for (const [i, src] of banks.entries()) {
+  if (src.includes('</script')) throw new Error(`${BANK_PARTS[i]} contains "</script" — inline embedding would break the HTML`);
 }
+if (app.includes('</script')) throw new Error('src/app.js contains "</script" — inline embedding would break the HTML');
 if (!template.includes('<!--QUESTION_BANK-->') || !template.includes('<!--APP-->')) {
   throw new Error('src/template.html lacks placeholders');
 }
 
 const out = template
-  .replace('<!--QUESTION_BANK-->', () => bank.replace(/\n$/, ''))
+  .replace('<!--QUESTION_BANK-->', () => banks.join('\n').replace(/\n$/, ''))
   .replace('<!--APP-->', () => app.replace(/\n$/, ''));
 
 writeFileSync(join(root, 'eiken-town.html'), out);
@@ -34,7 +38,7 @@ if (!template.includes(bankBlock) || !template.includes(appBlock)) {
   throw new Error('src/template.html script blocks changed — update build.mjs');
 }
 const index = template
-  .replace(bankBlock, () => '<script id="question-bank" src="src/question-bank.js"></script>')
+  .replace(bankBlock, () => BANK_PARTS.map(p => `<script src="${p}"></script>`).join('\n'))
   .replace(appBlock, () => '<script src="src/app.js"></script>');
 if (index.includes('<!--QUESTION_BANK-->') || index.includes('<!--APP-->')) {
   throw new Error('index.html still contains placeholders');
