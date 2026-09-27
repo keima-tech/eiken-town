@@ -4,6 +4,12 @@
 
 形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に準拠します。
 
+## [Unreleased]
+
+### 変更
+
+- ソースを `src/`（template.html / question-bank.js / app.js）に分割し、`node build.mjs` で `eiken-town.html` を生成する形に変更。配布物・遊び方は不変
+
 ## [1.7.1] - 2026-09-27
 
 ### 修正
