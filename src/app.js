@@ -63,7 +63,7 @@ const norm=s=>s.toLowerCase().replace(/[.!?,]/g,'').replace(/\s+/g,' ').trim();
 
 let state=null;
 let towns={},activeGrade='4',legacyLoaded=false;
-function freshState(grade='4'){const s={v:5,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],sound:true,lowGfx:false};updateUnlocks(s);return s}
+function freshState(grade='4'){const s={v:6,grade:validGrade(grade)?grade:'4',g:GRID,townName:'',coins:50,placed:{},progress:{},unlocked:['library'],roads:[],decorations:[],totalCorrect:0,totalAnswered:0,review:[],stats:{},reviewStats:{},qStats:{},sound:true,lowGfx:false};updateUnlocks(s);return s}
 function updateUnlocks(s){
  const unlocked=new Set((Array.isArray(s.unlocked)?s.unlocked:[]).filter(cat=>Object.hasOwn(B,cat)&&B[cat]&&buildingGrades(B[cat]).includes(s.grade)));
  unlocked.add('library');
@@ -76,11 +76,30 @@ function updateUnlocks(s){
 function validCat(cat){return typeof cat==='string'&&Object.hasOwn(B,cat)}
 function validTile(t){return Number.isInteger(t)&&t>=0&&t<GRID*GRID}
 function validReview(id,grade=state?.grade||'4'){return !!questionById(id,grade)}
+function capCount(n){return Number.isFinite(n)&&n>=0?Math.min(9999999,Math.floor(n)):0}
+function cleanStatMap(src,okCat){
+ const out={};
+ if(src&&typeof src==='object'&&!Array.isArray(src))for(const [cat,v] of Object.entries(src)){
+  if(!okCat(cat)||!v||typeof v!=='object'||Array.isArray(v))continue;
+  out[cat]={ok:capCount(v.ok),ng:capCount(v.ng)};
+ }
+ return out;
+}
+function cleanQStats(src,grade){
+ const out={};
+ if(src&&typeof src==='object'&&!Array.isArray(src))for(const [id,v] of Object.entries(src)){
+  if(typeof id!=='string'||!v||typeof v!=='object'||Array.isArray(v)||!validReview(id,grade))continue;
+  const ok=capCount(v.ok),ng=capCount(v.ng);
+  if(!ok&&!ng)continue;
+  out[id]={ok,ng,last:Number.isFinite(v.last)&&v.last>0?Math.floor(v.last):0};
+ }
+ return out;
+}
 function migrate(d,grade='4'){
  if(!validGrade(grade)||!d||typeof d!=='object'||Array.isArray(d))return null;
  const defaults=freshState(grade);
  const s=Object.assign(freshState(grade),d);
- s.v=5;
+ s.v=6;
  s.grade=grade;
  if(typeof s.townName!=='string')s.townName='';
  s.townName=s.townName.slice(0,12);
@@ -109,6 +128,11 @@ function migrate(d,grade='4'){
    }
    return null;
  }).filter(Boolean))];
+ const bankCats=new Set(Object.keys(questionsForGrade(grade)||{}));
+ const statCat=cat=>validCat(cat)&&cat!=='review'&&(!bankCats.size||bankCats.has(cat));
+ s.stats=cleanStatMap(s.stats,statCat);
+ s.reviewStats=cleanStatMap(s.reviewStats,statCat);
+ s.qStats=cleanQStats(s.qStats,grade);
  const oldG=Number.isInteger(d.g)&&d.g>0&&d.g<=20?d.g:5;
  const remap=t=>{
   let c=t%oldG,r=Math.floor(t/oldG);
@@ -173,7 +197,7 @@ function loadState(){
  if(!raw){towns={};activeGrade='4';legacyLoaded=false;return null}
  let d=null;
  try{d=JSON.parse(raw)}catch(e){}
- if(d&&typeof d==='object'&&!Array.isArray(d)&&d.v===5){
+ if(d&&typeof d==='object'&&!Array.isArray(d)&&(d.v===6||d.v===5)){
   if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns)){loadBlockError('malformed');return null}
   const next={},nextGrade=validGrade(d.activeGrade)?d.activeGrade:'4';
   for(const grade of ['4','5','3','pre2','2','pre1']){
@@ -213,7 +237,7 @@ function retryLoad(){
 function persistTowns(nextTowns=towns){
  if(loadBlocked){loadBlockError('read');return false}
  try{
-  localStorage.setItem(SAVE_KEY,JSON.stringify({v:5,activeGrade,towns:nextTowns}));
+  localStorage.setItem(SAVE_KEY,JSON.stringify({v:6,activeGrade,towns:nextTowns}));
   legacyLoaded=false;
   $('#save-error').classList.add('hidden');
   $('#save-retry').classList.add('hidden');
@@ -253,7 +277,7 @@ function exportSave(){
  }catch(e){toast('保存に失敗しました')}
 }
 function validateImportedSave(d){
- if(!d||typeof d!=='object'||Array.isArray(d)||d.v!==5)return null;
+ if(!d||typeof d!=='object'||Array.isArray(d)||(d.v!==6&&d.v!==5))return null;
  if(!d.towns||typeof d.towns!=='object'||Array.isArray(d.towns))return null;
  const next={};
  for(const grade of Object.keys(d.towns)){
@@ -1396,7 +1420,10 @@ function renderStats(){
   <span class="stat-chip">📝 回答数 <b>${state.totalAnswered}</b></span>
   <span class="stat-chip">📖 ふくしゅう待ち <b>${state.review.length}</b></span>
   <span class="stat-chip">🛣️ 道路 <b>${(state.roads||[]).length}</b> マス</span>
-  <span class="stat-chip">🏗️ 街レベル合計 <b>${sumLevels()}</b></span>`;
+  <span class="stat-chip">🏗️ 街レベル合計 <b>${sumLevels()}</b></span>
+  <button class="stat-chip rep-chip" id="stat-report">📊 べんきょうレポート</button>`;
+ const rb=$('#stat-report');
+ if(rb)rb.onclick=openReport;
 }
 function renderMap(){
  refreshNameUI();
@@ -1429,6 +1456,79 @@ function renderMap(){
  refreshHUD();
 }
 
+function rateColor(rate){return rate>=80?'good':rate>=60?'mid':'low'}
+function questionSnippet(q){
+ const text=String((q&&(q.en||q.q||q.jp))||'').replace(/\s+/g,' ').trim();
+ return text.length>54?text.slice(0,54)+'…':text;
+}
+function reportData(){
+ const grade=state.grade,bank=questionsForGrade(grade)||{};
+ const rows=Object.keys(bank).map(cat=>{
+  const s=state.stats[cat]||{ok:0,ng:0},rs=state.reviewStats[cat]||{ok:0,ng:0};
+  const total=s.ok+s.ng,rTotal=rs.ok+rs.ng;
+  return{cat,total,ok:s.ok,rate:total?Math.round(100*s.ok/total):null,rTotal,rOk:rs.ok};
+ });
+ const withData=rows.filter(r=>r.total>0).sort((a,b)=>a.rate-b.rate||b.total-a.total);
+ const sum=(list,key)=>list.reduce((n,r)=>n+r[key],0);
+ const overall={total:sum(rows,'total'),ok:sum(rows,'ok')};
+ const review={total:sum(rows,'rTotal'),ok:sum(rows,'rOk')};
+ const weak=Object.entries(state.qStats).filter(([,v])=>v.ng>0)
+  .sort((a,b)=>b[1].ng-a[1].ng||b[1].last-a[1].last||a[0].localeCompare(b[0])).slice(0,6)
+  .map(([id,v])=>({id,ok:v.ok,ng:v.ng,item:questionById(id,grade)}))
+  .filter(w=>w.item&&w.item.q);
+ const diff={1:{ok:0,ng:0},2:{ok:0,ng:0},3:{ok:0,ng:0}};
+ for(const [id,v] of Object.entries(state.qStats)){
+  const item=questionById(id,grade);
+  if(!item||!item.q||!diff[item.q.d])continue;
+  diff[item.q.d].ok+=v.ok;diff[item.q.d].ng+=v.ng;
+ }
+ const totalQ=Object.keys(bank).reduce((n,cat)=>n+(Array.isArray(bank[cat])?bank[cat].length:0),0);
+ const qs=Object.values(state.qStats);
+ return{
+  withData,untouched:rows.filter(r=>!r.total),overall,review,weak,diff,totalQ,
+  tried:qs.length,mastered:qs.filter(v=>v.ng===0&&v.ok>=2).length
+ };
+}
+function reportBar(label,ok,total,rate){
+ const color=rate===null?'none':rateColor(rate);
+ return`<div class="rep-row"><div class="rep-head"><span>${label}</span><span>${rate===null?'これから!':`${rate}% (${ok}/${total}問)`}</span></div><div class="rep-bar"><div class="rep-fill ${color}" style="width:${rate||0}%"></div></div></div>`;
+}
+function openReport(){
+ if(loadBlocked||activeSession())return;
+ const d=reportData();
+ const catRows=[...d.withData,...d.untouched].map(r=>reportBar(catTag(r.cat,state.grade),r.ok,r.total,r.rate)).join('');
+ const diffNames={1:'⭐ やさしい',2:'⭐⭐ ふつう',3:'⭐⭐⭐ むずかしい'};
+ const diffRows=[1,2,3].map(n=>{const s=d.diff[n];return reportBar(diffNames[n],s.ok,s.ok+s.ng,s.ok+s.ng?Math.round(100*s.ok/(s.ok+s.ng)):null)}).join('');
+ const weakHTML=d.weak.length?d.weak.map(w=>`<div class="rep-item">
+   <div class="rep-item-head"><span>${catTag(w.item.cat,state.grade)}</span><span>${state.review.includes(w.id)?'📖 ふくしゅうまち':''}</span></div>
+   <div class="rep-q">${escapeHTML(questionSnippet(w.item.q))}</div>
+   <div class="rep-count">❌ ${w.ng}回まちがえ・⭕ ${w.ok}回せいかい</div>
+  </div>`).join(''):'<p class="rep-none">いまのところ なし! すごい!!</p>';
+ const overallRate=d.overall.total?Math.round(100*d.overall.ok/d.overall.total):null;
+ const reviewRate=d.review.total?Math.round(100*d.review.ok/d.review.total):null;
+ const chips=[
+  `<span class="stat-chip">📝 れんしゅう <b>${d.overall.total}</b>問</span>`,
+  overallRate===null?'':`<span class="stat-chip">⭐ せいかいりつ <b>${overallRate}%</b></span>`,
+  reviewRate===null?'':`<span class="stat-chip">📖 ふくしゅう <b>${reviewRate}%</b></span>`
+ ].join('');
+ const challenge=d.tried?`<p class="rep-master">🧭 チャレンジした問題 <b>${d.tried}</b> / ${d.totalQ}問<br>🌟 とくいに なった問題 <b>${d.mastered}</b>問</p>`:'<p class="rep-master">クイズに こたえると、<br class="mbr">ここに きろくが たまっていくよ!</p>';
+ const weakCat=d.withData[0];
+ openModal(`<h3>📊 べんきょうレポート</h3>
+ <p class="sub">${gradeLabel(state.grade)}の これまでの きろく<br class="wbr"><br class="mbr">にがてなところを みつけて、クイズで のばそう!</p>
+ <div class="rep-summary">${chips}</div>
+ <div class="rep-sec"><h4>📚 カテゴリべつ せいかいりつ</h4>${catRows}</div>
+ <div class="rep-sec"><h4>💪 とくに がんばりたい問題</h4>${weakHTML}</div>
+ <div class="rep-sec"><h4>🎯 むずかしさべつ せいかいりつ</h4>${diffRows}</div>
+ ${challenge}
+ <div class="close-row" style="flex-direction:column">
+ ${state.review.some(id=>validReview(id))&&state.placed.review?'<button class="btn minty big" id="rep-review">📖 ふくしゅうをはじめる!</button>':''}
+ ${weakCat&&state.placed[weakCat.cat]?`<button class="btn sunny" id="rep-practice">▶️ ${B[weakCat.cat].name}で れんしゅう!</button>`:''}
+ <button class="btn ghosty small" onclick="closeModal()">とじる</button>
+ </div>`);
+ if($('#rep-review'))$('#rep-review').onclick=()=>startReview();
+ if($('#rep-practice'))$('#rep-practice').onclick=()=>{const cat=weakCat.cat;closeModal();openBuildingMenu(cat)};
+}
+
 function openReviewMenu(){
  if(loadBlocked||activeSession()||!state.placed.review)return;
  const b=B.review,p=state.placed.review;
@@ -1439,10 +1539,12 @@ function openReviewMenu(){
  <div class="close-row" style="flex-direction:column">
  <button class="btn minty big" id="rm-start">📖 ふくしゅうをはじめる!</button>
  ${waiting?'':state.placed.library?'<button class="btn sunny big" id="rm-go-library">📚 図書館でクイズにちょうせん!</button>':'<button class="btn sunny big" id="rm-go-library">📚 無料の図書館を建てよう!</button>'}
+ <button class="btn ghosty small" id="rm-report">📊 べんきょうレポート</button>
  <button class="btn ghosty small" id="rm-remove">撤去する</button>
  <button class="btn ghosty small" onclick="closeModal()">とじる</button>
  </div>`);
   $('#rm-start').onclick=()=>startReview();
+  $('#rm-report').onclick=()=>openReport();
  if(!waiting)$('#rm-go-library').onclick=()=>{closeModal();toast(state.placed.library?'図書館をタップして「クイズをはじめる」をおしてね!':'左下の「🏗️ こうじする」から無料の図書館を建ててね!')};
  $('#rm-remove').onclick=()=>{if(state.placed.review===p)openRemoval(p.tile,'review')};
 }
@@ -1567,6 +1669,23 @@ function addCoins(n){
  refreshHUD();
  if(n>0)sfx('coin');
 }
+function bumpStat(bucket,cat,ok){
+ if(!cat||cat==='review'||!validCat(cat))return;
+ const s=bucket[cat]||(bucket[cat]={ok:0,ng:0});
+ const key=ok?'ok':'ng';
+ s[key]=Math.min(9999999,(s[key]||0)+1);
+}
+function recordStat(item,ok,isReview){
+ if(!item)return;
+ const cat=item.cat||questionById(item.id,state.grade)?.cat;
+ if(!cat||cat==='review')return;
+ bumpStat(isReview?state.reviewStats:state.stats,cat,ok);
+ if(isReview||typeof item.id!=='string')return;
+ const q=state.qStats[item.id]||(state.qStats[item.id]={ok:0,ng:0,last:0});
+ const key=ok?'ok':'ng';
+ q[key]=Math.min(9999999,(q[key]||0)+1);
+ q.last=Date.now();
+}
 function recordResult(ok,baseCoins,label){
  if(!session||!canAnswer(session,session.i))return false;
  session.results[session.i]=ok;
@@ -1590,6 +1709,7 @@ function recordResult(ok,baseCoins,label){
    if(!state.review.includes(id))state.review.push(id);
   }
  }
+ recordStat(session.qs[session.i],ok,session.isReview);
  session.log.push({label:`Q${session.i+1} ${label}`,amount});
  addCoins(amount);
  save();

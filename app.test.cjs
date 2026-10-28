@@ -359,7 +359,7 @@ if (require.main === module) {
   test('init, build, upgrade, cancel removal, remove, reload and rebuild preserve learning and unlocks', () => {
     const app = loadApp();
     const { run, get, json } = app;
-    assert.equal(run('state.v'), 5);
+    assert.equal(run('state.v'), 6);
     assert.deepEqual(json('state.unlocked'), ['library', 'review']);
     run("state.coins=500; confirmBuild(0,'library'); confirmBuild(1,'school'); state.progress.school=16; state.totalCorrect=16; state.totalAnswered=18; state.review=['g4-school-001']; openBuildingMenu('school')");
     get('#bm-up').click();
@@ -539,6 +539,102 @@ if (require.main === module) {
       assert.deepEqual(json('({state,session})'), finished);
     });
   }
+
+  test('learning records track categories, questions, review outcomes and survive reload', () => {
+    const app = loadApp();
+    const { run, json } = app;
+    run("confirmBuild(0,'library'); startSession('library',false); globalThis.qid=session.qs[0].id; recordResult(false,5,'wrong')");
+    assert.equal(run('state.stats.library.ng'), 1);
+    assert.equal(run('state.stats.library.ok'), 0);
+    assert.equal(run('state.qStats[globalThis.qid].ng'), 1);
+    assert.equal(run('state.qStats[globalThis.qid].ok'), 0);
+    run("recordResult(false,5,'duplicate')");
+    assert.equal(run('state.stats.library.ng'), 1, 'duplicate answers do not double count');
+    assert.equal(run('state.qStats[globalThis.qid].ng'), 1);
+    run("session.i++; globalThis.qid2=session.qs[1].id; recordResult(true,5,'ok'); session.i++");
+    assert.equal(run('state.stats.library.ok'), 1);
+    assert.equal(run('state.qStats[globalThis.qid2].ok'), 1);
+    assert.equal(run('state.qStats[globalThis.qid].ok'), 0);
+    assert.deepEqual(json('state.reviewStats'), {}, 'normal answers do not touch review stats');
+    run("state.review=['g4-library-001','g4-library-002']; startReview()");
+    run("recordResult(false,4,'review-wrong')");
+    assert.equal(run('state.reviewStats.library.ng'), 1);
+    assert.equal(run('state.stats.library.ng'), 1, 'review answers do not touch normal stats');
+    assert.equal(run('state.qStats[globalThis.qid].ng'), 1, 'review answers do not touch per-question history');
+    run("session.i++; recordResult(true,4,'review-ok')");
+    assert.equal(run('state.reviewStats.library.ok'), 1);
+    assert.equal(run('state.review.length'), 1, 'only the correctly reviewed question leaves the list');
+    run('save(); state=loadState()');
+    assert.deepEqual(json('state.stats'), { library: { ok: 1, ng: 1 } });
+    assert.deepEqual(json('state.reviewStats'), { library: { ok: 1, ng: 1 } });
+    assert.equal(run('state.qStats[globalThis.qid2].ok'), 1);
+    assert.equal(run('state.qStats[globalThis.qid].ng'), 1);
+    assert.equal(run('state.qStats[globalThis.qid].last>0'), true);
+    assert.equal(run('state.qStats[globalThis.qid2].last>0'), true);
+  });
+
+  test('quiz UI answers flow into learning records', () => {
+    const { run, get } = loadApp();
+    run("confirmBuild(0,'library'); startSession('library',false)");
+    const id = run('session.qs[0].id');
+    get('.choice[data-ok="true"]').click();
+    assert.equal(run('state.stats.library.ok'), 1);
+    assert.equal(run('state.stats.library.ng'), 0);
+    assert.equal(run(`state.qStats['${id}'].ok`), 1);
+    assert.equal(run(`state.qStats['${id}'].last>0`), true);
+  });
+
+  test('migration sanitizes learning records for stats, review stats and question history', () => {
+    const { run, json } = loadApp();
+    run("state=migrate({v:5,grade:'4',coins:50,stats:{library:{ok:3.7,ng:-1},school:'nope',essay:{ok:2,ng:2},review:{ok:5,ng:5},bad:{ok:1,ng:1}},reviewStats:{park:{ok:1,ng:2},nope:{}},qStats:{'g4-library-001':{ok:1,ng:2,last:123.9},'g4-school-001':{ok:0,ng:0},'g4-nope-999':{ok:1,ng:1},'g5-library-001':{ok:1,ng:1},'g4-library-002':null,'42':{ok:1,ng:1}}},'4')");
+    assert.deepEqual(json('state.stats'), { library: { ok: 3, ng: 0 } });
+    assert.deepEqual(json('state.reviewStats'), { park: { ok: 1, ng: 2 } });
+    assert.deepEqual(json('state.qStats'), { 'g4-library-001': { ok: 1, ng: 2, last: 123 } });
+    assert.deepEqual(json('migrate({}).stats'), {});
+    assert.deepEqual(json('migrate({}).reviewStats'), {});
+    assert.deepEqual(json('migrate({}).qStats'), {});
+    assert.deepEqual(json("migrate({stats:[],reviewStats:'nope',qStats:'nope'}).qStats"), {});
+    assert.deepEqual(json("migrate({stats:[]}).stats"), {});
+  });
+
+  test('report aggregates categories, weak questions and difficulty with practice links', () => {
+    const { run, get } = loadApp();
+    run("state.coins=500; confirmBuild(0,'library'); confirmBuild(1,'school'); renderMap()");
+    assert.equal(get('#stat-report').tagName, 'button');
+    get('#stat-report').click();
+    assert.equal(get('#modal-root').classList.contains('open'), true);
+    assert.match(get('#modal').textContent, /べんきょうレポート/);
+    assert.match(get('#modal').textContent, /きろくが たまっていく/);
+    run('closeModal()');
+    run("state.stats={library:{ok:1,ng:3}}; state.reviewStats={library:{ok:1,ng:1}}; state.qStats={'g4-library-001':{ok:0,ng:3,last:9},'g4-library-002':{ok:2,ng:0,last:8},'g4-school-001':{ok:1,ng:1,last:7}}; state.placed.review={tile:2,level:1}; state.review=['g4-library-001']; openReport()");
+    const text = get('#modal').textContent;
+    assert.match(text, /たんご/);
+    assert.match(text, /25%/);
+    assert.match(text, /50%/);
+    assert.match(text, /My mother/);
+    assert.match(text, /3回まちがえ/);
+    assert.match(text, /ふくしゅうまち/);
+    assert.match(text, /チャレンジした問題 3 \/ 218問/);
+    assert.match(text, /とくいに なった問題 1問/);
+    assert.match(text, /⭐⭐⭐/);
+    assert.equal(get('#rep-review') !== null, true);
+    assert.equal(get('#rep-practice') !== null, true);
+    get('#rep-practice').click();
+    assert.match(get('#modal').textContent, /図書館/);
+    run('closeModal(); openReport()');
+    get('#rep-review').click();
+    assert.equal(run('!!session&&session.isReview'), true);
+    run('openReport()');
+    assert.equal(get('#modal-root').classList.contains('open'), false, 'report is blocked during an active session');
+  });
+
+  test('report entry also lives in the review tower menu', () => {
+    const { run, get } = loadApp();
+    run("confirmBuild(0,'library'); confirmBuild(1,'review'); onTileTap(1)");
+    assert.match(get('#rm-report').textContent, /べんきょうレポート/);
+    get('#rm-report').click();
+    assert.match(get('#modal').textContent, /べんきょうレポート/);
+  });
 
   test('feedback callback is bound to its session and question index', () => {
     const { run, get } = loadApp();
@@ -927,11 +1023,11 @@ if (require.main === module) {
     const app = loadApp({ storage, beforeApp: 'QUESTION_BANKS["4"].library.reverse()' });
     app.run('state=migrate({v:3,g:5,coins:120,placed:{library:{tile:0,level:1}},progress:{library:4},review:["library:0","library:39"],roads:[]},"4")');
     assert.deepEqual(app.json('state.review'), ['g4-library-001', 'g4-library-040']);
-    assert.equal(app.run('state.v'), 5);
+    assert.equal(app.run('state.v'), 6);
     assert.equal(app.run('state.grade'), '4');
     app.run('save()');
     const env = JSON.parse(storage.get('eikenTownSave_v1'));
-    assert.equal(env.v, 5);
+    assert.equal(env.v, 6);
     assert.deepEqual(Object.keys(env.towns), ['4']);
     const reloaded = loadApp({ storage });
     assert.deepEqual(reloaded.json('state.review'), ['g4-library-001', 'g4-library-040']);
@@ -1052,7 +1148,7 @@ if (require.main === module) {
     assert.deepEqual(json('Object.keys(towns)'), []);
     run('save()');
     const env = json('JSON.parse(localStorage.getItem(SAVE_KEY))');
-    assert.equal(env.v, 5);
+    assert.equal(env.v, 6);
     assert.equal(env.activeGrade, '4');
     assert.deepEqual(Object.keys(env.towns), ['4']);
   });
@@ -1215,7 +1311,7 @@ if (require.main === module) {
     assert.equal(JSON.parse(storage.get('eikenTownSave_v1')).towns['4'].coins, 333, 'writes allowed after recovery');
   });
 
-  for (const envelope of [null, '"junk"', '{"v":6,"towns":{},"activeGrade":"4"}', '{"v":"5","towns":{}}', '{"towns":{},"activeGrade":"4"}', '{"v":5}', '{"v":99,"towns":{"4":{"v":5}}}', '{"v":5,"activeGrade":"4","towns":{"4":null}}', '{"v":5,"activeGrade":"4","towns":{"4":{"grade":"4"}}}']) {
+  for (const envelope of [null, '"junk"', '{"v":7,"towns":{},"activeGrade":"4"}', '{"v":"5","towns":{}}', '{"towns":{},"activeGrade":"4"}', '{"v":5}', '{"v":99,"towns":{"4":{"v":5}}}', '{"v":5,"activeGrade":"4","towns":{"4":null}}', '{"v":5,"activeGrade":"4","towns":{"4":{"grade":"4"}}}']) {
     test(`malformed envelope ${JSON.stringify(envelope).slice(0, 28)} blocks overwrites and preserves bytes`, () => {
       const bytes = JSON.stringify(envelope);
       const storage = new Map([['eikenTownSave_v1', bytes]]);
@@ -1246,7 +1342,7 @@ if (require.main === module) {
     });
   }
 
-  test('valid v5 envelope loads normally after malformed ones are rejected', () => {
+  test('valid legacy v5 envelope loads normally after malformed ones are rejected', () => {
     const storage = new Map([['eikenTownSave_v1', '{"v":6}']]);
     let app = loadApp({ storage });
     assert.equal(app.run('loadBlocked'), true);
@@ -1258,7 +1354,7 @@ if (require.main === module) {
     assert.equal(app.run('state.coins'), 77);
     app.run('save()');
     const env = JSON.parse(storage.get('eikenTownSave_v1'));
-    assert.equal(env.v, 5, 'subsequent write is correct v5 envelope');
+    assert.equal(env.v, 6, 'subsequent write is upgraded to the v6 envelope');
     assert.deepEqual(Object.keys(env.towns), ['5']);
   });
 
